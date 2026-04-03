@@ -1,0 +1,92 @@
+.font(@size){
+    font-size: @size;
+    line-height: @size;
+}
+
+.red{
+    color: #FA9D3B !important;
+}
+
+.container{
+    min-height: 100vh;
+    
+    .zprice{
+        text-align: center;
+        font-size: 56rpx;
+        font-family: DIN-Bold, DIN;
+        font-weight: bold;
+        color: #FA5151;
+        line-height: 38rpx;
+        padding: 64rpx 0 32rpx;
+        background-color: #fff;
+    }
+    
+    .status{
+        text-align: center;
+        .font(32rpx);
+        color: #666666;  
+        font-weight: 400;
+        padding-bottom: 62rpx;
+        background-color: #fff;
+        border-radius: 0rpx 0rpx 24rpx 24rpx;
+        margin-bottom:24rpx ;
+    }
+    
+    .list{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 90rpx;
+        padding:38rpx;
+        background-color: #fff;
+        border-bottom: 1px solid #EEEEEE;
+        box-sizing: border-box;
+        view{
+            .font(32rpx);
+            color: #333333;
+            font-weight: 400;
+        }
+        
+        text{
+            .font(32rpx);
+            color: #333333;
+            font-weight: 500;
+            max-width: 370rpx;
+            text-align: right;
+        }
+        &:nth-child(1){
+            border-radius:24rpx 24rpx 0rpx 0rpx ;            
+        }
+        &:nth-last-child(1){
+            border-radius: 0rpx 0rpx 24rpx 24rpx;
+        }
+    }
+    
+    .btnBox{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 104rpx;
+        
+        view{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 686rpx;
+            height: 92rpx;
+            line-height: 92rpx;
+            border-radius: 52rpx;
+            border: 2rpx solid #FA5151;
+        }
+        
+        .background{
+            .solidBtn();
+        }
+        
+        .border{
+            border: 1px solid #Fa5151;
+            color: #Fa5151;
+        }
+    }
+}

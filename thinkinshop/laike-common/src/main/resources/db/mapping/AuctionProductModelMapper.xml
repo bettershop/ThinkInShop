@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.AuctionProductModelMapper">
+
+    <sql id="pluginSelectAuctionGoodsListSQL">
+        <where>
+            <trim prefixOverrides="and">
+                a.id=b.special_id
+                and b.id=c.session_id and c.attr_id=e.id and e.pid=d.id and a.mch_id=mch.id
+                    <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="status != null">and c.status = #{status}</if>
+                <if test="goodsMchId != null">and d.mch_id = #{goodsMchId}</if>
+                <if test="is_settlement != null">and a.is_settlement = #{is_settlement}</if>
+                <if test="key != null">and ( mch.name=#{key} or d.product_title like concat('%',#{key},'%') )</if>
+                <if test="auctionKey != null">and ( a.name=concat('%',#{auctionKey},'%') or b.name like
+                    concat('%',#{auctionKey},'%') )
+                </if>
+                <if test="attrIdList != null">
+                    <foreach collection="attrIdList" item="id" separator="or" open="and c.attr_id in (" close=")">
+                        #{id}
+                    </foreach>
+                </if>
+            </trim>
+        </where>
+    </sql>
+    <select id="pluginSelectAuctionGoodsList" parameterType="Map" resultType="Map">
+        select d.product_title goodsName,b.name sessionName,a.name specialName,mch.name
+        mchName,c.starting_amt,c.mark_up_amt,c.id acId,c.status,c.is_show,c.price currentPrice,e.attribute,b.id sessionId,c.status goodsStatus,c.sNo,
+        b.status sessionStatus,a.status specialStatus,a.end_date specialEndDate,a.start_date specialStartDate,a.id specialId
+        from lkt_auction_special a,lkt_auction_session b,lkt_auction_product c,lkt_product_list d,lkt_configure
+        e,lkt_mch mch
+        <include refid="pluginSelectAuctionGoodsListSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">c.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="pluginCountAuctionGoodsList" parameterType="Map" resultType="int">
+        select count(distinct c.id) from lkt_auction_special a,lkt_auction_session b,lkt_auction_product
+        c,lkt_product_list d,lkt_configure e,lkt_mch mch
+        <include refid="pluginSelectAuctionGoodsListSQL"/>
+    </select>
+
+    <sql id="selectDynamicSQL">
+        <trim prefixOverrides="and">
+            <if test="store_id != null">and store_id = #{store_id}</if>
+            <if test="status != null">and `status` = #{status}</if>
+            <if test="idList != null">
+                <foreach collection="idList" item="id" separator="," open="and id in(" close=")">
+                    #{id,jdbcType=INTEGER}
+                </foreach>
+            </if>
+            <if test="statusList != null">
+                <foreach collection="statusList" item="status" separator="," open="and `status` in(" close=")">
+                    #{status,jdbcType=INTEGER}
+                </foreach>
+            </if>
+            <if test="startDate != null and startDate != ''">and starttime <![CDATA[  >=  ]]> #{startDate}</if>
+            <if test="endDate != null and endDate != ''">and endtime <![CDATA[  <=  ]]> #{endDate}</if>
+        </trim>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select *
+        from lkt_auction_product
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="invalid_time_sort!=null and invalid_time_sort!=''">invalid_time ${invalid_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != null">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_auction_product
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+    </select>
+    <sql id="selectAuctionGoodsListSQL">
+        and a.recycle = 0
+        <if test="id == null">and a.id = #{id}</if>
+        <if test="type == null">and a.is_show = 1 and c.is_open = 1</if>
+        <if test="title != null and title!=''">and a.title like concat('%',#{title},'%')</if>
+        <if test="user_id_my != null and user_id_my != ''">and b.user_id = #{user_id_my}</if>
+        <if test="store_id != null and store_id != ''">and a.store_id = #{store_id}</if>
+        <if test="statusList != null">
+            <foreach collection="statusList" item="status" separator="," open="and a.status in(" close=")">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="invalid_systime != null">and a.invalid_time <![CDATA[  >  ]]> #{invalid_systime}</if>
+    </sql>
+
+    <select id="countAuctionGoodsList" parameterType="Map" resultType="int">
+        select count(a.id)
+        from lkt_auction_product as a
+        left join lkt_auction_promise as b on a.id = b.a_id and b.store_id = a.store_id
+        <if test="user_id != null and user_id != ''">and b.user_id = #{user_id}</if>
+        left join lkt_mch as c on a.mch_id = c.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectAuctionGoodsListSQL"/>
+            </trim>
+        </where>
+    </select>
+
+
+    <sql id="selectMchAuctionGoodsListSQL">
+        <if test="store_id != null">and c.store_id = #{store_id}</if>
+        <if test="mchId != null">and c.mch_id = #{mchId}</if>
+    </sql>
+    <select id="selectMchAuctionGoodsList" parameterType="Map" resultType="Map">
+        SELECT a.id acId,a.price,c.product_title,d.img,special.`name` specialName,b.name sessionName,b.status
+        sessionStatus,b.start_date,b.end_date,
+        (select count(1) from lkt_auction_record x where x.auction_id=a.id) outNum,1 type
+        FROM lkt_auction_product a
+        LEFT JOIN lkt_auction_session b ON a.session_id = b.id
+        left join lkt_auction_special special on special.id = b.special_id
+        inner join lkt_product_list c on c.id = a.goods_id
+        inner join lkt_configure d on d.id = a.attr_id
+        where b.recovery = 0 and special.recovery=0
+        <include refid="selectMchAuctionGoodsListSQL"/>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countMchAuctionGoods" parameterType="Map" resultType="int">
+        SELECT count(1) num FROM lkt_auction_product a
+        LEFT JOIN lkt_auction_session b ON a.session_id = b.id
+        left join lkt_auction_special special on special.id = b.special_id
+        inner join lkt_product_list c on c.id = a.goods_id
+        inner join lkt_configure d on d.id = a.attr_id
+        where b.recovery = 0 and special.recovery=0
+        <include refid="selectMchAuctionGoodsListSQL"/>
+    </select>
+
+
+    <sql id="getGoodsInfoListSQL">
+        <where>
+            <trim prefixOverrides="and">
+                and a.recovery=0 and a.is_show=1
+                <if test="store_id != null">and s.store_id = #{store_id}</if>
+                <if test="type != null">and s.type = #{type}</if>
+                <if test="specialId != null">and s.id = #{specialId}</if>
+                <if test="sessionId != null">and b.id = #{sessionId}</if>
+                <if test="mch_id != null">and goods.mch_id = #{mch_id}</if>
+                <if test="not_mchId != null">and goods.mch_id != #{not_mchId}</if>
+                <if test="goodsName != null">and goods.product_title like concat('%',#{goodsName},'%')</if>
+                <if test="key != null">and (goods.product_title like concat('%',#{key},'%') or mch.name like concat('%',#{key},'%'))</if>
+                <if test="goodsStatusList != null">and b.status in
+                <foreach collection="goodsStatusList" item="status" open="(" close=")" separator=",">
+                    #{status}
+                </foreach>
+                </if>
+                <if test="start_price != null">
+                    and a.starting_amt &gt;= #{start_price}
+                </if>
+                <if test="end_price != null">
+                    and a.starting_amt &lt;= #{end_price}
+                </if>
+                <if test="cid != null">
+                    and goods.product_class LIKE CONCAT('%-', #{cid},'-%')
+                </if>
+            </trim>
+        </where>
+    </sql>
+    <select id="getGoodsInfoList" parameterType="Map" resultType="Map">
+        SELECT
+        a.id,
+        c.img,
+        a.goods_price,
+        a.price,
+        a.starting_amt,
+        a.mark_up_amt,
+        cls.pname className,
+        c.attribute,
+        b.status sessionStatus,
+        a.status,
+        goods.product_title,
+        a.is_show,
+        mch.name mchName,
+        c.img,
+        DATE_FORMAT(b.end_date, '%Y-%m-%d %H:%i:%s' ) AS end_date,
+        (select count(1) from lkt_auction_record x where x.auction_id=a.id) outNum,
+        DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%s' ) AS start_date,
+        a.goods_id,
+        mch.id as mchId
+        FROM
+        lkt_auction_product AS a
+        INNER JOIN lkt_configure AS c ON a.attr_id = c.id
+        INNER JOIN lkt_auction_session b ON b.id = a.session_id
+        AND b.recovery = a.recovery
+        INNER JOIN lkt_auction_special s ON s.id = b.special_id
+        AND s.recovery = a.recovery
+        INNER JOIN lkt_product_list goods ON goods.id = c.pid
+        LEFT JOIN lkt_product_class cls ON cls.cid = substring_index( substring_index( goods.product_class, '-', 2 ), '-', - 1 )
+        LEFT JOIN lkt_mch mch ON mch.id = goods.mch_id
+        <include refid="getGoodsInfoListSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="is_hot != null">a.sort desc,</if>
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+            <if test="count != null and count != ''">outNum ${count},</if>
+            <if test="price != null and price != ''">a.starting_amt ${price},</if>
+            <if test="date !=null and date !=  ''">s.start_date ${date},</if>
+            <if test="end_date != null and end_date != ''">end_date ${end_date},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGoodsInfoList" parameterType="Map" resultType="int">
+        SELECT count(1) num FROM lkt_auction_product AS a INNER JOIN lkt_configure AS c ON a.attr_id = c.id inner join lkt_auction_session b
+        on b.id=a.session_id and b.recovery=a.recovery inner join lkt_auction_special s on s.id=b.special_id and
+        s.recovery=a.recovery inner join lkt_product_list goods on goods.id = c.pid left join lkt_product_class cls on
+        cls.cid= substring_index(substring_index(goods.product_class, '-', 2), '-', -1) left join lkt_mch mch on mch.id=goods.mch_id
+        <include refid="getGoodsInfoListSQL"/>
+    </select>
+    <select id="getImgListById" resultType="java.lang.String">
+        SELECT
+            c.img
+        FROM
+            lkt_auction_product AS a
+                INNER JOIN lkt_configure AS c ON a.attr_id = c.id
+                INNER JOIN lkt_auction_session b ON b.id = a.session_id
+                AND b.recovery = a.recovery
+                INNER JOIN lkt_auction_special s ON s.id = b.special_id
+                AND s.recovery = a.recovery
+                INNER JOIN lkt_product_list goods ON goods.id = c.pid
+        where s.id = #{specialId}
+    </select>
+    <select id="selectMyAuctionGoodsList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        t.currenPrice,
+        t.passed_status,
+        t.acId,
+        t.product_title,
+        t.goodsStatus,
+        t.special_id,
+        t.sessionStatus,
+        t.end_date,
+        t.start_date,
+        t.price,
+        t.starting_amt,
+        t.img,
+        t.sNo,
+        t.attribute,
+        t.mchId
+        FROM (
+        SELECT
+        DISTINCT
+        a.price currenPrice,
+        b.passed_status,
+        b.id acId,
+        c.product_title,
+        b.`status` goodsStatus,
+        d.special_id,
+        d.`status` sessionStatus,
+        d.end_date,
+        d.start_date,
+        b.price,
+        b.starting_amt,
+        e.img,
+        b.sNo,
+        e.attribute,
+        c.mch_id mchId,
+        ROW_NUMBER() OVER (PARTITION BY a.auction_id ORDER BY a.add_time DESC) AS rn
+        FROM lkt_auction_record a
+        INNER JOIN lkt_auction_product b ON a.auction_id = b.id
+        INNER JOIN lkt_product_list c ON b.goods_id = c.id
+        INNER JOIN lkt_auction_session d ON b.session_id = d.id
+        INNER JOIN lkt_configure e ON b.attr_id = e.id
+        WHERE b.recovery = 0
+        AND c.recycle = 0
+        AND c.recycle = b.recovery
+        AND c.recycle = d.recovery
+        AND c.recycle = e.recycle
+        <if test="userId != null and userId != ''">
+            AND a.user_id = #{userId}
+        </if>
+        <if test="goodsStatus != null and goodsStatus.size() > 0">
+            AND b.`status` IN
+            <foreach collection="goodsStatus" item="status" open="(" close=")" separator=",">
+                #{status}
+            </foreach>
+        </if>
+        AND d.`status` = #{sessionStatus}
+        <if test="finalUserId != null and finalUserId != ''">
+            AND b.user_id = #{finalUserId}
+        </if>
+        <if test="notMy != null and notMy != ''">
+            AND b.user_id != #{notMy}
+        </if>
+
+        <if test="notMy02 != null and notMy02 != ''">
+            AND (b.user_id != #{notMy02} OR (b.`status` = 3 AND b.passed_status = 2))
+        </if>
+
+        <if test="passedStatus != null and passedStatus != ''">
+            AND b.passed_status = #{passedStatus}
+        </if>
+        ) t
+        WHERE t.rn = 1
+        LIMIT #{start}, #{end}
+    </select>
+    <select id="getMchGoodsTotal" resultType="java.lang.Integer">
+        SELECT
+            COUNT( 1 )
+        FROM
+            lkt_auction_product AS a
+                INNER JOIN lkt_configure AS c ON a.attr_id = c.id
+                LEFT JOIN lkt_product_list goods ON goods.id = c.pid
+                LEFT JOIN lkt_user_collection d ON d.p_id = a.id
+                AND d.type = 3
+        WHERE
+            goods.mch_id = #{mchId} and a.recovery=0 and a.is_show=1
+    </select>
+</mapper>

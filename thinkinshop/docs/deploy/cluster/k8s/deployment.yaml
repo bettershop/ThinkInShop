@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laike-apis
+  namespace: laike-prod
+  labels:
+    app: laike-apis
+spec:
+  replicas: 3
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: laike-apis
+  template:
+    metadata:
+      labels:
+        app: laike-apis
+      annotations:
+        # SLS/日志平台按需读取此标签或标准容器stdout
+        log.service/name: laike-apis
+        log.service/env: prod
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: laike-apis
+          image: registry.example.com/laike/laike-apis:0.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 21898
+          envFrom:
+            - secretRef:
+                name: laike-apis-secret
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: JAVA_OPTS
+              value: "-Xms2048m -Xmx2048m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfile.encoding=UTF-8"
+          readinessProbe:
+            httpGet:
+              path: /apis/actuator/health
+              port: 21898
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /apis/actuator/health
+              port: 21898
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "2Gi"
+            limits:
+              cpu: "4"
+              memory: "4Gi"
+          volumeMounts:
+            - name: bootstrap
+              mountPath: /opt/laike/apis/config/bootstrap.yml
+              subPath: bootstrap.yml
+            - name: logs
+              mountPath: /opt/laike/apis/logs
+            - name: upload
+              mountPath: /opt/laike/apis/upload
+            - name: xxl-logs
+              mountPath: /opt/laike/apis/xxl-logs
+      volumes:
+        - name: bootstrap
+          configMap:
+            name: laike-apis-bootstrap
+        - name: logs
+          persistentVolumeClaim:
+            claimName: laike-apis-logs-pvc
+        - name: upload
+          persistentVolumeClaim:
+            claimName: laike-apis-upload-pvc
+        - name: xxl-logs
+          emptyDir: {}

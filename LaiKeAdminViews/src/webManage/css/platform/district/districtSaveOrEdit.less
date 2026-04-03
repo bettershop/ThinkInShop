@@ -1,0 +1,213 @@
+.container {
+  width: 100%;
+  height: 737px;
+  background-color: #fff;
+  padding: 40px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  overflow: hidden;
+  overflow-y: auto;
+  border-radius: 4px;
+  .gz_bt{
+    color: #2890FF;
+    border: 0.0625rem solid #2890FF;
+    background-color: #fff;
+  }
+  .prompt{
+    position: absolute;
+    width: 420px;
+    left: 100;
+  }
+
+  .dialog-block {
+    // 弹框样式
+    /deep/.el-dialog {
+      width: 580px;
+      height: 252px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0 !important;
+      .proportion {
+        margin-bottom: 0;
+      }
+      .el-dialog__header {
+        width: 100%;
+        height: 58px;
+        line-height: 58px;
+        font-size: 16px;
+        margin-left: 19px;
+        font-weight: bold;
+        border-bottom: 1px solid #e9ecef;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0 0 0 19px;
+        .el-dialog__headerbtn {
+          font-size: 18px;
+          top: 0 !important;
+        }
+        .el-dialog__title {
+          font-weight: normal;
+        }
+      }
+
+      .el-dialog__body {
+        padding: 40px !important;
+        .el-form-item__label {
+          font-weight: normal;
+        }
+        .form-footer {
+          width: 100%;
+          height: 72px;
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          border-top: 1px solid #e9ecef;
+          .el-form-item {
+            text-align: right;
+            margin-right: 10px;
+            padding: 0 !important;
+            height: 100%;
+            .el-form-item__content {
+              height: 100%;
+              line-height: 72px;
+              margin: 0 !important;
+            }
+          }
+        }
+        .el-input {
+          width: 360px;
+        }
+      }
+    }
+  }
+  /deep/.el-form {
+    .el-form-item__label {
+      font-weight: normal;
+    }
+    .copyright, .record{
+      .el-form-item__content {
+        .el-input {
+          width: 580px;
+          height: 40px;
+          input {
+            width: 580px;
+            height: 40px;
+          }
+        }
+      }
+    }
+    .linkBox{
+      display: flex;
+      margin-bottom: 1.375rem;
+      // margin-top: 10px;
+    }
+
+    .link {
+      margin-bottom: 0;
+      .el-form-item__content {
+        display: flex;
+        flex-direction: column;
+        .link-name {
+          width: 180px;
+          height: 40px;
+          input {
+            width: 180px;
+            height: 40px;
+          }
+        }
+        .link-local {
+          width: 390px;
+          height: 40px;
+          margin-left: 10px;
+          input {
+            width: 390px;
+            height: 40px;
+          }
+        }
+
+        .add-reduction {
+          position: relative;
+          i {
+            font-size: 20px;
+            margin-left: 10px;
+          }
+          .el-icon-circle-plus-outline {
+            color: #2890FF;
+          }
+          span {
+            margin-left: 14px;
+            position: relative;
+            bottom: 3px;
+            color: #97A0B4;
+          }
+          .prompt2{
+            position: absolute;
+            width: 420px;
+            left: 100;
+          }
+        }
+      }
+    }
+
+    .add-link {
+      .el-form-item__content {
+        display: flex;
+        flex-direction: column;
+
+        .add-info {
+          display: flex;
+          &:not(:last-child) {
+            margin-bottom: 20px;
+          }
+          .link-names {
+            width: 180px;
+            height: 40px;
+            input {
+              width: 180px;
+              height: 40px;
+            }
+          }
+          .link-locals {
+            width: 390px;
+            height: 40px;
+            margin-left: 10px;
+            input {
+              width: 390px;
+              height: 40px;
+            }
+          }
+
+          .add-reduction {
+            i {
+              font-size: 20px;
+              margin-left: 10px;
+            }
+            .el-icon-circle-plus-outline {
+              color: #2890FF;
+            }
+          }
+        }
+      }
+    }
+
+    .el-input {
+      width: 580px;
+    }
+    
+  }
+
+  .form-footer {
+    .bdColor {
+      margin-left: 14px;
+    }
+    button {
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

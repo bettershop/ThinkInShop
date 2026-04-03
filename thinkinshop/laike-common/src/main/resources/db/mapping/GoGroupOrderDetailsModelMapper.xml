@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.GoGroupOrderDetailsModelMapper">
+    <sql id="selectDynamicSQL">
+        <where>
+            <trim prefixOverrides="and">
+                <if test="store_id != null">and store_id = #{store_id}</if>
+                <if test="orderno != null">and r_sNo = #{orderno}</if>
+            </trim>
+        </where>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select *
+        from lkt_go_group_order_details
+        <include refid="selectDynamicSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_go_group_order_details
+        <include refid="selectDynamicSQL"/>
+    </select>
+</mapper>

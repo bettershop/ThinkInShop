@@ -1,0 +1,543 @@
+.signTextDown {
+    margin: 40rpx auto;
+    width: 303rpx;
+    height: 89rpx;
+    border-radius: 20rpx;
+    background-color: #30B87D;
+    position: absolute;
+    top: -30rpx;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    border-radius: 44rpx;
+}
+
+.strong > view {
+    font-size: 15rpx;
+    font-weight: bold;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 20rpx;
+    right: 30rpx;
+
+    /* #ifdef MP-ALIPAY */
+    width: 0.3rem !important;
+    background-size: 32rpx 32rpx !important;
+    right: 0.3rem;
+    /* #endif */
+}
+
+.signDownText {
+    color: #999999;
+    font-size: 24rpx;
+    margin-top: 6rpx;
+}
+
+.signDayBC1 {
+    background: linear-gradient(30deg, #F6C800 0%, #F88E28 100%);
+    height: 100%;
+    border-radius: 8rpx;
+    position: relative;
+}
+
+.signDayBC2 {
+    background: #eeeeee;
+    height: 100%;
+    border-radius: 8rpx;
+    position: relative;
+}
+
+.signDayDiv {
+    height: 160rpx;
+    padding: 0 30rpx;
+    position: relative;
+    margin-top: -60rpx;
+    z-index: 9;
+}
+
+.signDay {
+    height: 100%;
+    background-color: #fff;
+    width: 100%;
+    border-radius: 8rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.signDayImg1 {
+    width: 24rpx;
+    height: 16rpx;
+    position: relative;
+    margin-bottom: 10rpx;
+}
+
+.signDayImg2 {
+    width: 26rpx;
+    height: 24rpx;
+    position: relative;
+    margin-bottom: 6rpx;
+}
+
+.signDayText1 {
+    font-size: 28rpx;
+    color: #fff;
+    height: 38rpx;
+    margin-bottom: 10rpx;
+}
+
+.signDayText2 {
+    font-size: 28rpx;
+    color: #000;
+    height: 38rpx;
+    margin-bottom: 10rpx;
+}
+
+.sign7Div {
+    width: 64rpx;
+    text-align: center;
+}
+
+.maskContent {
+    width: 520rpx;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 10rpx;
+    position: relative;
+    margin: 0 auto;
+    background-color: #ffffff;
+    text-align: left;
+    font-size: 28rpx;
+    padding: 20rpx;
+}
+
+uni-button:after {
+    border: none;
+}
+
+.load {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.load > div {
+    width: 200rpx;
+    height: 200rpx;
+    border-radius: 10rpx;
+    background-color: rgba(000, 000, 000, 0.6);
+    color: #fff;
+    font-size: 28rpx;
+    text-align: center;
+    margin: 0 auto;
+    padding: 40rpx 0;
+}
+
+.load > div > img {
+    width: 40rpx;
+    height: 40rpx;
+    margin: 5rpx 0 20rpx 0;
+}
+
+.body {
+    min-height: 100vh;
+    height: 100vh;
+    background-color: @bgColor;
+}
+
+.head img {
+    position: absolute;
+    top: 26rpx;
+    left: 20rpx;
+    width: 24rpx;
+    height: 36rpx;
+}
+
+.head span {
+    height: 88rpx;
+    width: 60rpx;
+    display: inline-block;
+    position: absolute;
+}
+
+.active {
+    background-color: #76E4B4;
+}
+
+.lose {
+    background-color: #76E6B6;
+    color: #30B77D !important;
+}
+
+#signBtn {
+    margin: 40rpx auto;
+    width: 303rpx;
+    height: 88rpx;
+    border-radius: 50rpx;
+    color: @btnBackground;
+    line-height: 88rpx;
+    box-sizing: content-box;
+    font-size: 40rpx;
+    position: relative;
+    z-index: 5;
+}
+
+.sign_head {
+    height: 370rpx;
+    width: 100%;
+    font-size: 28rpx;
+    color: @lightColor;
+    padding: 0 29rpx;
+    text-align: center;
+    position: relative;
+}
+
+.sign_one {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20rpx;
+}
+
+.sign_left {
+    display: flex;
+    align-items: center;
+}
+
+.sign_right {
+    position: absolute;
+    box-sizing: content-box;
+    text-align: center;
+    right: 20rpx;
+    height: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
+    color: #99B4B4;
+    width: 140rpx;
+    white-space: nowrap;
+}
+
+.sign_head > img {
+    width: 200rpx;
+    height: 200rpx;
+    margin-top: 10rpx;
+}
+
+.sign_head > p {
+    font-size: 28rpx;
+    color: @lightColor;
+    margin-top: 20rpx;
+}
+
+.paging {
+    width: 17rpx;
+    height: 30rpx;
+}
+
+.calendar {
+    border-radius: 8rpx;
+    overflow: hidden;
+    position: relative;
+    color: white;
+    font-size: 38rpx;
+    background-color: #fff;
+    text-align: center;
+    margin: 0 30rpx;
+    margin-top: 30rpx;
+}
+
+.prev,
+.next {
+    font-size: 70rpx;
+}
+
+.prev {
+    float: left;
+}
+
+.next {
+    float: right;
+}
+
+.calendar > img {
+    width: 600rpx;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+}
+
+.date {
+    width: 100%;
+    color: #020202;
+    padding: 20rpx 0;
+    font-size: 30rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1rpx solid #ececec;
+}
+
+.month {
+    padding: 20rpx 0;
+    color: #020202;
+    font-size: 28rpx;
+}
+
+.month li {
+    display: inline-block;
+    width: 14.285%;
+    float: left;
+    height: 80rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.week {
+    font-size: 32rpx;
+    width: 100%;
+    margin-bottom: 20rpx;
+}
+
+.week div {
+    float: left;
+    width: 14.285%;
+    text-align: center;
+}
+
+.week:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.month ul:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.mark {
+    font-size: 10rpx;
+    color: #e83737;
+    position: absolute;
+    right: -10rpx;
+    top: -20rpx;
+}
+
+.month li div {
+    display: flex;
+    align-items: center;
+}
+
+.today {
+    width: 70rpx;
+    height: 70rpx;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    box-sizing: content-box;
+    background-color: @priceColor;
+    color: #FFFFFF;
+}
+
+.today span {
+    border-radius: 50%;
+}
+
+.month li div span {
+    display: flex;
+    align-items: center;
+    width: 70rpx;
+    text-align: center;
+}
+
+.sign_in {
+    width: 70rpx;
+    height: 70rpx;
+    border-radius: 50%;
+    background-color: @priceColor;
+    color: #fff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign_in span {
+    position: relative;
+    margin: 0 auto;
+    height: 50rpx;
+    width: 50rpx;
+    background-color: #be9e5f;
+    border-radius: 50%;
+}
+
+.complete {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(000, 000, 000, 0.5);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 34;
+    display: flex;
+    justify-content: center;
+    padding-top: 55%;
+}
+
+.complete_tishi {
+    width: 520rpx;
+    height: 330rpx;
+    background-color: #fff;
+    border-radius: 10rpx;
+    text-align: center;
+    position: relative;
+}
+
+.complete_tishi > img {
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-bottom: 10rpx;
+}
+
+.complete_tishi > div {
+    text-align: right;
+    padding: 10rpx 10rpx 20rpx 0;
+}
+
+.complete_tishi > div > img,
+.complete_img {
+    width: 40rpx;
+}
+
+.complete_tishi p {
+    font-size: 24rpx;
+    color: #666666;
+}
+
+.complete_tishi p > span {
+    margin: 0 5rpx;
+    color: #be9e5f;
+}
+
+.complete_qiandao {
+    border-radius: 10rpx;
+    width: 520rpx;
+    padding: 30rpx;
+    text-align: left;
+    font-size: 28rpx;
+    position: absolute;
+    background-color: #fff;
+}
+
+.complete_qiandao > p {
+    margin-top: 10rpx;
+}
+
+.complete_b {
+    padding-top: 45%;
+}
+
+.complete_img {
+    position: absolute;
+    top: 20rpx;
+    right: 20rpx;
+}
+
+.closeDiv {
+    width: 240rpx;
+    height: 70rpx;
+    border: 2rpx solid @btnBackground;
+    border-radius: 4rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @btnBackground;
+    box-sizing: content-box;
+    background-color: #fff;
+    border-radius: 5rpx;
+}
+
+.sign_left .img {
+    width: 44rpx;
+    height: 44rpx;
+    margin-right: 20rpx;
+    border-radius: 50%;
+}
+
+.sign_left .span {
+    margin-left: 10rpx;
+    color: @lightColor;
+    font-size: 34rpx;
+}
+
+.sign_right .img {
+    width: 20rpx;
+    height: 24rpx;
+    margin-right: 6rpx;
+}
+
+.sign_suc {
+    width: 100rpx !important;
+    height: 100rpx !important;
+    position: relative;
+    margin-top: 50rpx;
+}
+
+.complete_text {
+    margin-bottom: 20rpx;
+    font-size: 30rpx!important;
+    color: #191819;
+    font-weight: 600;
+}
+
+.maskContentTitle {
+    font-size: 30rpx;
+    text-align: center;
+    font-weight: bold;
+    color: #020202;
+    padding-top: 20rpx;
+}
+
+.maskContent .richBox {
+    padding: 20rpx 16rpx 20rpx 16rpx;
+    color: #666666;
+    height: 600rpx;
+    overflow: scroll;
+}
+
+.closeBtnDiv {
+    text-align: center;
+    margin-top: 20rpx;
+    margin-bottom: 40rpx;
+    display: flex;
+    justify-content: center;
+}
+
+.closeDiv:after {
+    border: 0;
+}
+
+.w_100 {
+    width: 100%;
+}
+
+.color_ff3 {
+    color: @priceColor !important;
+}
+
+.font_14 {
+    font-size: 14rpx;
+}
+
+
+.sign_top{
+    background-position: left top;
+    background-size: 100% 100%;
+}

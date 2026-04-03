@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  /deep/.Search {
+    margin-bottom: 16px;
+
+    .Search-condition {
+      .query-input {
+        display: flex;
+        margin-right: 10px;
+
+        .select-date {
+          margin-left: 10px;
+        }
+
+        .Search-input {
+          margin-right: 0px;
+        }
+      }
+    }
+
+  }
+
+  /deep/.jump-list {
+    .fontColor {
+      min-width: 120px;
+      height: 42px;
+      color: #6a7076;
+      background-color: #fff;
+      border-radius: 4px;
+    }
+  }
+
+  .merchants-list {
+    width: 100%;
+    // height: 671px;
+    flex: 1;
+  }
+
+}

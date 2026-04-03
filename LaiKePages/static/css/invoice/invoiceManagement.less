@@ -1,0 +1,331 @@
+.container {
+    min-height: 100vh;
+    background-color: #F4F5F6;
+    display: flex;
+    flex-direction: column;
+    
+    .position_head {
+        background-color: #F4F5F6;
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+        .add_rise_management {
+            width: 100%;
+            box-sizing: border-box;
+            .down_fp_ts{
+                display: flex;
+                align-items: center;
+                background-color: #fff3d7; 
+                height: 50rpx; 
+                padding-left: 32rpx;
+                img{
+                    width: 26rpx;
+                    height: 26rpx;
+                }
+                span{
+                    color:#FA5151 ;
+                }
+            }
+            .rise_block {
+                background-color: #ffffff;  
+                border-radius: 0rpx 0rpx 24rpx 24rpx;
+                padding: 32rpx;
+                .rise_management {
+                    width: 100%;
+                    height: 144rpx;
+                    background: rgba(250,81,81,0.1);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 16rpx;
+                    image {
+                        width: 40rpx;
+                        height: 40rpx;
+                        margin-right: 10rpx;
+                    }
+                    p {
+                        font-size: 32rpx;
+                        font-weight: bold;
+                        color: #FA5151;
+                        margin-left: 10rpx;
+                    }
+                }
+            }
+            
+        }
+        
+        .nav_header {
+            width: 100%;
+            // height: 120rpx;
+            background: #FFFFFF;
+            border-radius: 24rpx;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            margin-top: 24rpx;
+            padding: 32rpx 0 40rpx 0;
+            li {
+                width: 25%;
+                position: relative;
+                display: flex;
+                justify-content: center;
+                font-size: 28rpx;
+                font-weight: 500;
+                color: #999999;
+            }
+            .header_border {
+                font-size: 32rpx;
+                font-weight: 500;
+                color: #333333;
+                &::after{
+                    position: absolute;
+                    content: '';
+                    width: 96rpx;
+                    height: 4rpx;
+                    background: #FA5151;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    bottom: -12rpx;
+                    border-radius: 5rpx;
+                }
+            }
+        }
+    }
+    
+    .invoiceList {
+        .invoice_li {
+            padding: 32rpx 32rpx 32rpx 32rpx;
+            background-color: #ffffff;
+            border-radius: 24rpx;
+            margin-top: 16rpx;
+            .order_info {
+                width: 100%;
+                height: 144rpx;
+                background: #F4F5F6;
+                border-radius: 16rpx;
+                padding: 24rpx;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                box-sizing: border-box;
+                font-size: 28rpx;
+                color: #333333;
+                .order-head {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    p {
+                        &:first-child {
+                            margin-bottom: 8rpx;
+                        }
+                        &:last-child {
+                            color: #999999;
+                            margin-top: 8rpx;
+                            display: flex;
+                            align-items: center;
+                            span {
+                                margin-right: 8rpx;
+                            }
+                            image {
+                                width: 32rpx;
+                                height: 44rpx;
+                            }
+                        }
+                    }
+                }
+            }
+            .company_name {
+                margin: 24rpx 0;
+                p {
+                    font-size: 32rpx;
+                    font-weight: 500;
+                    color: #333333;
+                }
+                
+            }
+            .invoice_li_bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 24rpx;
+                .price {
+                    span {
+                        font-size: 32rpx;
+                        font-weight: 500;
+                        color: #FA5151;
+                    }
+                }
+                .btn {
+                    display: flex;
+                    p {
+                        width: 144rpx;
+                        height: 56rpx;
+                        border-radius: 28rpx;
+                        font-size: 24rpx;
+                        font-weight: 500;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-left: 24rpx;
+                    }
+                    .red_btn {
+                        background: #FA5151;
+                        color: #ffffff;
+                    }
+                    .gray_btn {
+                        background: #F4F5F6;
+                        color: #333333;
+                    }
+                }
+            }
+        }
+    }
+    
+    .no_header {
+        width: 100%;
+        background-color: #ffffff;
+        // height: 668rpx;
+        flex: 1;
+        border-radius: 0px 0px 24rpx 24rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 16rpx;
+        border-radius: 24rpx 24rpx 0 0;
+        image {
+            height: 460rpx;
+        }
+        p {
+            font-size: 28rpx;
+            color: #333333;
+        }
+    }
+    
+    .mask_invoice {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 999;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 9999;
+            .invoice_img {
+                width: 100%;
+            }
+            .fp_close{
+                position: absolute;
+                top: 10rpx;
+                right: 10rpx;
+                width: 32rpx;
+                height: 32rpx;
+                margin: 12rpx;
+            }
+            p {
+                width: 332rpx;
+                height: 92rpx;
+                background: #FA5151;
+                border-radius: 46rpx;
+                color: #ffffff;
+                margin-top: 188rpx;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                image {
+                    width: 40rpx;
+                    height: 40rpx;
+                }
+                span {
+                    font-size: 32rpx;
+                    font-weight: 500;
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
+    
+    .mask_addInvoice {
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.5);
+        z-index: 9999;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .mask_invoice_content {
+             width: 640rpx;
+             height: 358rpx;
+             background-color: #ffffff;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             border-radius: 24rpx;
+             .invoice_content_top {
+                 flex: 1;
+                 width: 100%;
+                 display: flex;
+                 flex-direction: column;
+                 justify-content: center;
+                 align-items: center;
+                 p {
+                     &:first-child {
+                        
+                         font-size: 32rpx;
+                         font-weight: 500;
+                         color: #333333;
+                         margin-bottom: 16rpx;
+                     }
+                     &:last-child {
+                         font-size: 32rpx;
+                         color: #999999;
+                         font-weight: 400;
+                         
+                         margin-top: 16rpx;
+                     }
+                 }
+             }
+             .invoice_content_bottom {
+                 width: 100%;
+                 height: 108rpx;
+                 border-top: 2rpx solid #e5e5e5;
+                 display: flex;
+                 justify-content: space-evenly;
+                 align-items: center;
+                 p {
+                     &:first-child {
+                         color: #333333;
+                         border-right: 2rpx solid #e5e5e5;
+                     }
+                     &:last-child {
+                         color: #D73B48;
+                     }
+                 }
+                 p {
+                     width: 100%;
+                     height: 100%;
+                     display: flex;
+                     justify-content: center;
+                     align-items: center;
+                     font-size: 32rpx;
+                     font-weight: 500;
+                 }
+             }
+         }
+    }
+}

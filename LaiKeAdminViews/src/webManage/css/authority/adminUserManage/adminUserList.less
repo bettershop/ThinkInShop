@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  /deep/.jump-list {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    .laiketui-add:before {
+      font-size: 14px;
+      margin-right: 8px;
+    }
+    .laiketui-shangjia:before {
+      font-size: 14px;
+      margin-right: 8px;
+      position: relative;
+      top: 1px;
+    }
+    button {
+      min-width: 120px;
+      height: 40px;
+      background: #28B6FF;
+      border-radius: 4px;
+      padding: 0 10px;
+      border: none;
+      &:hover {
+        opacity: 0.8;
+      }
+      span {
+        font-size: 14px;
+      }
+    }
+    
+    .fontColor {
+      width: 120px;
+      height: 42px;
+      color: #6a7076;
+      background-color: #fff;
+      border-radius: 4px;
+    }
+
+    .el-icon-printer:before  {
+      margin-right: 8px;
+    }
+  }
+
+  .merchants-list {
+    flex: 1;
+  }
+  .OP-button{
+    button{
+      margin-right: 4px;
+      margin-left: 4px;
+    }
+    .OP-button-top{
+      margin-bottom: 0px !important;
+      justify-content: center;
+
+    }
+  }
+}

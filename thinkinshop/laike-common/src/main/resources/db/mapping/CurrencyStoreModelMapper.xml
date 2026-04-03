@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.CurrencyStoreModelMapper">
+    <resultMap id="BaseResultMap" type="com.laiketui.domain.CurrencyStoreModel">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="store_id" property="store_id" jdbcType="INTEGER"/>
+        <result column="currency_id" property="currency_id" jdbcType="INTEGER"/>
+        <result column="is_show" property="is_show" jdbcType="INTEGER"/>
+        <result column="default_currency" property="default_currency" jdbcType="INTEGER"/>
+        <result column="exchange_rate" property="exchange_rate" jdbcType="DECIMAL"/>
+        <result column="recycle" property="recycle" jdbcType="INTEGER"/>
+        <result column="update_time" property="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="countCurrencyStore" resultType="int" parameterType="com.laiketui.domain.vo.saas.CurrencyStoreVo">
+        select count(1) from lkt_currency_store as a
+        <where>
+            <include refid="queryCondition"/>
+        </where>
+    </select>
+
+    <delete id="deleteByBatchParams">
+        DELETE FROM lkt_currency_store
+        WHERE (store_id, currency_id) IN
+        <foreach collection="list" item="item" open="(" separator=")," close=")">
+            (#{item.store_id}, #{item.currency_id})
+        </foreach>
+    </delete>
+
+    <select id="queryCurrencyStoreList" resultType="Map" parameterType="com.laiketui.domain.vo.saas.CurrencyStoreVo">
+        select a.*,b.currency_name,b.currency_code,b.currency_symbol from lkt_currency_store as a left join lkt_currency
+        as b on a.currency_id = b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="queryCondition"/>
+            </trim>
+        </where>
+        ORDER BY a.currency_id desc
+        <if test="pageNo != null and pageSize != ''">limit #{pageNo},#{pageSize}</if>
+    </select>
+
+    <sql id="queryCondition">
+        <if test="storeId != null">AND a.store_id = #{storeId}</if>
+        <if test="currency_id != null">AND a.currency_id = #{currency_id}</if>
+        <if test="default_currency != null">AND a.default_currency = #{default_currency}</if>
+        <if test="recycle != null">AND a.recycle = #{recycle}</if>
+        AND a.is_show = 1
+    </sql>
+
+    <select id="selectByStoreIds" resultType="com.laiketui.domain.CurrencyStoreModel">
+        SELECT * FROM lkt_currency_store
+        WHERE store_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND recycle = 0
+    </select>
+
+    <select id="selectDefaultCurrencies" resultType="com.laiketui.domain.CurrencyStoreModel">
+        SELECT a.*, b.currency_symbol
+        FROM lkt_currency_store a
+        LEFT JOIN lkt_currency b ON a.currency_id = b.id
+        WHERE a.store_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND a.default_currency = 1
+        AND a.recycle = 0
+    </select>
+
+
+</mapper>

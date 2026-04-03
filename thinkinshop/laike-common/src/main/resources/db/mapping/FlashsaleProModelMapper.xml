@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.FlashsaleProModelMapper">
+    <sql id="getGoodsInfoSQL">
+		a.recycle = 0
+		AND a.mch_status = 2
+		AND a.STATUS = 2
+		AND a.commodity_type = '0'
+		AND a.is_presell = 0
+		AND a.gongyingshang = ''
+		AND a.num > 0
+        <if test="storeId != null and storeId!=''">and a.store_id = #{storeId}</if>
+        <if test="mchId != null and mchId!=''">and a.mch_id = #{mchId}</if>
+        <if test="brandId != null and brandId!=''">and a.brand_id = #{brandId}</if>
+        <if test="classId != null and classId!=''">AND a.product_class like CONCAT('%-',
+            #{classId},'-%')
+        </if>
+        <if test="proNotInId != null">
+            <foreach collection="proNotInId" item="proId" separator="," open="and a.id not in (" close=")">
+                #{proId}
+            </foreach>
+        </if>
+        <if test="key != null">and (a.product_title like concat('%', #{key},'%') or a.id =#{key})</if>
+    </sql>
+    <select id="getGoodsInfo" parameterType="Map" resultType="Map">
+        SELECT
+        a.id,
+        a.goodsName,
+        a.product_class,
+        a.brand_id,
+        a.mch_id,
+        a.attrId,
+        a.num,
+        a.imgUrl,
+        a.price,
+        a.attribute,
+        a.stockNum,
+        a.mchName,
+        a.brandName
+        FROM
+        (
+        SELECT
+        a.id,
+        a.product_title AS goodsName,
+        a.product_class,
+        a.brand_id,
+        a.mch_id,
+        c.id AS attrId,
+        a.num,
+        a.imgurl AS imgUrl,
+        c.price,
+        c.attribute,
+        c.num AS stockNum,
+        b.name AS mchName,
+        brand.brand_name AS brandName,
+        ROW_NUMBER() over (partition by a.id) AS top
+        FROM
+        lkt_product_list AS a
+        LEFT JOIN lkt_mch AS b ON a.mch_id = b.id
+        LEFT JOIN lkt_configure AS c ON a.id = c.pid
+        LEFT JOIN lkt_brand_class brand ON brand.brand_id = a.brand_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getGoodsInfoSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            a.id ASC
+        </trim>
+        ) AS a
+        WHERE a.top = 1
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGoodsInfo" parameterType="Map" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        lkt_product_list AS a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getGoodsInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+</mapper>

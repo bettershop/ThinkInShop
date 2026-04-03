@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.PtGoGroupOrderDetailsModelMapper">
+    <resultMap id="BaseResultMap" type="com.laiketui.domain.plugin.group.PtGoGroupOrderDetailsModel">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="store_id" property="store_id" jdbcType="INTEGER"/>
+        <result column="user_id" property="user_id" jdbcType="CHAR"/>
+        <result column="p_id" property="p_id" jdbcType="INTEGER"/>
+        <result column="p_name" property="p_name" jdbcType="VARCHAR"/>
+        <result column="p_price" property="p_price" jdbcType="DECIMAL"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="unit" property="unit" jdbcType="VARCHAR"/>
+        <result column="r_sNo" property="r_sNo" jdbcType="VARCHAR"/>
+        <result column="add_time" property="add_time" jdbcType="TIMESTAMP"/>
+        <result column="deliver_time" property="deliver_time" jdbcType="TIMESTAMP"/>
+        <result column="arrive_time" property="arrive_time" jdbcType="TIMESTAMP"/>
+        <result column="r_status" property="r_status" jdbcType="TINYINT"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="reason" property="reason" jdbcType="CHAR"/>
+        <result column="re_type" property="re_type" jdbcType="TINYINT"/>
+        <result column="re_apply_money" property="re_apply_money" jdbcType="REAL"/>
+        <result column="re_money" property="re_money" jdbcType="REAL"/>
+        <result column="real_money" property="real_money" jdbcType="DECIMAL"/>
+        <result column="re_time" property="re_time" jdbcType="TIMESTAMP"/>
+        <result column="re_photo" property="re_photo" jdbcType="VARCHAR"/>
+        <result column="audit_time" property="audit_time" jdbcType="TIMESTAMP"/>
+        <result column="r_content" property="r_content" jdbcType="VARCHAR"/>
+        <result column="r_type" property="r_type" jdbcType="TINYINT"/>
+        <result column="express_id" property="express_id" jdbcType="INTEGER"/>
+        <result column="courier_num" property="courier_num" jdbcType="VARCHAR"/>
+        <result column="express_type" property="express_type" jdbcType="TINYINT"/>
+        <result column="freight" property="freight" jdbcType="DECIMAL"/>
+        <result column="size" property="size" jdbcType="VARCHAR"/>
+        <result column="sid" property="sid" jdbcType="CHAR"/>
+        <result column="invoice" property="invoice" jdbcType="TINYINT"/>
+        <result column="express" property="express" jdbcType="TINYINT"/>
+        <result column="exchange_num" property="exchange_num" jdbcType="INTEGER"/>
+        <result column="coupon_id" property="coupon_id" jdbcType="VARCHAR"/>
+        <result column="after_discount" property="after_discount" jdbcType="DECIMAL"/>
+        <result column="settlement_type" property="settlement_type" jdbcType="TINYINT"/>
+        <result column="recycle" property="recycle" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, store_id, user_id, p_id, p_name, p_price, num, unit, r_sNo, add_time, deliver_time,
+    arrive_time, r_status, content, reason, re_type, re_apply_money, re_money, real_money, 
+    re_time, re_photo, audit_time, r_content, r_type, express_id, courier_num, express_type, 
+    freight, size, sid, invoice, express, exchange_num, coupon_id, after_discount, settlement_type, 
+    recycle
+    </sql>
+
+    <sql id="selectDynamicSQL">
+        <where>
+            <trim prefixOverrides="and">
+                <if test="store_id != null">and store_id = #{store_id}</if>
+                <if test="orderno != null">and r_sNo = #{orderno}</if>
+            </trim>
+        </where>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select *
+        from lkt_pt_go_group_order_details
+        <include refid="selectDynamicSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_pt_go_group_order_details
+        <include refid="selectDynamicSQL"/>
+    </select>
+
+</mapper>

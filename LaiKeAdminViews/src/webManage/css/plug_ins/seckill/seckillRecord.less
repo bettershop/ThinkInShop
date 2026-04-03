@@ -1,0 +1,168 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  /deep/.btn-nav {
+    span {
+      width: 150px;
+      height: 42px;
+      font-size: 16px;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .el-radio-group {
+      .el-radio-button {
+        &:not(:last-child) {
+          span {
+            border-right: 1px solid #d5dbe8;
+          }
+        }
+      }
+    }
+    .order_dfhNum {
+      color: red;
+      border-right: none !important;
+      &.active {
+        color: #fff;
+      }
+    }
+  }
+
+  /deep/.Search {
+    margin: 16px 0;
+    .Search-condition {
+      .query-input {
+        display: flex;
+        margin-right: 10px;
+        .Search-input {
+          margin-right: 10px;
+        }
+        .select-input {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  .menu-list {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 4px;
+    /deep/.el-table__header {
+      thead {
+        tr {
+          th {
+            height: 61px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #414658;
+          }
+        }
+      }
+    }
+    /deep/.el-table__body {
+      tbody {
+        tr {
+          td {
+            height: 92px;
+            text-align: center;
+            font-size: 14px;
+            color: #414658;
+            font-weight: 400;
+          }
+        }
+      }
+      .cell {
+        .stores-info {
+          display: flex;
+          align-items: center;
+          margin-left: 40px;
+          .head-img {
+            img {
+              width: 60px;
+              height: 60px;
+            }
+          }
+
+          .store-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            margin-left: 20px;
+            .name {
+              font-size: 14px;
+              font-weight: bold;
+            }
+
+            .center {
+              margin: 6px 0;
+            }
+
+            .grey {
+              color: #888f9e;
+            }
+          }
+        }
+      }
+
+      .cell {
+        .goods-info {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          img {
+            width: 60px;
+            height: 60px;
+          }
+          span {
+            margin-left: 10px;
+            text-align: left;
+          }
+          p{
+            flex: 1;
+            margin-left: 10px;
+            text-align: left;
+            overflow: hidden; /* 确保超出容器的文本被裁剪 */
+            white-space: nowrap; /* 确保文本在一行内显示 */
+            text-overflow: ellipsis; /* 使用省略号表示文本溢出 */
+          }
+        }
+      }
+
+      .cell {
+        .ststus {
+          &.active1 {
+            color: #18c364;
+          }
+          &.active2 {
+            color: #414658;
+          }
+          &.active3 {
+            color: #ff453d;
+          }
+        }
+      }
+    }
+
+    /deep/.el-table {
+      &::before {
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 0px;
+      }
+      .el-table__fixed-right::before {
+        height: 0 !important;
+      }
+      .OP-button {
+        .OP-button-top {
+          // margin-bottom: 8px;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

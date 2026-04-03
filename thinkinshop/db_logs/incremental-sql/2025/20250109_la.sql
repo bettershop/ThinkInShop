@@ -1,0 +1,1 @@
+ALTER TABLE lkt_seconds_activity ADD COLUMN attr_id INT NOT NULL COMMENT '规格id' AFTER label_id

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.LivingSensitiveModelMapper">
+    <sql id="selectDynamicSQL">
+        recycle=0
+        <if test="store_id != null">and `store_id` = #{store_id}</if>
+        <if test="word != null">and `word` like concat('%',#{word},'%')</if>
+
+    </sql>
+    <select id="selectSensitive" resultType="java.util.Map">
+        select id,word,add_time from lkt_living_sensitive
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        order by add_time desc
+        <if test="page != null and pageSize != ''">limit #{page},#{pageSize}</if>
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select count(1) from lkt_living_sensitive
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+</mapper>

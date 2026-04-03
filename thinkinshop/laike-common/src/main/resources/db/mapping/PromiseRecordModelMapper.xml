@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.PromiseRecordModelMapper" >
+  <resultMap id="BaseResultMap" type="com.laiketui.domain.mch.PromiseRecordModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="store_id" property="store_id" jdbcType="INTEGER"/>
+    <result column="mch_id" property="mch_id" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="type" property="type" jdbcType="INTEGER"/>
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="add_date" property="add_date" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+    <result column="promise_sh_id" property="promise_sh_id" jdbcType="VARCHAR"></result>
+  </resultMap>
+  <select id="selectDynamic" resultType="Map" parameterType="Map">
+    select a.id,a.mch_id,a.store_id,a.money,ifnull(a.remarks,'') as remark,a.add_date,a.type
+    ,case when a.status = '' then '-1' else a.status end as status,case when a.type=1 then '缴纳' when type=2 then '退还' end as typeName,case when ifnull(a.status,'')=''then '' when a.status=0 then '审核中' when a.status=1 then '审核通过' when status=2 then '审核失败' end as statusName from lkt_promise_record a
+    <where>
+      <include refid="getPromiseRecordInfoSQL"/>
+    </where>
+    order by a.add_date desc
+    <if test="pageStart!=null and pageEnd!=null">
+      LIMIT #{pageStart},#{pageEnd}
+    </if>
+  </select>
+
+  <select id="countDynamic" resultType="int" parameterType="Map">
+    select count(1) from lkt_promise_record a
+    <where>
+      <include refid="getPromiseRecordInfoSQL"/>
+    </where>
+    order by a.add_date desc
+    <if test="pageStart!=null and pageEnd!=null">
+      LIMIT #{pageStart},#{pageEnd}
+    </if>
+  </select>
+
+  <sql id="getPromiseRecordInfoSQL">
+    <if test="store_id != null and store_id != ''">a.store_id=#{store_id}</if>
+    <if test="mch_id != null and mch_id != ''"> and a.mch_id=#{mch_id}</if>
+    <if test="type !=null and type !=''">and a.type=#{type}</if>
+    <if test="status!=null and status!=''">and a.status=#{status}</if>
+    <if test="startDate != null">AND a.add_date <![CDATA[ >= ]]> #{startDate}</if>
+    <if test="endDate != null">AND a.add_date <![CDATA[ <= ]]> #{endDate}</if>
+  </sql>
+</mapper>

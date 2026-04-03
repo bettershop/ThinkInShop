@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.PromiseShModelMapper" >
+  <resultMap id="BaseResultMap" type="com.laiketui.domain.mch.PromiseShModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="mch_id" property="mch_id" jdbcType="INTEGER" />
+    <result column="promise_amt" property="promise_amt" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="pay_type" property="pay_type" jdbcType="VARCHAR" />
+    <result column="is_pass" property="is_pass" jdbcType="INTEGER" />
+    <result column="add_date" property="add_date" jdbcType="TIMESTAMP" />
+    <result column="refused_date" property="refused_date" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.laiketui.domain.mch.PromiseShModel" extends="BaseResultMap" >
+    <result column="refused_why" property="refused_why" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mch_id, promise_amt, status, pay_type, is_pass, add_date
+  </sql>
+  <sql id="Blob_Column_List" >
+  ed_why
+  </sql>
+
+  <select id="getPromiseShInfoDynamic" parameterType="Map" resultType="Map">
+    select a.id aid,a.promise_amt,a.add_date,a.refused_date,a.refused_why,a.status,a.is_pass,b.*,cast(c.user_name as char ) userName
+    from lkt_promise_sh a
+    left join lkt_mch b on a.mch_id = b.id
+    left join lkt_user c on c.user_id = b.user_id
+    WHERE
+    1=1
+    <if test="mch_id != null">and a.mch_id = #{mch_id}</if>
+    <if test="storeId != null">and b.store_id = #{storeId}</if>
+    <if test="title != null">and (b.user_id = #{title} or b.name = #{title})</if>
+    order by a.add_date desc
+    <if test="pageStart != null and pageEnd!=null">LIMIT #{pageStart},#{pageEnd}</if>
+  </select>
+
+  <select id="getPromiseShRefusedWhyDynamic" parameterType="Map" resultType="Map">
+    select a.promise_amt,a.add_date,a.refused_date,a.refused_why,a.status,a.is_pass,b.*
+    from lkt_promise_sh a
+    left join lkt_mch b on a.mch_id = b.id
+    WHERE
+    1=1
+    <if test="mch_id != null">and a.mch_id = #{mch_id}</if>
+    <if test="title != null">and (b.user_id = #{title} or b.name = #{title})</if>
+    and a.refused_why is not null
+    <if test="pageStart != null and pageEnd!=null">LIMIT #{pageStart},#{pageEnd}</if>
+  </select>
+
+  <select id="getPromiseShWhyDynamic" parameterType="Map" resultType="Map">
+    select a.promise_amt,a.add_date,a.refused_date,a.refused_why,a.status,a.is_pass,b.*
+    from lkt_promise_sh a
+    left join lkt_mch b on a.mch_id = b.id
+    WHERE
+    a.id = (select max(a.id) from lkt_promise_sh)
+    <if test="mch_id != null">and a.mch_id = #{mch_id}</if>
+    <if test="title != null">and (b.user_id = #{title} or b.name = #{title})</if>
+    <if test="pageStart != null and pageEnd!=null">LIMIT #{pageStart},#{pageEnd}</if>
+  </select>
+
+  <select id="countPromiseShInfoDynamic" resultType="int" parameterType="Map">
+    SELECT
+    count(distinct a.id)
+    from lkt_promise_sh a
+    left join lkt_mch b on a.mch_id = b.id
+    WHERE
+    1=1
+    <if test="mch_id != null">and a.mch_id = #{mch_id}</if>
+    <if test="storeId != null">and b.store_id = #{storeId}</if>
+    <if test="title != null">and (b.user_id = #{title} or b.name = #{title})</if>
+    order by a.add_date desc
+  </select>
+</mapper>

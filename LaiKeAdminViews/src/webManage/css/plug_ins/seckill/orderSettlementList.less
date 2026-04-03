@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  .Search {
+    .Search-input {
+      margin: 0px !important;
+    }
+    .query-input {
+      margin-right: 10px !important;
+    }
+  }
+  .merchants-list {
+    flex: 1;
+    .OP-button-top {
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      button {
+        margin-left: 0;
+        margin-bottom: 8px;
+      }
+    }
+  }
+  .OP-button-top{
+    display: flex;
+    justify-content: center;
+  }
+  tr td:last-child{
+    z-index: -999;
+  }
+
+  .merchants-list {
+    background-color: #ffffff !important;
+    border-radius: 4px;
+  }
+  
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.ExpressSubtableModelMapper">
+
+    <sql id="selectDynamicSQL">
+        <choose>
+            <when test="recycle==null">and a.recovery = 0</when>
+            <otherwise>and a.recovery = #{recycle}</otherwise>
+        </choose>
+        <if test="id != null">and a.id = #{id}</if>
+        <if test="mchId != null">and a.mch_id = #{mchId}</if>
+        <if test="storeId != null">and a.store_id = #{storeId}</if>
+        <if test="is_open != null">and b.is_open = #{is_open}</if>
+        <if test="name != null">and (b.kuaidi_name like concat('%',#{name},'%') or a.express_id = #{name} or b.type like concat('%',#{name},'%') )</if>
+        <if test="express_id != null">and a.express_id = #{express_id}</if>
+    </sql>
+
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.id, a.mch_id, a.express_id, a.partner_id as partnerId, a.partner_key as partnerKey,a.temp_id,
+               a.partner_secret as partnerSecret, a.partner_name as partnerName, a.express_net as net,
+               a.express_code as code, a.check_man as checkMan, a.add_time, b.kuaidi_name, b.type
+               from lkt_express_subtable a left join lkt_express b on  a.express_id = b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_express_subtable a left join lkt_express b on  a.express_id = b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectExpressByexpressSubtable" parameterType="Map" resultType="Map">
+        select b.* from lkt_express_subtable a left join lkt_express b on  a.express_id = b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        order by a.add_time desc
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="countExpressByexpressSubtable" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_express_subtable a left join lkt_express b on  a.express_id = b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+</mapper>

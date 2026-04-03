@@ -1,0 +1,302 @@
+    //隐藏滚动条
+    ::-webkit-scrollbar {
+      display: none !important;
+  }
+.container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    /deep/.el-form {
+      .header {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        border-bottom: 1px solid #E9ECEF;
+        padding-left: 20px;
+        span {
+          font-weight: 400;
+          font-size: 16px;
+          color: #414658;
+        }
+      }
+  
+      .basic-info {
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        .basic-block {
+          margin-top: 40px;
+          padding: 0 20px 40px 20px;
+          .limit-input {
+            .el-input {
+              width: 400px;
+            }
+          }
+
+          .tip{
+            width: 580px;
+            // height: 83px;
+            background-color: #F4F7F9;
+            font-size: 14px;
+            color: #97A0B4;
+            padding: 10px;
+            p{
+                display: flex;
+                align-items: center;
+                height: 22px;
+                line-height: 1;
+            }
+          }
+  
+          .trailen {
+            .isOpen-trailen {
+              display: flex;
+              align-items: center;
+              .gray {
+                color: #97A0B4;
+                margin-left: 20px;
+              }
+            }
+            .trailen-time {
+              width: 580px;
+              height: 80px;
+              display: flex;
+              align-items: center;
+              padding-left: 20px;
+              background-color: #f4f7f9;
+              .red {
+                color: #FF453B ;
+              }
+              .el-input {
+                width: 400px;
+                margin-left: 14px;
+              }
+            }
+          }
+  
+          .activity-push {
+            .el-input {
+              width: 140px;
+              margin: 0 10px;
+            }
+            span {
+              color: #414658;
+            }
+          }
+        }
+      }
+  
+      .order-info {
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        .order-block {
+          margin-top: 40px;
+          padding: 0 20px 40px 20px;
+          
+          .package-mail {
+            .package_set {
+              width: 580px;
+              height: 80px;
+              display: flex;
+              align-items: center;
+              padding-left: 20px;
+              background-color: #f4f7f9;
+              .red {
+                color: #FF453B ;
+              }
+              .el-input {
+                width: 140px;
+                margin: 0 14px;
+              }
+            }
+          }
+  
+          .order-time {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .el-input {
+              width: 400px;
+            }
+          }
+  
+          .remind-limit {
+            .el-form-item__content {
+              display: flex;
+              align-items: center;
+              .el-input {
+                width: 140px;
+                .el-input-group__append{
+                  width: 69px;
+                }
+              }
+    
+              span {
+                margin: 0 10px;
+              }
+  
+              .gray {
+                color: #97A0B4;
+
+              }
+            }
+          }
+  
+          .trailen {
+            .isOpen-trailen {
+              display: flex;
+              align-items: center;
+              height: 40px;
+              .gray {
+                color: #97A0B4;
+                margin-left: 20px;
+              }
+            }
+            .trailen-time {
+              width: 580px;
+              // height: 80px;
+              display: flex;
+              align-items: center;
+              // padding-left: 20px;
+              padding: 20px;
+              background-color: #f4f7f9;
+              &:last-child {
+                padding-top: 0;
+              }
+              .red {
+                color: #FF453B ;
+              }
+              .el-input {
+                width:140px;
+                margin-left: 10px;
+              }
+  
+              .content-goods {
+                width:470px;
+                height:60px;
+                margin-left: 10px;
+                textarea {
+                  width:470px;
+                  height:60px;
+                }
+              }
+            }
+          }
+        }
+      }
+  
+      .rules-set {
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        .shaco_form{
+          // height: 507px !important;
+          padding-right: 63px !important;
+          margin-top: 20px;
+          padding-bottom: 40px;
+        }
+        .rules-block {
+          margin-top: 40px;
+          padding: 0 20px 120px 20px;
+          display: flex;
+          .title{
+            width: 200px;
+            text-align: right;
+            padding-right: 15px;
+            margin-left: 40px;
+          }
+          .quillWrapper {
+            height: 341px;
+            .quillWrapper {
+              .ql-container {
+                height: 300px;
+              }
+            }
+          }
+        }
+      }
+  
+      .footer-button {
+        position: fixed;
+        right: 0;
+        bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 15px 20px;
+        border-top: 1px solid #E9ECEF;
+        background: #FFFFFF;
+        width: 300%;
+        z-index: 10;
+        button {
+          width: 70px;
+          height: 40px;
+        }
+        .bgColor {
+          margin-left: 14px;
+        }
+        .bgColor:hover {
+          opacity: 0.8;
+        }
+  
+        .fontColor {
+          color: #6a7076;
+          border: 1px solid #d5dbe8;
+          margin-left: 14px;
+        }
+        .fontColor:hover {
+          color: #2890ff;
+          border: 1px solid #2890ff;
+        }
+      }
+      .el-form-item__label {
+        font-weight: normal;
+      }
+  
+  
+      .trailen-time-info {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        justify-content: center;
+        height: auto !important;
+        align-items: flex-start !important;
+      }
+      .add-info {
+        display: flex;
+        align-items: center;
+        &:not(:last-child) {
+          margin-bottom: 20px;
+        }
+        .el-input {
+          width: 300px !important;
+          height: 40px;
+          input {
+            width: 300px !important;
+            height: 40px;
+          }
+        }
+  
+        .add-reduction {
+          display: flex;
+          align-items: center;
+          span {
+            margin-left: 10px;
+            color: #97a0b4;
+          }
+          i {
+            font-size: 20px;
+            margin-left: 10px;
+          }
+          .el-icon-circle-plus-outline {
+            color: #2890FF;
+          }
+        }
+      }
+    }
+      
+  }

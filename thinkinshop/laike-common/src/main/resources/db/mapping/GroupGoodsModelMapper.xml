@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.GroupGoodsModelMapper" >
+
+    <sql id="selectDynamicSQL">
+        <if test="store_id != null and store_id!=''">and b.store_id = #{store_id}</if>
+        <choose>
+            <when test="recycle != null and recycle!=''">and a.recycle = #{recycle} </when>
+            <otherwise>and a.recycle = 0</otherwise>
+        </choose>
+        <if test="idList!=null">
+            <foreach collection="idList" item="id" separator="," open="and a.id in(" close=")">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="goods_status != null and goods_status!=''">and a.status = #{goods_status}</if>
+        <if test="classId != null and classId!=''">and cls.cid = #{classId}</if>
+        <if test="goodsBrandId != null and goodsBrandId!=''">and b.brand_id = #{goodsBrandId}</if>
+        <if test="goodsName != null">and a.product_title like concat('%', #{goodsName},'%')</if>
+        <if test="checkedGoods != null">and b.id is not null</if>
+        <if test="activityId != null and activityId!=''">and b.activity_id =#{activityId}</if>
+        <if test="not_activityId != null and not_activityId!=''">and(b.id is not null or b.activity_id !=#{not_activityId})</if>
+        <if test="status != null and status != ''">and (b.status = 1 or b.status = 0)</if>
+        <if test="goodsId != null and goodsId != ''">and a.goods_id = #{goodsId}</if>
+        <if test="mchId != null and mchId != ''">and b.mch_id = #{mchId}</if>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.id,goods.id goodsId,goods.imgurl,goods.product_title,goods.initial,b.id acId from lkt_group_goods a inner join lkt_group_activity b on a.activity_id=b.id and a.recycle=0
+        left join lkt_product_list goods on goods.id=a.goods_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_group_goods a inner join lkt_group_activity b on a.activity_id=b.id and a.recycle=0
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+
+    <sql id="getGoodsInfoSQL">
+        and a.gongyingshang=''
+        and a.is_presell = 0
+        and a.num > 0
+        <if test="store_id != null and store_id!=''">and a.store_id = #{store_id}</if>
+        <if test="mchId != null and mchId!=''">and a.mch_id = #{mchId}</if>
+        <choose>
+            <when test="recycle != null and recycle!=''">and a.recycle = #{recycle} </when>
+            <otherwise>and a.recycle = 0</otherwise>
+        </choose>
+        <if test="idList!=null">
+            <foreach collection="idList" item="id" separator="," open="and a.id in(" close=")">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="goods_status != null and goods_status!=''">and a.status = #{goods_status}</if>
+        <if test="commodity_type != null and commodity_type!=''">and a.commodity_type = #{commodity_type}</if>
+        <if test="classId != null and classId!=''">AND a.product_class like CONCAT('%-',
+            #{classId},'-%')</if>
+        <if test="goodsBrandId != null and goodsBrandId!=''">and a.brand_id = #{goodsBrandId}</if>
+        <if test="goodsName != null">and a.product_title like concat('%', #{goodsName},'%')</if>
+        <if test="key != null">and (a.product_title like concat('%', #{key},'%') or a.id =#{key})</if>
+        <if test="checkedGoods != null">and EXISTS(select x.id from lkt_group_goods x where a.id=x.goods_id and x.recycle=0)</if>
+        <if test="activityId != null and activityId!=''">and EXISTS(select x.id from lkt_group_goods x where a.id=x.goods_id and x.recycle=0 and x.activity_id =#{activityId})</if>
+        <if test="not_activityId != null and not_activityId!=''">and not EXISTS(select x.id from lkt_group_goods x where a.id=x.goods_id and x.recycle=0 and x.activity_id =#{not_activityId})</if>
+        <if test="notIdList!=null and notIdList != ''">
+            <foreach collection="notIdList" item="id" separator="," open="and a.id not in(" close=")">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </sql>
+    <select id="getGoodsInfo" parameterType="Map" resultType="Map">
+        select a.id,a.product_title goodsName,a.imgurl,a.num stockNum,cls.pname className,brand.brand_name from lkt_product_list a
+        left join lkt_product_class cls on cls.cid= substring_index(substring_index(a.product_class, '-', -2), '-', 1)
+        left join lkt_brand_class brand on brand.brand_id= a.brand_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getGoodsInfoSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGoodsInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_product_list a
+        left join lkt_product_class cls on cls.cid= substring_index(substring_index(a.product_class, '-', 2), '-', -1)
+        left join lkt_brand_class brand on brand.brand_id= a.brand_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getGoodsInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+
+
+
+    <sql id="selectGroupGoodsDetailInfoSQL">
+        <where>
+            <trim prefixOverrides="and">
+                <choose>
+                    <when test="recycle!=null">and a.recycle =#{recycle}</when>
+                    <otherwise>
+                        and a.recycle = 0
+                    </otherwise>
+                </choose>
+                <if test="isShow != null">and ac.is_show = #{isShow}</if>
+                <if test="acStatus != null">and ac.status = #{acStatus}</if>
+                <if test="attrId != null">and attr.id = #{attrId}</if>
+                <if test="goodsAttrId != null">and attr.id = #{goodsAttrId}</if>
+                <if test="openId != null">and op.id = #{openId}</if>
+                <if test="groupStatus != null">and op.status = #{groupStatus}</if>
+                <if test="storeId != null">and b.store_id = #{storeId}</if>
+                <if test="activityId != null">and a.activity_id = #{activityId}</if>
+                <if test="goodsId != null">and a.goods_id = #{goodsId}</if>
+                <if test="startDate != null and startDate != ''">and a.start_date <![CDATA[  >=  ]]> #{startDate}</if>
+                <if test="endDate != null and endDate != ''">and a.end_date <![CDATA[  <=  ]]> #{endDate}</if>
+                <if test="mchId != null">and ac.mch_id = #{mchId}</if>
+                <if test="goods_status != null and goods_status!=''">and b.status = #{goods_status}</if>
+            </trim>
+        </where>
+    </sql>
+    <select id="selectGroupGoodsDetailInfo" parameterType="Map" resultType="Map">
+        SELECT
+        a.groupGoodsId,
+        a.goodsId,
+        a.product_title,
+        a.imgurl,
+        a.weight,
+        a.openId,
+        a.team_num,
+        a.attr_id,
+        a.teamStatus,
+        a.teamUserId,
+        a.acId,
+        a.freight,
+        a.mch_id,
+        a.goodsStatus,
+        a.attribute,
+        a.attrId,
+        a.attrImg,
+        a.content,
+        a.status,
+        a.start_date,
+        a.end_date,
+        a.openEndDate,
+        a.team_limit,
+        a.team_rule,
+        a.stockNum,
+        a.mchName,
+        a.mchImg,
+        a.is_open,
+        a.business_hours,
+        a.headimgurl,
+        a.user_name,
+        a.video,
+        a.pro_video
+        FROM
+        (
+        SELECT
+        a.id groupGoodsId,
+        a.goods_id goodsId,
+        b.product_title,
+        b.imgurl,
+        b.weight,
+        op.id openId,
+        op.team_num,
+        op.attr_id,
+        op.STATUS teamStatus,
+        op.user_id teamUserId,
+        ac.id acId,
+        b.freight,
+        b.mch_id,
+        b.STATUS goodsStatus,
+        attr.attribute,
+        attr.id attrId,
+        attr.img attrImg,
+        b.content,
+        ac.STATUS,
+        ac.start_date,
+        ac.end_date,
+        op.end_date openEndDate,
+        ac.team_limit,
+        ac.team_rule,
+        b.num stockNum,
+        mch.NAME mchName,
+        mch.head_img mchImg,
+        mch.is_open,
+        mch.business_hours,
+        `user`.headimgurl,
+        `user`.user_name,
+        b.video,
+        b.pro_video,
+        ROW_NUMBER() over(partition by a.id) as top
+        FROM
+        lkt_group_goods a
+        INNER JOIN lkt_group_activity ac ON ac.id = a.activity_id
+        INNER JOIN lkt_product_list b ON a.goods_id = b.id
+        INNER JOIN lkt_configure attr ON attr.pid = b.id
+        AND attr.recycle = b.recycle
+        LEFT JOIN lkt_group_open op ON op.activity_id = ac.id
+        AND op.goods_id = a.goods_id
+        AND op.recycle = 0
+        LEFT JOIN lkt_user `user` ON `user`.user_id = op.user_id
+        LEFT JOIN lkt_mch mch ON mch.id = b.mch_id
+        <include refid="selectGroupGoodsDetailInfoSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_date ${add_time_sort},</if>
+        </trim>
+        ) AS a
+        WHERE a.top = 1
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGoodsDetailInfo" parameterType="Map" resultType="int">
+        select count(distinct a.id)
+        from lkt_group_goods a inner join lkt_group_activity ac on ac.id=a.activity_id inner join lkt_product_list b on a.goods_id=b.id
+        inner join lkt_configure attr on attr.pid=b.id and attr.recycle=b.recycle
+        left join lkt_group_open op on op.activity_id=ac.id and op.goods_id=a.goods_id
+        <include refid="selectGroupGoodsDetailInfoSQL"/>
+    </select>
+
+    <update id="delDynamic" parameterType="Map">
+        update lkt_group_goods a
+        <set>
+            <trim suffixOverrides=",">
+                <if test="recycle != null">a.recycle = #{recycle},</if>
+            </trim>
+        </set>
+        <where>
+            <trim prefixOverrides="and">
+                <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="idList != null">
+                    <foreach collection="idList" item="id" separator="," open="and a.id in(" close=")">
+                        #{id,jdbcType=INTEGER}
+                    </foreach>
+                </if>
+                <if test="acIdList != null">
+                    <foreach collection="acIdList" item="id" separator="," open="and a.activity_id in(" close=")">
+                        #{id,jdbcType=INTEGER}
+                    </foreach>
+                </if>
+            </trim>
+        </where>
+    </update>
+
+</mapper>

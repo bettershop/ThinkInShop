@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.CouponOrderModalMapper">
+
+    <sql id="selectDynamicSQL">
+        <where>
+            <trim prefixOverrides="and">
+                <if test="id != null">and a.id = #{id}</if>
+                <if test="acId != null">and ac.id = #{acId}</if>
+                <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="mch_id != null">and ac.mch_id = #{mch_id}</if>
+                <choose>
+                    <when test="recycle != null">and a.recycle = #{mch_id}</when>
+                    <otherwise>and a.recycle = 0</otherwise>
+                </choose>
+            </trim>
+        </where>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.id,b.user_id,c.user_name,a.add_date add_time,a.sNo,b.hid from lkt_coupon_sno a inner join lkt_coupon b on a.coupon_id=b.id inner join lkt_user c on c.user_id=a.user_id
+        INNER JOIN lkt_coupon_activity ac ON ac.id=b.hid
+        <include refid="selectDynamicSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_coupon_sno a inner join lkt_coupon b on a.coupon_id=b.id inner join lkt_user c on c.user_id=a.user_id INNER JOIN lkt_coupon_activity ac ON ac.id=b.hid
+        <include refid="selectDynamicSQL"/>
+    </select>
+
+</mapper>

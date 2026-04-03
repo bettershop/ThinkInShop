@@ -1,0 +1,104 @@
+.container {
+  display: flex;
+  flex-direction: column;
+    /deep/.btn-nav {
+    span {
+      min-width: 112px;
+      height: 42px;
+      font-size: 16px;
+      border: none;
+    }
+
+    .el-radio-group {
+      .el-radio-button {
+        &:not(:last-child) {
+          span {
+            border-right: 1px solid #d5dbe8;
+          }
+        }
+      }
+    }
+  }
+
+  /deep/.group_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .group_span {
+      text-align: left;
+      margin-left: 10px;
+    }
+  }
+  /deep/.Search {
+     margin: 16px 0;
+    .Search-condition {
+      .query-input {
+        .Search-input {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  /deep/.jump-list {
+    .laiketui-add:before {
+      font-size: 14px;
+      margin-right: 8px;
+    }
+  }
+
+  .menu-list {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 4px;
+    /deep/.el-table__header {
+      thead {
+        tr {
+          th {
+            height: 61px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #414658;
+          }
+        }
+      }
+    }
+    /deep/.el-table__body {
+      tbody {
+        tr {
+          td {
+            height: 92px;
+            text-align: center;
+            font-size: 14px;
+            color: #414658;
+            font-weight: 400;
+          }
+        }
+      }
+      .cell {
+        img {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+
+    /deep/.el-table {
+      .OP-button {
+        .OP-button-bottom {
+          .laiketui-add:before {
+            margin-right: 5px;
+            font-size: 10px;
+          }
+          .laiketui-zhiding:before {
+            margin-right: 5px;
+            color: #888f9e;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}

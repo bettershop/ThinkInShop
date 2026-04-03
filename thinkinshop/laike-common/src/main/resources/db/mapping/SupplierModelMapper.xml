@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.SupplierModelMapper" >
+
+  <sql id="selectDynamicSQL">
+    and store_id = #{storeId}
+    and recovery = 0
+    <if test="supplierId != null">and id = #{supplierId}</if>
+    <if test="supplierName != null">and supplier_name like concat('%',#{supplierName},'%')</if>
+    <if test="dicId != null">and dic_id = #{dicId}</if>
+    <if test="type != null">and type = #{type}</if>
+    <if test="status != null">and status = #{status}</if>
+    <if test="startTime != null and startTime != ''">and add_date <![CDATA[  >=  ]]> #{startTime}</if>
+    <if test="endTime != null and endTime != ''">and add_date <![CDATA[  <=  ]]> #{endTime}</if>
+  </sql>
+
+  <select id="conditionQuery" parameterType="Map" resultType="Map">
+    select * from lkt_supplier
+    <where>
+      <trim prefixOverrides="and">
+        <include refid="selectDynamicSQL"/>
+      </trim>
+    </where>
+    <trim prefix="order by" suffixOverrides=",">
+      <if test="add_date_sort!=null and add_date_sort!=''">add_date ${add_date_sort},</if>
+    </trim>
+    <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+  </select>
+
+  <select id="countCondition" parameterType="Map" resultType="int">
+    select count(1) from lkt_supplier
+    <where>
+      <trim prefixOverrides="and">
+        <include refid="selectDynamicSQL"/>
+      </trim>
+    </where>
+  </select>
+
+  <select id="settlementPrice" resultType="java.math.BigDecimal">
+    SELECT ifnull(sum(d.supplier_settlement),0) as total
+    FROM lkt_order_details d
+           left join lkt_order as o on d.r_sNo = o.sNo
+           LEFT JOIN lkt_product_list AS p ON p.id = d.p_id
+    WHERE o.status = 5
+      AND o.settlement_status = 0
+      AND o.store_id = #{storeId}
+      AND p.gongyingshang = #{supplierId}
+      AND o.is_lssued = 1
+    </select>
+
+  <select id="salePro" resultType="int">
+    SELECT COUNT(1) FROM lkt_product_list
+    WHERE store_id = #{storeId}
+    AND gongyingshang = #{supplierId}
+    <choose>
+      <when test="atstus = 4">
+        AND `status` not in (4,5)
+      </when>
+      <otherwise>
+        AND `status` = #{status}
+      </otherwise>
+    </choose>
+      AND mch_id = 0 AND recycle = 0 AND mch_status = 2
+    </select>
+</mapper>

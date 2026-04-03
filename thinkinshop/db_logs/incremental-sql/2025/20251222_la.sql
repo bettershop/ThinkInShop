@@ -1,0 +1,1 @@
+ALTER TABLE lkt_express_subtable ADD temp_id VARCHAR(255)  COMMENT '模板id' AFTER check_man

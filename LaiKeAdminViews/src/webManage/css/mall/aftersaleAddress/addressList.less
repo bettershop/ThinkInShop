@@ -1,0 +1,83 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  /deep/.Search {
+    .Search-condition {
+      display: flex;
+      align-items: center;
+      .query-input {
+        display: flex;
+        margin-right: 10px;
+        .Search-input {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  /deep/.jump-list {
+    .laiketui-add:before {
+      font-size: 14px;
+      margin-right: 8px;
+    }
+  }
+
+  .merchants-list {
+    flex: 1;
+    background: #ffffff !important;
+    border-radius: 4px;
+    /deep/.el-table__header {
+      thead {
+        tr {
+          th {
+            height: 61px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #414658;
+          }
+        }
+      }
+    }
+    /deep/.el-table__body {
+      tbody {
+        tr {
+          td {
+            height: 92px;
+            text-align: center;
+            font-size: 14px;
+            color: #414658;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+
+    /deep/.el-table {
+      .OP-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .OP-button-top {
+          // margin-bottom: 8px;
+          display: flex;
+          justify-content: start;
+        }
+
+        .OP-button-bottom {
+          display: flex;
+          justify-content: start;
+          .laiketui-jinru:before {
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+    .active1 {
+      color: #00ce6d;
+    }
+    .active2 {
+      color: #ff453d;
+    }
+  }
+}

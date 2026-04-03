@@ -1,0 +1,541 @@
+/deep/.el-icon-sh {
+    background: url('../../../../assets/images/shaco-sh.png') center center no-repeat;
+    background-size: 14px;
+    margin-right: 3px;
+}
+
+/deep/.el-icon-sh:before {
+    content: "替";
+    font-size: 14px;
+    visibility: hidden;
+}
+/deep/.el-icon-pj {
+    background: url('../../../../assets/images/shaco-pj.png') center center no-repeat;
+    background-size: 14px;
+    margin-right: 3px;
+}
+/deep/.pageBox{
+  border-radius: 0 0 4px 4px !important;
+}
+/deep/.el-icon-pj:before {
+    content: "替";
+    font-size: 14px;
+    visibility: hidden;
+}
+/deep/.el-icon-js {
+    background: url('../../../../assets/images/shaco-js.png') center center no-repeat;
+    background-size: 14px;
+    margin-right: 3px;
+}
+
+/deep/.el-icon-js:before {
+    content: "替";
+    font-size: 14px;
+    visibility: hidden;
+}
+.align{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    /deep/.btn-nav {
+        span {
+            min-width: 112px;
+            height: 42px;
+            font-size: 16px;
+            border: none;
+        }
+        .el-radio-group {
+          .el-radio-button {
+            &:not(:last-child) {
+              span {
+                border-right: 1px solid #d5dbe8;
+              }
+            }
+          }
+        }
+        
+    }
+    .dialog-refund {
+      // 弹框样式
+      /deep/.el-dialog {
+        width: auto;
+        min-width: 580px;
+        height: 298px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0 !important;
+        .shaco_qx:hover{
+          border: 1px solid #28B6FF;
+          background: #fff;
+        }
+        .el-dialog__header {
+          width: 100%;
+          height: 58px;
+          line-height: 58px;
+          font-size: 16px;
+          margin-left: 19px;
+          font-weight: bold;
+          border-bottom: 1px solid #e9ecef;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0 0 0 19px;
+          .el-dialog__headerbtn {
+            font-size: 18px;
+            top: 0 !important;
+          }
+          .el-dialog__title {
+            font-weight: normal;
+          }
+        }
+  
+        .el-dialog__body {
+          padding: 40px 60px 40px 60px !important;
+          .el-form-item__label {
+            color: #888F9E;
+            font-weight: normal;
+          }
+          .demo-ruleForm {
+            .el-form-item {
+              display: flex;
+              margin-bottom: 0 !important;
+            }
+            .el-form-item__content {
+              margin-left: 0 !important;
+            }
+          }
+          .form-footer {
+            width: 100%;
+            height: 72px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border-top: 1px solid #e9ecef;
+            .el-form-item {
+              text-align: right;
+              margin-right: 10px;
+              padding: 0 !important;
+              height: 100%;
+              display: block !important;
+              .el-form-item__content {
+                height: 100%;
+                line-height: 72px;
+                margin: 0 !important;
+              }
+            }
+            .bgColor:hover {
+              background-color: #fff;
+              color: #2890ff;
+              border: 1px solid #2890ff;
+            }
+          }
+          .el-input {
+            width: 360px;
+          }
+        }
+      }
+    }
+    .dialog-block2 {
+      // 弹框样式
+      /deep/.el-dialog {
+        width: 580px;
+        // height: 310px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        margin: 0 !important;
+        .shaco_qx:hover{
+          border: 1px solid #28B6FF;
+          background: #fff;
+        }
+        .el-dialog__header {
+          width: 100%;
+          height: 58px;
+          line-height: 58px;
+          font-size: 16px;
+          margin-left: 19px;
+          font-weight: bold;
+          border-bottom: 2px solid #E9ECEF;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0 0 0 19px;
+          .el-dialog__headerbtn {
+            font-size: 18px;
+            top: 0 !important;
+          }
+          .el-dialog__title {
+            font-weight: normal;
+          }
+        }
+        // 提示部分
+        .tishi{
+          // width: 540px;
+          height: 110px;
+          background-color: #F4F7F9;
+          padding: 17px 0 0 16px;
+          .title{
+            color: #2890ff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            img{
+              margin-right: 8px;
+            }
+          }
+          .tishi_content{
+            padding-left:28px ;
+            margin-top: 12px;
+            color: #6A7076;
+            font-size: 13px;
+            div{
+              margin-bottom: 4px;
+            }
+          }
+        }
+        .el-dialog__body {
+          padding: 41px 60px 0px 60px !important;
+          .el-form-item__label {
+            font-weight: normal;
+          }
+          .form-footer {
+            width: 100%;
+            height: 72px;
+            // position: absolute;
+            bottom: 0;
+            right: 0;
+            border-top: 1px solid #E9ECEF;
+            .el-form-item {
+              text-align: right;
+              margin-right: 10px;
+              padding: 0 !important;
+              height: 100%;
+              .el-form-item__content {
+                height: 100%;
+                line-height: 72px;
+                margin: 0 !important;
+              }
+            }
+          }
+          .el-input {
+              width: 360px;
+          }
+        }
+      }
+  }
+    /deep/.Search{
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 16px 0;
+      .Search-condition{
+        display: flex;
+        align-items: center;
+        .query-input {
+          display: flex;
+          margin-right: 10px;
+          .Search-input{
+            width: 280px;
+            margin-right: 10px;
+          }
+          .select-input {
+            margin-right: 8px;
+            width: 180px;
+          }
+        }
+      }
+    }
+  
+    /deep/.jump-list {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        .laiketui:before{
+          font-size: 14px;
+          margin-right: 8px;
+        }
+        .laiketui-add:before {
+          font-size: 14px;
+          margin-right: 8px;
+        }
+        .laiketui-shangjia:before {
+          font-size: 14px;
+          margin-right: 8px;
+          position: relative;
+          top: 1px;
+        }
+        button {
+          min-width: 120px;
+          height: 40px;
+          padding: 0 0.625rem !important;
+        //   margin-right: 10px;
+          background: #28B6FF;
+          border-radius: 4px;
+          padding: 0;
+          border: none;
+          &:hover {
+            opacity: 0.8;
+          }
+          span {
+            font-size: 14px;
+          }
+        }
+        
+        .fontColor {
+          width: 120px;
+          height: 42px;
+          color: #6a7076;
+          background-color: #fff;
+          border-radius: 4px;
+        }
+  
+        .el-icon-printer:before  {
+            margin-right: 8px;
+        }
+    }
+  
+    .menu-list {
+        flex: 1;
+        background: #FFFFFF;
+        border-radius: 4px;
+        /deep/.el-table__header {
+          thead {
+            tr {
+              th{
+                height: 61px;
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                color: #414658;
+              }
+            }
+          }
+        }
+        /deep/.el-table__body {
+          tbody {
+            tr {
+              height: 160px;
+              td{
+                height: 160px;
+                text-align: center;
+                font-size: 14px;
+                color: #414658;
+                font-weight: 400;
+              }
+            }
+          }
+          .cell {
+            .expressStrs {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              .item_box {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+              }
+              .item {
+                display: flex;
+                text-align: left;
+                .kuaidi-info {
+                  color: #97a0b4;
+                }
+                .item-title {
+                  width: 70px;
+                  color: #97a0b4;
+                }
+                ul {
+                  flex: 1;
+                  li {
+                    display: flex;
+                    justify-content: start;
+                    text-align: left;
+                  }
+                }
+              } 
+            }
+            .id {
+              .id-item {
+                color: #97a0b4;
+              }
+            }
+            .name {
+              .name-item {
+                color: #97a0b4;
+              }
+            }
+            .ekko{
+              .ekko-item {
+                color: #97a0b4;
+                width: 42px;
+                display: inline-block;
+                text-align-last: justify;
+                text-align: justify;
+              }
+              .name-item {
+                color: #97a0b4;
+              }
+            }
+            .head-info {
+              position: absolute;
+              top: 18px;
+              left: 10px;
+              min-width: 1200px;
+              height: auto;
+              z-index: 2;
+              text-align: left;
+              display: flex;
+              color: #969dab;
+              .red-dot {
+                display: block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: #ff453d;
+                margin: 8px 5px 0 0px;
+              }
+              span {
+                &:not(:first-child) {
+                  margin-right: 30px;
+                }
+              }
+            }
+  
+            .content-info {
+              display: flex;
+              margin-top: 40px;
+              .img-item {
+                width: 90px;
+                height: 90px;
+                margin-right: 12px;
+                img {
+                  width: 90px;
+                  height: 90px;
+                }
+              }
+              .goods-item {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-start;
+                // z-index: 99;
+                .kip_name{
+                  color: #97a0b4;
+                }
+                .name {
+                  font-weight: bold;
+                  white-space:nowrap;
+                }
+              }
+            }
+          }
+        }
+        /deep/ .el-table__fixed-body-wrapper {
+          top: 61px !important;
+        }
+        /deep/.el-table__fixed-right-patch {
+          height: 61px !important;
+        }
+    
+        /deep/.el-table{
+          border-radius: 4px 4px 0 0 !important;
+          .OP-button{
+            .OP-button-top{
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              button {
+                margin: 4px 0;
+                // &:nth-child(2) {
+                //   margin: 8px 0;
+                // }
+                &:nth-child(3) {
+                  margin-left: 0;
+                }
+                &:nth-child(4) {
+                  margin-left: 0;
+                }
+              }
+  
+              .logistics {
+                margin-top: 5px;
+              }
+            }
+          }
+        }
+    }
+  
+    .dialog-block {
+      // 弹框样式
+      /deep/.el-dialog {
+        width: 920px;
+        height: 600px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        margin: 0 !important;
+        .el-dialog__header {
+          width: 100%;
+          height: 58px;
+          line-height: 58px;
+          font-size: 16px;
+          margin-left: 19px;
+          font-weight: bold;
+          border-bottom: 1px solid #E9ECEF;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0 0 0 19px;
+          .el-dialog__headerbtn {
+            font-size: 18px;
+            top: 0 !important;
+          }
+          .el-dialog__title {
+            font-weight: normal;
+          }
+        }
+  
+        .el-dialog__body {
+          width: 100%;
+          height: 542px;
+          padding: 0 !important;
+          .el-form {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            .task-container {
+              padding: 40px 40px 0px 40px;
+              width: 100%;
+              .span_two{
+                  color: #414658;
+              }
+              .courier-no {
+                margin: 20px 0;
+              }
+              .logistics {
+                display: flex;
+                .logistics-tracking {
+                  min-width: 70px;
+                }
+                .el-timeline {
+                  margin-top: 5px;
+                }
+              }
+            }
+          }
+          .el-form-item__label {
+            font-weight: normal;
+          }
+        }
+      }
+    }
+  }

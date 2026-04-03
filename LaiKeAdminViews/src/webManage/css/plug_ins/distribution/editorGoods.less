@@ -1,0 +1,252 @@
+.container {
+  width: 100%;
+  /deep/.el-form {
+    padding-bottom: 90px;
+
+    .header {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      border-bottom: 1px solid #e9ecef;
+      padding-left: 20px;
+      span {
+        font-weight: 400;
+        font-size: 16px;
+        color: #414658;
+      }
+    }
+    .select-goods {
+      border-radius: 4px;
+      width: 100%;
+      background-color: #fff;
+      padding-bottom: 30px;
+      .select-distributiongoods {
+        margin-top: 40px;
+        .goods-block {
+          display: flex;
+          flex-direction: column;
+          padding: 0 20px 0px 0;
+          .Search {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            .Search-condition {
+              display: flex;
+              align-items: center;
+              .query-input {
+                display: flex;
+                .select-input {
+                  width: 180px;
+                  height: 40px;
+                }
+                .select-brand {
+                  margin: 0 10px;
+                }
+                .input-name {
+                  width: 280px;
+                  height: 40px;
+                  margin-right: 10px;
+                  input {
+                    width: 280px;
+                    height: 40px;
+                  }
+                }
+                .el-input__inner {
+                  height: 40px;
+                  line-height: 40px;
+                  border: 1px solid #d5dbe8;
+                }
+                .el-input__inner:hover {
+                  border: 1px solid #b2bcd4;
+                }
+                .el-input__inner:focus {
+                  border-color: #409eff;
+                }
+                .el-input__inner::-webkit-input-placeholder {
+                  color: #97a0b4;
+                }
+              }
+
+              .btn-list {
+                .bgColor {
+                  background-color: #2890ff;
+                }
+                .bgColor:hover {
+                  background-color: #70aff3;
+                }
+                .fontColor {
+                  color: #6a7076;
+                  border: 1px solid #d5dbe8;
+                  background-color: #fff;
+                }
+                .fontColor:hover {
+                  color: #2890ff;
+                  border: 1px solid #2890ff;
+                  background-color: #fff;
+                }
+                .export {
+                  position: absolute;
+                  right: 30px;
+                }
+              }
+            }
+          }
+          .menu-list {
+            height: 410px;
+            width: 100%;
+            flex: 1;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            .el-table__header {
+              thead {
+                tr {
+                  th {
+                    height: 50px;
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: #414658;
+                  }
+                }
+              }
+            }
+            .el-table__body {
+              tbody {
+                tr {
+                  td {
+                    height: 90px;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #414658;
+                    font-weight: 400;
+                  }
+                }
+              }
+              .cell {
+                .goods-info {
+                  display: flex;
+                  justify-content: flex-start;
+                  align-items: center;
+                  img {
+                    width: 60px;
+                    height: 60px;
+                  }
+                  span {
+                    margin-left: 10px;
+                    text-align: left;
+                  }
+                }
+              }
+            }
+            .el-table {
+              &::before {
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 0px;
+              }
+              .el-table__fixed-right::before {
+                height: 0 !important;
+              }
+            }
+          }
+        }
+      }
+
+      .distribution-set {
+        .trailen-time {
+          border-radius: 4px;
+          width: 858px;
+          height: 368px;
+          display: flex;
+          flex-direction: column;
+          padding: 20px;
+          background-color: #f4f7f9;
+          .item {
+            margin-top: 14px;
+            .red {
+              color: #ff453b;
+            }
+            .el-input {
+              width: 156px;
+              margin-left: 14px;
+            }
+            .el-input-group__append {
+              width: 60px;
+              .el-select {
+                width: 60px;
+                .el-input {
+                  width: 60px;
+                  margin-left: 0;
+                }
+              }
+            }
+            .gray {
+              color: #414658;
+              margin-left: 14px;
+            }
+          }
+        }
+      }
+
+      .promotion-set {
+        .select-input {
+          width: 420px;
+        }
+      }
+
+      .pv {
+        .el-input {
+          width:420px;
+          height: 40px;
+          .el-input__inner{
+            height: 40px;
+          }
+        }
+      }
+
+      .grays {
+        color: #97A0B4;
+        margin-left: 8px;
+      }
+    }
+
+    .footer-button {
+      position: fixed;
+      right: 0;
+      bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px 20px;
+      border-top: 1px solid #e9ecef;
+      background: #ffffff;
+      width: 300%;
+      z-index: 2020;
+      button {
+        width: 70px;
+        height: 40px;
+      }
+      .bgColor {
+        margin-left: 14px;
+      }
+      .bgColor:hover {
+        opacity: 0.8;
+      }
+
+      .fontColor {
+        color: #6a7076;
+        border: 1px solid #d5dbe8;
+        margin-left: 14px;
+      }
+      .fontColor:hover {
+        color: #2890ff;
+        border: 1px solid #2890ff;
+      }
+    }
+  }
+}

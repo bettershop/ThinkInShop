@@ -1,0 +1,99 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+}
+.dialog{
+
+  /deep/ .el-table  {
+    border: 1px solid #EBEEF5 !important;
+  }
+}
+.dit {
+  /deep/.el-dialog__body{
+      border-bottom: 1px solid #E9ECEF;
+      border-top: 1px solid #E9ECEF;
+
+  }
+  /deep/.el-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0 !important;
+  }
+}
+.wt-icon { 
+  width: 64px;
+  height: 138px;
+}
+.empty{
+    text-align: center;
+    img{
+        width: 250px;
+    }
+    p {
+        margin: 20px;
+        font-size: 16px;
+        color: #97A0B4;
+    }
+}
+.el-table{
+    user-select: none;
+}
+.OP-button-top{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:current;
+    button {
+        margin: 0px !important;
+        margin: 2px !important;
+    }
+}
+.menu-list {
+    flex: 1;
+}
+.div-content{
+  overflow-y: hidden;
+}
+/deep/ .div-content{
+  display: block !important;
+}
+ 
+.disabled-btn{
+  color: #B2BCD1 !important;
+  background-color: #F9FAFC !important; 
+  .el-icon-view {
+    color: #B2BCD1 !important;
+  }
+}
+/deep/.Search {
+    margin-left: 16px;
+    .Search-condition {
+      .query-input {
+        display: flex;
+        .select-input {
+          margin-right: 8px;
+        }
+        .input-name {
+          width: 200px;
+          height: 40px;
+          margin-right: 8px;
+          input {
+            width: 200px;
+            height: 40px;
+          }
+        }
+      }
+    }
+}
+
+/deep/.add_dia {
+  .el-dialog {
+    width: 950px;
+    // height: 751px;
+  }
+ 
+}

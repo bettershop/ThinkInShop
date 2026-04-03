@@ -1,0 +1,1 @@
+ALTER TABLE lkt_admin ALTER COLUMN lang SET DEFAULT 'zh_CN'

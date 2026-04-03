@@ -1,0 +1,373 @@
+page {
+    background-color: #f4f5f6;
+}
+.zhanwei{
+    width: 750rpx;
+    height: 104rpx;
+    margin-top: 96rpx;
+}
+.page{
+    .wechat-not-address {
+        display: flex;
+        height: 200rpx;
+        background: #FFF;
+        text-align: center;
+        font-size: 24rpx;
+        color: #666;
+        justify-content: center;
+        align-items: center;
+        image {
+            width: 80rpx;
+            height: 80rpx;
+            display: block;
+            margin: 0 auto 20rpx;
+        }
+        
+        .space {
+            width: 67rpx;
+        }
+    }
+    .remarks_pop_up{
+        position: fixed;
+        z-index: 99;
+       bottom: 0;
+        height: 100%;
+        width: 750rpx;
+        background: rgba(0,0,0,0.5);
+        .pop_up{
+            position: relative;    
+            height: 100%;
+            .remarksBox{
+                border-radius: 24rpx 24rpx 0px 0px;
+                overflow: hidden;
+                position: absolute;
+                bottom: 0;
+                background-color: white;
+                width: 100%;
+                // height: 50%;
+                height: 934rpx;
+                .remarks_head{
+                    background: #F4F5F6;
+                    padding: 40rpx;
+                    text-align: center;
+                    view{
+                        display: inline-block;                        
+                    }
+                    .head_closeIcon{
+                        float: right;
+                        width: 48rpx;
+                        height: 48rpx;
+                        image{
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    .head_closeIcon:after{
+                        content:"";
+                        display:block;
+                        visibility:hidden;
+                        clear:both;
+                    }
+                    .head_title{
+                        font-size: 40rpx;
+                        
+                        font-weight: 500;
+                        color: #333333;
+                    }
+                }
+                .remarks_content{
+                    padding: 32rpx;
+                    margin: 48rpx;
+                    border-radius: 20rpx;
+                    border: 2rpx solid rgba(0,0,0,0.1);
+                    .textarea{
+                        height: 400rpx;
+                    }
+                    .fontNum{
+                        text-align: end;
+                        .font{
+                            color: #999999;
+                        }
+                    }
+                }
+                .remarks_btn{
+                    // position: absolute;
+                    // bottom: 10rpx;
+                    // left: 50%;
+                    // transform: translateX(-50%);
+                    width: 686rpx;
+                    height: 92rpx;
+                    line-height: 92rpx;
+                    text-align: center;
+                    background: linear-gradient(270deg, #FF6F6F 0%, #FA5151 100%);
+                    border-radius: 52rpx;
+                    margin: 64rpx auto 0;
+                    font-size: 32rpx;
+                    
+                    font-weight: 500;
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
+    //内容
+    .content{
+        >view{
+            width: 750rpx;
+            background-color: #ffffff;
+            border-radius: 24rpx;
+            margin-bottom: 12rpx;
+        }
+        //内容四 支付组件
+        .content_four{
+            border-radius: 24rpx 24rpx 0 0;
+        }
+        //内容三 价格明细
+        .content_three{
+            >view{
+                display: flex;
+                flex-direction: column;
+                >view{
+                    width: 686rpx;
+                    height: 108rpx;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin: 0 32rpx;
+                    >text{
+                        color: #333333;
+                        font-size: 32rpx;
+                        font-weight: 400;
+                    }
+                    >view{
+                        >text{
+                            color: #333333;
+                            font-size: 32rpx;
+                            font-weight: 400;
+                        }
+                    }
+                }
+                >view:nth-child(1){}
+                >view:nth-child(2){
+                    border: 1rpx solid rgba(0,0,0,0.1);
+                    border-left: 0;
+                    border-right: 0;
+                }
+                >view:nth-child(3){
+                    >view{
+                        >text{color: #FA5151;}
+                    }
+                }
+            }
+        }
+        //内容二 产品信息
+        .content_two{
+            >view{
+                display: flex;
+                flex-direction: column;
+                >view:nth-child(1){
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    margin-left: 32rpx;
+                    margin-top: 32rpx;
+                    margin-bottom: 32rpx;
+                    >view:first-child{
+                        width: 48rpx;
+                        height: 48rpx;
+                        border-radius: 24rpx;
+                        overflow: hidden;
+                        margin-right: 16rpx;
+                        >image{
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    >view:last-child{
+                        color: #333333;
+                        font-size: 28rpx;
+                        font-weight: 400;
+                    }
+                }
+                >view:nth-child(2){
+                    display: flex;
+                    flex-direction: row;
+                    >view:first-child{
+                        width: 216rpx;
+                        height: 216rpx;
+                        border-radius: 16rpx;
+                        overflow: hidden;
+                        margin-right: 24rpx;
+                        margin-left: 32rpx;
+                        margin-bottom: 24rpx;
+                        >image{
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    >view:last-child{
+                        display: flex;
+                        flex-direction: column;
+                        font-weight: 400;
+                        >view:nth-child(1){
+                            >text{
+                                color: #333333;
+                                font-size: 32rpx;
+                                width: 446rpx;
+                                display:-webkit-box;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                -webkit-box-orient:vertical; 
+                                -webkit-line-clamp:2;
+                            }
+                        }
+                        >view:nth-child(2){
+                            color: #999999;
+                            font-size: 24rpx;
+                            margin-top: 16rpx;
+                            margin-bottom: 28rpx;
+                        }
+                        >view:nth-child(3){
+                            color: #FA5151;
+                            font-size: 32rpx;
+                            display: flex;
+                            flex-direction: row;
+                            >text{}
+                            >view{
+                                >text{}
+                            }
+                        }
+                    }
+                }
+                >view:nth-child(3){
+                    width: 100%;
+                    height: 108rpx;
+                    color: #333333;
+                    font-size: 32rpx;
+                    font-weight: 400;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    >view:nth-child(1){margin-right: 58rpx;}
+                    >view:nth-child(2){
+                        width: 458rpx;
+                        display:-webkit-box;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        -webkit-box-orient:vertical; 
+                        -webkit-line-clamp:1;
+                    }
+                    >view:nth-child(3){
+                        margin-left: 10rpx;
+                        display: flex;
+                        >image{
+                            max-width: 15rpx;
+                            max-height: 30rpx;
+                        }
+                    }
+                }
+            }
+        }
+        //内容一 地址
+        .content_one{
+             margin-bottom: 0 0 24rpx 24rpx;
+             >view{
+                display: flex;
+                flex-direction: column;
+                >view:first-child{
+                    display: flex;
+                    >image{
+                         width: 100%;
+                         max-height: 12rpx;
+                    }
+                }
+                >view:last-child{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin: 32rpx;
+                    >view:first-child{
+                        display: flex;
+                        flex-direction: column;
+                        font-weight: 400;
+                        >view:nth-child(1){
+                            color: #333333;
+                            font-size: 32rpx;
+                            margin-bottom: 8rpx;
+                        }
+                        >view:nth-child(2){
+                            color: #999999;
+                            font-size: 28rpx;
+                        }
+                        >view:nth-child(3){
+                            margin-top: 16rpx;
+                            >text{
+                                color: #333333;
+                                font-size: 14px;
+                            }
+                            >text:first-child{
+                                margin-right: 10rpx;
+                            }
+                        }
+                    }
+                    >view:last-child{
+                        >image{
+                            max-width: 15rpx;
+                            max-height: 30rpx;
+                        }
+                    }
+                }
+             }
+        }
+    }
+    // 尾部 支付
+    .footer{
+        >view{
+            width: 100%;
+            height: 104rpx;
+            background-color: #ffffff;
+            box-shadow: 0rpx 0rpx 0rpx 2rpx rgba(0,0,0,0.2);
+            position: fixed;
+            bottom: 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
+                padding-bottom: env(safe-area-inset-bottom);
+            >view:nth-child(1){
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-left: 32rpx;
+                >text{
+                    color: #666666;
+                    font-size: 32rpx;
+                    font-weight: 400;
+                }
+                >view{
+                    >text{
+                        color: #FA5151;
+                        font-size: 32rpx;
+                        font-weight: 400;
+                    }
+                }
+            }
+            >view:nth-child(2){
+                width: 192rpx;
+                height: 72rpx;
+                background: linear-gradient(270deg, #FF6F6F 0%, #FA5151 100%);
+                border-radius: 36rpx;
+                text-align: center;
+                line-height: 72rpx;
+                color: #ffffff;
+                font-size: 28rpx;
+                font-weight: 400;
+                margin-right: 32rpx;
+            }
+        }
+    }
+}

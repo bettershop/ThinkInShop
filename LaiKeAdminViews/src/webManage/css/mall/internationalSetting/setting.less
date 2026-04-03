@@ -1,0 +1,95 @@
+/deep/.el-switch__core{
+  //  cursor: not-allowed !important;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  /deep/.btn-nav {
+    height: 42px;
+    span {
+      min-width: 112px;
+      height: 42px;
+      font-size: 16px;
+      border: none;
+    }
+    .el-radio-group {
+      .el-radio-button {
+        &:not(:last-child) {
+          span {
+            border-right: 1px solid #d5dbe8;
+          }
+        }
+      }
+    }
+
+  }
+
+  .basic-configuration {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    .header {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      padding-left: 20px;
+      border-bottom: 1px solid #E9ECEF;
+      // background-color: #F4F7F9;
+      span {
+        font-size: 16px;
+        font-weight: 400;
+        color: #414658;
+      }
+    }
+
+    /deep/.el-form {
+      .notice {
+        padding: 20px;
+        .logisticsSort{
+          width: 180px;
+        }
+        .el-form-item {
+          .el-form-item__label {
+            padding-right: 14px !important;
+          }
+          .el-form-item__content {
+            .richText-info {
+              width: 90%;
+              height: 413px;
+              .quillWrapper {
+                .ql-container {
+                  height: 413px;
+                }
+              }
+            }
+          }
+        }
+
+      }
+
+      .footer-button {
+        position: fixed;
+        right: 0;
+        bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 15px 20px;
+        border-top: 1px solid #E9ECEF;
+        background: #FFFFFF;
+        width: 300%;
+        z-index: 10;
+        button {
+          width: 70px;
+          height: 40px;
+        }
+      }
+    }
+  }
+}
+.OP-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

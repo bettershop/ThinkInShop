@@ -1,0 +1,255 @@
+    //隐藏滚动条
+    ::-webkit-scrollbar {
+      display: none !important;
+  }
+.container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    /deep/.btn-nav {
+      margin-bottom: 20px;
+      span {
+        min-width: 120px;
+        height: 42px;
+        font-size: 16px;
+        border: none;
+        display: flex;
+        justify-content: center;
+      }
+  
+      .el-radio-group {
+        .el-radio-button {
+          &:not(:last-child) {
+            span {
+              border-right: 1px solid #d5dbe8;
+            }
+          }
+        }
+      }
+  
+      .order_dfhNum {
+        color: red;
+        border-right: none !important;
+  
+        &.active {
+          color: #fff;
+        }
+      }
+  
+    }
+  
+    /deep/.el-form {
+      .header {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        border-bottom: 1px solid #E9ECEF;
+        padding-left: 20px;
+  
+        span {
+          font-weight: 400;
+          font-size: 16px;
+          color: #414658;
+        }
+      }
+  
+      .basic-info {
+        border-radius: 4px;
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 16px;
+        .tip{
+          width: 1020px;
+          // height: 83px;
+          background-color: #F4F7F9;
+          font-size: 14px;
+          color: #97A0B4;
+          padding: 10px;
+          p{
+              display: flex;
+              align-items: center;
+              height: 22px;
+              line-height: 1;
+          }
+        }
+  
+        .basic-block {
+          margin-top: 40px;
+          padding: 0 20px 40px 20px;
+  
+          .limit-input {
+            .el-input {
+              width: 400px;
+            }
+          }
+  
+          .trailen {
+            .isOpen-trailen {
+              display: flex;
+              align-items: center;
+              padding: 10px 0;
+              .gray {
+                color: #97A0B4;
+                margin-left: 20px;
+              }
+            }
+  
+            .trailen-time {
+              width: 1020px;
+              height: 60px;
+              display: flex;
+              align-items: center;
+              padding: 0 20px;
+              background-color: #f4f7f9;
+              //在style里面添加此段代码即可
+              input::-webkit-outer-spin-button,
+              input::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+              }
+              input[type="number"]{
+              -moz-appearance: textfield;
+              }
+              
+              span {
+                margin: 0 15px 0 0;
+              }
+              .line{
+                display: block;
+                height: 36px;
+                width: 1px;
+                background-color: #D5DBE8;
+                margin: 0 30px;
+              }
+              .el-input {
+                width: 180px;
+              }
+              .el-select {
+                width: 180px;
+              }
+              .shopping-promt {
+                margin-left: 12px;
+                font-size: 14px;
+              }
+            }
+          }
+  
+          .activity-push {
+            .el-input {
+              width: 375px;
+              margin: 0 10px 0 0;
+            }
+  
+            span {
+              color: #414658;
+            }
+          }
+        }
+      }
+  
+      .order-info {
+        border-radius: 4px;
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 16px;
+  
+        .order-block {
+          margin-top: 40px;
+          padding: 0 20px 40px 20px;
+          .equity-content {
+            display: flex;
+            .equity-item {
+              width: 168px;
+              height: 68px;
+              background: #FFFFFF;
+              border-radius: 2px;
+              border: 1px solid #B2BCD1;
+              margin-right: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 12px;
+              position: relative;
+              .equity-item-right {
+                img {
+                  width: 24px;
+                  height: 24px;
+                }
+              }
+              .el-icon-close {
+                position: absolute;
+                right: 0;
+                top: 0;
+                font-size: 16px;
+                color: #ffffff;
+                background-color: #B2BCD1;
+              }
+            }
+          }
+          .add-equity {
+            width: 1150px;
+            background: #F4F7F9;
+            border-radius: 4px;
+            padding: 20px 20px 1px 20px;
+            margin-top: 20px;
+            .activity-push {
+              .el-input {
+                width: 375px;
+              }
+            }
+          }
+        }
+      }
+  
+      .footer-button {
+        position: fixed;
+        right: 0;
+        bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 15px 20px;
+        border-top: 1px solid #E9ECEF;
+        background: #FFFFFF;
+        width: 300%;
+        z-index: 10;
+  
+        button {
+          width: 70px;
+          height: 40px;
+        }
+  
+        .bgColor {
+          margin-left: 14px;
+        }
+  
+        .bgColor:hover {
+          opacity: 0.8;
+        }
+  
+        .fontColor {
+          color: #6a7076;
+          border: 1px solid #d5dbe8;
+          margin-left: 14px;
+        }
+  
+        .fontColor:hover {
+          color: #2890ff;
+          border: 1px solid #2890ff;
+        }
+      }
+  
+      .el-form-item__label {
+        font-weight: normal;
+      }
+  
+      .el-select {
+        .el-input__suffix {
+          margin: 0 !important;
+          right: 0px !important;
+        }
+      }
+    }
+    .my_gray{
+      color: #94a0b4!important;
+    }
+  }

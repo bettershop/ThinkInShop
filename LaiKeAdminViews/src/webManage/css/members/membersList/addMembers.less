@@ -1,0 +1,106 @@
+
+/deep/.custom-autocomplete {
+  margin-right: 12px !important;
+  .el-input {
+    width: 135px !important;
+    .el-input__inner {
+      width: 135px !important;
+    }
+  }
+
+  // 关键修改：调整下拉弹出层的宽度
+  .el-autocomplete-suggestion {
+    width: 340px !important; // 增大弹出层宽度，可根据需要调整
+  }
+}
+
+// 修改滚动条容器和选项宽度，移除省略号限制
+/deep/.el-scrollbar {
+  width: 100% !important;
+}
+
+/deep/.el-scrollbar__view {
+  width: 100% !important;
+  li {
+    width: 100% !important; // 选项宽度撑满容器
+    white-space: nowrap !important;
+    overflow: visible !important; // 取消溢出隐藏
+    text-overflow: unset !important; // 取消省略号
+    padding: 0 10px !important; // 增加内边距，避免内容贴边
+  }
+}
+
+.container {
+  width: 100%;
+  // height: 737px;
+  background-color: #fff;
+  border-radius: 4px;
+  overflow-y: auto;
+  .header {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    padding-left: 20px;
+    border-bottom: 1px solid #E9ECEF;
+    span {
+      font-size: 16px;
+      font-weight: 400;
+      color: #414658;
+    }
+  }
+
+  /deep/.form-search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .notice {
+      padding: 40px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      .el-form-item {
+        .el-form-item__content {
+          display: flex;
+          align-items: center;
+          .el-input {
+            width: 580px;
+            height: 40px;
+            input {
+              width: 580px;
+              height: 40px;
+            }
+          }
+
+          .gray {
+            margin-left: 18px;
+            color: #97A0B4;
+          }
+        }
+      }
+
+      #upload {
+        .el-form-item__label:first-child{
+          line-height: 80px;
+        }
+      }
+
+      .members-head {
+          img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+          }
+      }
+
+    }
+
+    .footer-button {
+      .kid_left{
+        margin-left: 14px;
+      }
+      button {
+        min-width: 70px;
+        height: 40px;
+      }
+    }
+  }
+}

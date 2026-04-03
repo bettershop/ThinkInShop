@@ -1,0 +1,1 @@
+ALTER TABLE lkt_comments MODIFY COLUMN oid VARCHAR(64);

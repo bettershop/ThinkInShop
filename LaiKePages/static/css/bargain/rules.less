@@ -1,0 +1,93 @@
+.head,
+.order_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.head {
+    height: 88rpx;
+    padding: 0 30rpx;
+        border-bottom: 1rpx solid #eee;
+    font-size: 40rpx;
+    color: #242424;
+}
+
+.head_img {
+    width: 24rpx;
+    height: 36rpx;
+}
+
+.head_search {
+    width: 40rpx;
+    height: 40rpx;
+    visibility: hidden;
+}
+
+.order_header {
+    justify-content: space-around;
+    width: 100%;
+}
+
+.header_li {
+    width: 25%;
+    text-align: center;
+    height: 84rpx;
+    line-height: 84rpx;
+    font-size: 30rpx;
+    color: #242424;
+}
+
+.header_border {
+    color: #242424;
+    position: relative;
+}
+
+.header_border:after {
+    border-bottom: 5rpx solid #D30202;
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    content: "";
+    left: 25%;
+}
+
+.last_right > div {
+    justify-content: center;
+}
+
+.position_head {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 35;
+}
+
+.rule_img {
+    width: 100%;
+    height: auto;
+}
+
+.rule_list {
+    padding: 40rpx 40rpx;
+    word-break: break-all;
+}
+
+
+/* 优化 */
+.yh-ifndef-mp {
+    height: 178rpx;
+    position: fixed;
+    background: #FFFFFF;
+    z-index: 999;
+}
+
+.yh-head-p {
+    font-size: 32rpx;
+}
+
+.yh-head-top {
+    height: 88rpx;
+}

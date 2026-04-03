@@ -1,0 +1,206 @@
+/deep/.el-icon-store {
+  background: url('../../../../assets/imgs/hxmdh.png') center center
+    no-repeat;
+  background-size: 13px;
+}
+
+/deep/.el-icon-store:before {
+  content: '替';
+  font-size: 12px;
+  visibility: hidden;
+}
+/deep/.store:hover {
+  .el-icon-store {
+    background: url('../../../../assets/imgs/hxmdl.png') center center
+      no-repeat;
+    background-size: 13px;
+  }
+}
+.dialog-orderInfo {
+  // 弹框样式
+  /deep/.el-dialog {
+    width: auto;
+    width: 920px;
+    // height: 630px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    margin: 0 !important;
+    .el-dialog__header {
+      width: 100%;
+      height: 58px;
+      line-height: 58px;
+      font-size: 16px;
+      margin-left: 19px;
+      font-weight: bold;
+      border-bottom: 1px solid #e9ecef;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0 0 0 19px;
+      .el-dialog__headerbtn {
+        font-size: 18px;
+        top: 0 !important;
+      }
+      .el-dialog__title {
+        font-weight: normal;
+      }
+    }
+    .div_center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .span_center {
+        margin-left: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        width: 250px;
+        text-align: left;
+      }
+    }
+    .el-dialog__body {
+      padding: 0 !important;
+      .orderBox {
+        padding: 41px 21px;
+        .el-table {
+          border: 1px solid #e9ecef;
+        }
+      }
+    }
+    .el-dialog__footer{
+      padding: 0 !important;
+    }
+  }
+}
+.merchants-list{
+  margin-top: 16px;
+    &:first-child{
+      margin-top: 0;
+    }
+}
+.dictionary-list{
+  padding-bottom: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.statistical {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: #FFFFFF;
+  border-radius: 0 0 4px 4px;
+  margin-bottom: 20px;
+  .goods-totalprice,.discount-stores,.discount-platform{
+    margin-bottom: 10px;
+    display: flex;
+  }
+  .totle-pay{
+    display: flex;
+    text-align: end;
+    width: 100%;
+    justify-content: flex-end;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .title {
+    font-size: 14px;
+  }
+  .title-totle {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .red {
+    color: #FF453D;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .price {
+    display: block;
+    width: 150px;
+    text-align: right;
+    margin-right: 22px;
+  }
+  .hr {
+    background-color: #edf1f5;
+    width: 100%;
+    height: 120px;
+  }
+  .hr {
+    background-color: #edf1f5;
+    width: 100%;
+    height: 20px;
+  }
+
+}
+
+/deep/.el-form-item__label{
+  margin-left: 20px;
+  color: #97A0B4;
+}
+.footerBox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px;
+  height: 72px;
+  background: #FFFFFF;
+  border-top: 1px solid #E9ECEF;
+  box-sizing: border-box;
+}
+
+//主体
+.card {
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  //标题
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 20px;
+    border-bottom: 1px solid #E9ECEF;
+    font-size: 16px;
+    font-weight: 400;
+    color: #414658;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+    position: sticky;
+    top: 0;
+    background-color: #FFFFFF;
+    z-index: 1000;
+    border-radius: 20px 20px 0 0;
+  }
+  img{
+    width: 50px;
+    height: 50px;
+  }
+  .el-form-item{
+    margin-bottom: 1rem;
+  }
+
+}
+.OP-button-top{
+    display: flex;
+    justify-content: center !important;
+  button{
+    margin-right: 8px;
+  }
+}
+/deep/.el-table  {
+  .cell {
+    .name-info {
+      display: flex;
+      // justify-content: center;
+      align-items: center;
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+}

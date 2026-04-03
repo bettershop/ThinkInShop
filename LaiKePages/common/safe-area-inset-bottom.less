@@ -1,0 +1,70 @@
+/**
+适配 iPhoneX 底部小黑条，在需要适配的元素上添加 safe-area-inset-bottom 这个类。
+参考链接 https://aotu.io/notes/2017/11/27/iphonex/index.html
+ */
+@supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+    // 全局
+    .goods_bottom,
+    .mask_d,
+    .mask_quren,
+    .content_d,
+    shareMask,
+    .submitDiv,
+    .okBtn,
+
+
+        //src/pagesC/goods/goodsDetailed.vue
+    .goodsDetail .content_d,
+    .goodsDetail .shareMask,
+    .goodsDetail .goods_bottom,
+    .goodsDetail .mask_quren,
+    .goodsDetail .mask_d,
+
+
+
+        //src/pagesA/group/groupDetailed.vue
+    .order_ii .goods_bottom,
+
+        //pagesA/shop/coupon
+    .mycoupon_bottom,
+
+        // 订单确认页面,新增 .select-pay-ul
+    .pages-pay-orderDetailsr .select-pay-ul,
+    .pages-pay-orderDetailsr .foot2,
+
+        // pagesB/address/receivingAddress
+    .receivingAddress .bottom,
+
+        // src/pagesA/myStore/uploadPro.vue 
+    .uploadPro .relative,
+
+        //pagesC/vip/vip
+    .vip-footer,
+
+    .distribution_share .save-btn,
+        // pages/message/systemMesage 
+    .systemMesage .systemMesage-ul,
+    .systemMesage .messagetail,
+    .goods-detailed-safe-area-inset-bottom,
+        // 课程学习页面
+    .safe-area-inset-bottom
+    {
+        box-sizing: content-box;
+        //padding-bottom: 44rpx; // 方便调试
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+
+    // 购物车去除
+    .shoppingCart {
+        .mask_d, .mask_quren {
+            padding-bottom: 0;
+        }
+    }
+
+    .submitDiv {
+        background: #F6F6F6;
+    }
+}
+

@@ -1,0 +1,102 @@
+
+.shaco_left{
+  margin-left: 14px;
+}
+// .el-input__inner {
+//   width: 580px !important;
+//   height: 40px;
+// }
+.form-search{
+  width: 100%;
+  // height: 677px;
+  // overflow: hidden;
+  // overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+.container {
+    width: 100%;
+    height: auto !important;
+    // height: 737px;
+    background-color: #fff;
+    border-radius: 4px;
+    .header {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      padding-left: 20px;
+      border-bottom: 1px solid #E9ECEF;
+      span {
+        font-size: 16px;
+        font-weight: 400;
+        color: #414658;
+      }
+    }
+  
+    /deep/.el-form {
+      // width: 100%;
+      // height: 677px;
+      // overflow: hidden;
+      // overflow-y: auto;
+      // display: flex;
+      // justify-content: center;
+      .notice {
+        padding: 40px 0 0 0px;
+        display: flex;
+        flex-direction: column;
+        .el-form-item {
+          margin-bottom: 20px;
+          .el-form-item__label{
+            padding-right: 14px !important;
+          }
+          // .el-form-item__content {
+          //   display: flex;
+            // .el-input {
+            //   width: 580px !important;
+            //   height: 40px;
+
+            // }
+          // }
+        }
+
+        // .input-interval {
+        //   margin-bottom: 14px !important;
+        // }
+        .input-interval-block{
+          display: flex;
+          .auto{
+            margin-right: 8px;
+          }
+        }
+        .business-license {
+          margin-bottom: 7px;
+            img {
+              width: 100px;
+              height: 100px;
+              border: 1px solid #e3e3e3;
+              border-radius: 2px;
+            }
+        }
+
+        .cascadeAddress {
+            .el-form-item__content {
+                .cascadeAddress-block {
+                    display: flex;
+                    justify-content: space-between;
+                    .el-select {
+                        &:not(:last-child) {
+                            margin-right: 10px !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .footer-button {
+          padding-bottom: 40px;
+          margin-bottom: 0;
+        }
+  
+      }
+    }
+}

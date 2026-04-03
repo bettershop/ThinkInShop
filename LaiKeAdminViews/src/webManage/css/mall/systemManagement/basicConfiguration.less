@@ -1,0 +1,245 @@
+.iframe-row-card {
+    width: 710px;
+    // height: 189px;
+    background-color: #F4F7F9;
+    // padding-bottom: 14px;
+    // margin-top: 10px;
+    margin-left: 3px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    padding-right: 16px;
+    padding-left: 10px;
+    .select-input-box{
+      display: flex;
+      justify-content: space-between;
+      .gap{
+        width: 10px;
+        height: 40px;
+
+      }
+    }
+    .select-input {
+        // width: 31.4%;
+        width: 100%;
+        height: 40px;
+        input{
+          width: 186px;
+          height: 40px;
+        }
+        &:not(:last-child) {
+          margin-right: 11px !important;
+        }
+      }
+      .select-input2 {
+        width: 162px;
+        height: 40px;
+        input{
+          width: 162px;
+          height: 40px;
+        }
+        &:not(:last-child) {
+          margin-right: 11px !important;
+        }
+      }
+}
+.merchants-list{
+  margin-top: 16px; 
+}
+.card-row {
+    display: flex;
+    margin-top: 14px;
+    align-items: center;
+}
+.card-row-left {
+    min-width: 110px;
+    line-height: 36px;
+    font-family: Microsoft YaHei;
+    text-align: right;
+    margin-right: 14px;
+    color: #414658;
+}
+.card-row-right{
+    width: 100%;
+}
+.box_right{
+    margin-right: 14px;
+}
+/deep/.form-card {
+  // padding-left: 20px;
+    .prompt {
+        color: #97A0B4;
+        margin-left: 10px;
+    }
+    .title{
+      padding-left: 20px !important;
+    }
+    .el-form-item{
+      padding-left: 40px;
+    }
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    /deep/.btn-nav {
+        span {
+            min-width: 112px;
+          height: 42px;
+          font-size: 16px;
+          border: none;
+        }
+        .el-radio-group {
+          .el-radio-button {
+            &:not(:last-child) {
+              span {
+                border-right: 1px solid #d5dbe8;
+              }
+            }
+          }
+        }
+            
+    }
+    /deep/.form-card{
+        background-color: #fff;
+        border-radius: 4px;
+        // padding-bottom: 40px;
+        padding-bottom: 22.4px;
+        margin-bottom: 16px;
+        .title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 20px;
+            border-bottom: 1px solid #E9ECEF;
+            font-size: 16px;
+            font-weight: 400;
+            color: #414658;
+            box-sizing: border-box;
+            margin-bottom: 40px;
+            // position: sticky;
+            top: 0;
+            background-color: #FFFFFF;
+            border-radius: 4px 4px 0 0;
+            // z-index: 1000;
+          }
+          .el-input-group__append{
+            // color: #000;
+            color: #414658;
+        }
+    }
+
+    .basic-configuration {
+        width: 100%;
+        flex: 1;
+        // background-color: #fff;
+        border-radius: 4px;
+        // margin-top: 16px;
+        // border-bottom: 20px solid #edf1f5;
+        display: flex;
+        flex-direction: column;
+        .header {
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            padding-left: 20px;
+            border-bottom: 1px solid #E9ECEF;
+            span {
+                font-size: 16px;
+                font-weight: 400;
+                color: #414658;
+            }
+        }
+    
+        /deep/.form-search {
+            width: 100%;
+            // height: 619px;
+            flex: 1;
+            overflow: hidden;
+            overflow-y: auto;
+            padding-bottom: 60px;
+            // padding-bottom: 3vw;
+            .notice {
+                padding: 40px 0 0 60px;
+                display: flex;
+                flex-direction: column;
+                margin-left: 20%;
+                .el-form-item {
+                    .el-form-item__label {
+                        margin-right: 14px !important;
+                        padding-right: 0 !important;
+                    }
+                    
+                    .el-form-item__content {
+                        .prompt {
+                            color: #97A0B4;
+                            margin-left: 10px;
+                        }
+
+                        // .el-input {
+                        //     width: 400px;
+                        //     height: 40px;
+                        //     input {
+                        //         width: 400px;
+                        //         height: 40px;
+                        //     }
+                        // }
+
+                        // textarea {
+                        //     width: 580px;
+                        // }
+
+                        .unipush-info {
+                            width: 600px;
+                            // height: 170px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: flex-end;
+                            background-color: #F4F7F9;
+                            margin-top: 10px;
+                            border-radius: 4px;
+                            padding: 20px 10px;
+                            .el-input {
+                                width: 385px;
+                            }
+                            .Appid {
+                                margin: 10px 0;
+                            }
+
+                            .appkey,.Appid,.MasterECRET {
+                                margin-right: 90px;
+                            }
+                        }
+                    }
+                }
+        
+            }
+    
+        .footer-button {
+            margin-left: 195Px;
+            button {
+            width: 70px;
+            height: 40px;
+            }
+        }
+        .footerBox {
+            position: fixed;
+            right: 0;
+            bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            border-top: 1px solid #E9ECEF;
+            background: #FFFFFF;
+            width: 300%;
+            z-index: 10;
+            button {
+              width: 70px;
+              height: 40px;
+            }
+          }
+        }
+    }
+}

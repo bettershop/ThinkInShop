@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.SubtractionConfigModalMapper" >
+  <resultMap id="BaseResultMap" type="com.laiketui.domain.subtraction.SubtractionConfigModal" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="store_id" property="store_id" jdbcType="INTEGER" />
+    <result column="is_subtraction" property="is_subtraction" jdbcType="TINYINT" />
+    <result column="range_zfc" property="range_zfc" jdbcType="VARCHAR" />
+    <result column="pro_id" property="pro_id" jdbcType="VARCHAR" />
+    <result column="position_zfc" property="position_zfc" jdbcType="VARCHAR" />
+    <result column="is_shipping" property="is_shipping" jdbcType="TINYINT" />
+    <result column="z_money" property="z_money" jdbcType="DECIMAL" />
+    <result column="address_id" property="address_id" jdbcType="VARCHAR" />
+    <result column="add_date" property="add_date" jdbcType="TIMESTAMP" />
+    <result column="mobile_terminal_image" property="mobile_terminal_image" jdbcType="VARCHAR" />
+    <result column="pc_side_picture" property="pc_side_picture" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, store_id, is_subtraction, range_zfc, pro_id, position_zfc, is_shipping, z_money, 
+    address_id, add_date, mobile_terminal_image, pc_side_picture
+  </sql>
+</mapper>

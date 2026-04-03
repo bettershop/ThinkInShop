@@ -1,0 +1,15 @@
+FROM tomcat:9.0-jdk8-temurin
+
+ARG WAR_FILE=output/laike-apis-0.0.1-SNAPSHOT.war
+
+ENV TZ=Asia/Shanghai \
+    CATALINA_OPTS="-Xms1g -Xmx1g -XX:+UseG1GC -Dfile.encoding=UTF-8 -Dspring.config.additional-location=file:/opt/laike/apis/config/bootstrap.yml -Dlogging.file.path=/opt/laike/apis/logs"
+
+RUN rm -rf /usr/local/tomcat/webapps/* \
+    && mkdir -p /opt/laike/apis/config /opt/laike/apis/logs /opt/laike/apis/upload /opt/laike/apis/xxl-logs
+
+COPY ${WAR_FILE} /usr/local/tomcat/webapps/apis.war
+
+EXPOSE 8080
+
+CMD ["catalina.sh", "run"]

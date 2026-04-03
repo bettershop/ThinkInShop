@@ -1,0 +1,148 @@
+//隐藏滚动条
+::-webkit-scrollbar {
+  display: none !important;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  /deep/.btn-nav {
+    margin-bottom: 20px;
+    span {
+      min-width: 120px;
+      height: 42px;
+      font-size: 16px;
+      border: none;
+      display: flex;
+      justify-content: center;
+    }
+    .el-radio-group {
+      .el-radio-button {
+        &:not(:last-child) {
+          span {
+            border-right: 1px solid #d5dbe8;
+          }
+        }
+      }
+    }
+
+    .order_dfhNum {
+      border-right: none !important;
+      &.active {
+        color: #fff;
+      }
+    }
+  }
+
+  /deep/.el-form {
+    .header {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      border-bottom: 1px solid #e9ecef;
+      padding-left: 20px;
+      span {
+        font-weight: 400;
+        font-size: 16px;
+        color: #414658;
+      }
+    }
+
+    .basic-info {
+      width: 100%;
+      border-radius: 4px;
+      background-color: #fff;
+      margin-bottom: 16px;
+      .basic-block {
+        margin-top: 40px;
+        padding: 0 20px 10px 20px;
+        .gray {
+          color: #97a0b4;
+          margin-left: 13px;
+        }
+
+        .el-input {
+          width: 260px;
+          margin-right: 8px;
+        }
+        .tip {
+          width: 750px;
+          height: 83px;
+          background-color: #f4f7f9;
+          font-size: 14px;
+          color: #97a0b4;
+          padding: 10px;
+          p {
+            display: flex;
+            align-items: center;
+            height: 22px;
+            line-height: 1;
+          }
+        }
+      }
+    }
+
+    .rules-set {
+      width: 100%;
+      border-radius: 4px;
+      background-color: #fff;
+      margin-bottom: 90px;
+      .rules-block {
+        margin-top: 40px;
+        padding: 0 20px 140px 20px;
+        .quillWrapper {
+          height: 341px;
+          .quillWrapper {
+            .ql-container {
+              height: 300px;
+            }
+          }
+        }
+      }
+    }
+
+    //   好评
+    .shaco_box_three {
+      width: 750px;
+      height: 166px;
+      background: #f4f7f9;
+      padding: 20px;
+    }
+
+    .footer-button {
+      position: fixed;
+      right: 0;
+      bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px 20px;
+      border-top: 1px solid #e9ecef;
+      background: #ffffff;
+      width: 300%;
+      z-index: 10;
+      button {
+        width: 70px;
+        height: 40px;
+      }
+      .bgColor {
+        margin-left: 14px;
+      }
+      .bgColor:hover {
+        opacity: 0.8;
+      }
+
+      .fontColor {
+        color: #6a7076;
+        border: 1px solid #d5dbe8;
+        margin-left: 14px;
+      }
+      .fontColor:hover {
+        color: #2890ff;
+        border: 1px solid #2890ff;
+      }
+    }
+    .el-form-item__label {
+      font-weight: normal;
+    }
+  }
+}

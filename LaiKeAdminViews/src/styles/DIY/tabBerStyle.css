@@ -1,0 +1,14 @@
+:root { 
+  /* tabbar组件 */
+    --fontColor: #1F2937; /* 文本颜色 */ 
+    --optColor: rgba(11,11,11,1); /* 选中的tabbat文本颜色 */ 
+    --typeFace: 'Microsoft YaHei'; /* 文本字体 */ 
+    --fontSzie: 10px; /* 文本字体 */ 
+    --lingHehig: 0px; /* 行间距 */ 
+    --marginTop: 0px; /* 上间距 */ 
+    --marginBottom: 0px; /* 下间距 */ 
+    --marginLeft: 0px; /* 左间距 */ 
+    --marginRight: 0px; /* 右间距 */ 
+    --colorTwo: #f4f5f6; /* 右间距 */ 
+    --imgurl: 'https://laikeds.oss-cn-shenzhen.aliyuncs.com/1/1/20250915/1967581692844208128.png'; /* 右间距 */ 
+  }

@@ -1,0 +1,134 @@
+
+.lj_box{
+    overflow:hidden;
+	text-overflow:ellipsis;
+	display:-webkit-box;
+	-webkit-box-orient:vertical;
+	-webkit-line-clamp:3;
+    width: 325px;
+    text-align: left;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    /deep/.jump-list {
+        .laiketui-add:before {
+            font-size: 14px;
+            margin-right: 8px;
+        }
+    }
+
+    .menu-list {
+        flex: 1;
+        background: #FFFFFF;
+        border-radius: 4px;
+
+        /deep/.el-table__header {
+            thead {
+                tr {
+                    th {
+                        height: 61px;
+                        text-align: center;
+                        font-size: 14px;
+                        font-weight: bold;
+                        color: #414658;
+                    }
+                }
+            }
+        }
+
+        /deep/.el-table__body {
+            tbody {
+                tr {
+                    td {
+                        height: 92px;
+                        text-align: center;
+                        font-size: 14px;
+                        color: #414658;
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .cell {
+                img {
+                    width: 340px;
+                    height: 80px;
+                }
+            }
+        }
+    }
+}
+
+.banner-add-ande-edit{
+  .el-dialog__wrapper {
+    display: flex;
+    // padding: 24px; //添加上下间隙，可为任意值
+}
+  /deep/.el-dialog {
+    width: 580px;
+    min-height: 260px;
+    // margin-top: 15vh;
+    margin: auto !important;
+    .notice{
+      width: 420px;
+      padding-top: 0px;
+      // padding: 0 ;
+      .el-input{
+        width: 360px;
+      }
+      .el-input input{
+        width: 360px;
+      }
+    }
+    .add-config-container .form-search{
+      padding-bottom: 0;
+    }
+    .l-upload{
+      .el-dialog__header{
+       .el-dialog__headerbtn{
+         top:0
+       }
+     }
+    //  .el-dialog__body {
+    //    padding-bottom: 0;
+    //    padding-left: 0;
+    //    padding-right: 0;
+    //    padding-top: 0;
+    //    .pass-input{
+    //      padding-bottom: 18px;
+    //    }
+    //  }
+   }
+    .el-dialog__footer{
+      border-top: 0.0625rem solid #E9ECEF;
+      height: 72px;
+      line-height: 1;
+      padding: 16px 20px;
+      .dialog-footer{
+        display: inline-block;
+        .shaco_color:hover{
+          color: #2890ff;
+          background: #FFFFFF;
+          border: 1px solid #2890ff;
+        }
+      }
+    }
+  }
+  .el-dialog__body {
+    .add-banner-container{
+      padding-bottom: 0;
+      padding-left: 60px;
+      padding-right: 60px;
+    }
+  }
+  .el-dialog__header{
+    border-bottom: 1px solid #E9ECEF;
+    // padding: 10px 0 10px 20px;
+    height: 60px;
+    line-height: 1;
+    .el-dialog__headerbtn{
+      top:22px
+    }
+  }
+}

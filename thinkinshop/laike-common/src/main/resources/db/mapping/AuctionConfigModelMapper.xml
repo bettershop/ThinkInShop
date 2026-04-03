@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.AuctionConfigModelMapper" >
+  <sql id="selectAuctionGoodsListSQL">
+    <where>
+      <trim prefixOverrides="and">
+        a.goods_id=b.id and a.recovery=0 and a.recovery=b.recycle
+        <if test="store_id != null">and b.store_id = #{store_id}</if>
+        <if test="mchId != null">and b.mch_id = #{mchId}</if>
+        <if test="goodsIdList != null">
+          <foreach collection="goodsIdList" item="id" separator="or" open="and a.goods_id in (" close=")">
+            #{id}
+          </foreach>
+        </if>
+        <if test="attrIdList != null">
+          <foreach collection="attrIdList" item="id" separator="or" open="and a.attr_id in (" close=")">
+            #{id}
+          </foreach>
+        </if>
+      </trim>
+    </where>
+  </sql>
+  <select id="selectAuctionGoodsList" parameterType="Map" resultType="Map">
+    select a.*,b.mch_id,b.product_title from lkt_auction_goods a,lkt_product_list b
+    <include refid="selectAuctionGoodsListSQL"/>
+    <trim prefix="order by" suffixOverrides=",">
+      <if test="add_date_sort!=null and add_date_sort!=''">c.add_date ${add_date_sort},</if>
+    </trim>
+    <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+  </select>
+  <select id="countAuctionGoodsList" parameterType="Map" resultType="int">
+    select count(distinct a.id) from lkt_auction_goods a,lkt_product_list b
+    <include refid="selectAuctionGoodsListSQL"/>
+  </select>
+</mapper>

@@ -1,0 +1,455 @@
+.container{
+  display: flex;
+  flex-direction: column;
+}
+.shaco_color:hover{
+  color: #2890ff;
+  background: #FFFFFF;
+  border: 1px solid #2890ff;
+}
+.link-content{
+  .input-two{
+    margin: 0 10px;
+    margin-left: 10px;
+  }
+  .icon-two{
+    margin-right: 10px;
+  }
+}
+// 添加配置弹窗
+.add-config-container {
+  width: 100%;
+  background-color: #fff;
+  .header {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      padding-left: 20px;
+      border-bottom: 1px solid #E9ECEF;
+      span {
+        font-size: 16px;
+        font-weight: 400;
+        color: #414658;
+      }
+  }
+  /deep/.form-search {
+      width: 100%;
+      overflow: hidden;
+      overflow-y: auto;
+      padding-bottom: 80px;
+      display: flex;
+      justify-content: center;
+      .notice {
+        padding: 40px 0 0 0px;
+        display: flex;
+        flex-direction: column;
+        .selects {
+          width: 400px;
+        }
+        .type-stlect {
+          width: 100px;
+          margin-right: 5px;
+          .el-input {
+            width: 580px;
+            input {
+              width: 580px;
+            }
+          }
+        }
+        .el-input {
+          width: 580px;
+          height: 40px;
+          input {
+            width: 580px;
+            height: 40px;
+          }
+        }
+      }
+
+      .footer-button {
+        margin-left: 135Px;
+        button {
+          width: 70px;
+          height: 40px;
+        }
+      }
+  }
+}
+//tbl页
+ /deep/.btn-nav {
+    span {
+      min-width: 112px;
+      height: 42px;
+      font-size: 16px;
+      border: none;
+    }
+    .el-radio-button:first-child .el-radio-button__inner{
+      border-left: 0;
+    }
+    .el-radio-group {
+      .el-radio-button {
+        &:not(:last-child) {
+          span {
+            border-right: 1px solid #d5dbe8;
+          }
+        }
+      }
+    }
+  }
+/deep/.shaco_flex{
+  display: flex;
+  .set_box{
+    min-width: 566px;
+    height: auto;
+    padding: 20px;
+    background: #F4F7F9;
+    border-radius: 4px;
+    .el-form-item:first-child{
+      margin-bottom: 20px
+    }
+  }
+  .has-gutter {
+    .cell{
+      height: 25px;
+    }
+    .el-table__cell{
+      height: 25px!important;
+    }
+    tr{
+      th{
+        height: 25px!important;
+      }
+    }
+  }
+  // .configuration-table{
+  //   margin-top: 20px;
+  //   .el-table__body-wrapper .el-table__row{
+  //         height: 80px;
+  //         // box-sizing: border-box;
+  //   }
+  //   .el-table__body .cell{
+  //     line-height: initial;
+  //   }
+
+  // }
+  }
+.H5_font{
+  position: absolute;
+  color: #97A0B4;
+  font-family: MicrosoftYaHei-, MicrosoftYaHei;
+  font-weight: normal;
+  right: -57px;
+}
+.shaco_padding{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.shaco_box_one{
+  display:flex;
+  flex-direction: column;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.shaco_box_two{
+  display:flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+.shaco_box_three{
+  display:flex;
+  flex-direction: column;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.shaco_btn{
+  color: #2890ff;
+  border: 1px solid #2890ff;
+}
+.el-main {
+  width: 100%;
+  padding: 0 5px 20px 5px !important;
+  // overflow: hidden;
+}
+/deep/.app-main{
+  overflow: auto !important;
+}
+//分割
+.hr {
+  height: 16px;
+  min-height: 16px;
+}
+
+//主体
+.card {
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  //标题
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 20px;
+    border-bottom: 1px solid #E9ECEF;
+    font-size: 16px;
+    font-weight: 400;
+    color: #414658;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    // position: sticky;
+    top: 0;
+    background-color: #FFFFFF;
+    border-radius: 4px 4px 0 0;
+    // z-index: 1000;
+  }
+.dialog-block-add-peizhi{
+  .dialog-block {
+    .el-dialog__wrapper {
+      display: flex;
+      // padding: 24px; //添加上下间隙，可为任意值
+  }
+    /deep/.el-dialog {
+      width: 720px;
+      min-height: 356px;
+      margin: auto !important;
+      .el-dialog__header{
+        border-bottom: 1px solid #E9ECEF;
+        padding: 10px 0 10px 20px;
+      }
+      .el-dialog__body {
+        padding-bottom: 0;
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+      .pass-input{
+        // margin-left: -35px;
+
+      }
+    }
+  }
+}
+
+  img{
+    width: 50px;
+    height: 50px;
+  }
+}
+.merchants-list{
+  margin-top: 16px;
+  flex: 1;
+  // margin-bottom: 16px;
+}
+
+.api-config {
+  margin-top: 0 !important;
+}
+/deep/ .el-table .OP-button .OP-button-top {
+  display: flex;
+  justify-content: center !important;
+}
+/deep/.el-table__header {
+  thead {
+      tr {
+          th {
+              height: 50px;
+              text-align: center;
+              font-size: 14px;
+              font-weight: bold;
+              color: #414658;
+          }
+      }
+  }
+}
+/deep/.el-table__body {
+  .cell{
+    line-height: 1;
+  }
+  tbody {
+      tr {
+          td {
+              height: 80px;
+              text-align: center;
+              font-size: 14px;
+              color: #414658;
+              font-weight: 400;
+          }
+      }
+  }
+
+  .cell {
+    margin: 0;
+    padding: 0;
+      img {
+          width: 28px;
+          height: 50px;
+      }
+  }
+}
+/deep/.intro {
+  background-color: #FFFFFF;
+  padding-bottom: 90px;
+  border-radius: 4px;
+  .el-table{
+    // height: 420px;
+  }
+  .el-table__body-wrapper {
+    // height: 160px!important;
+  }
+}
+
+.footerBox {
+  position: fixed;
+  right: 0;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  border-top: 1px solid #E9ECEF;
+  background: #FFFFFF;
+  width: 300%;
+  z-index: 10;
+  button {
+    width: 70px;
+    height: 40px;
+  }
+}
+
+.shaco_padding {
+  padding-bottom: 40px;
+}
+
+/deep/.el-form-item {
+  .el-input {
+    width: 300px;
+  }
+}
+
+.dialog-block {
+  .el-dialog__wrapper {
+    display: flex;
+    // padding: 24px; //添加上下间隙，可为任意值
+}
+  /deep/.el-dialog {
+    width: 580px;
+    min-height: 320px;
+    margin: auto !important;
+    .el-dialog__header{
+      border-bottom: 1px solid #E9ECEF;
+      // padding: 10px 0 10px 20px;
+      height: 60px;
+      line-height: 1;
+      .el-dialog__headerbtn{
+        top:22px
+      }
+
+    }
+    .el-dialog__body {
+      padding-bottom: 0;
+      padding-left: 60px;
+      padding-right: 60px;
+      padding-top: 40px;
+      .pass-input{
+        padding-bottom: 18px;
+      }
+    }
+    .l-upload{
+       .el-dialog__header{
+        .el-dialog__headerbtn{
+          top:0
+        }
+      }
+      .el-dialog__body {
+        padding-bottom: 0;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+        .pass-input{
+          padding-bottom: 18px;
+        }
+      }
+    }
+    .form-footer{
+      width: 580px;
+      display: flex;
+      // height: 4.25rem;
+      height: 72px;
+      justify-content: flex-end;
+      align-items: center;
+      border-top: 0.0625rem solid #E9ECEF;
+      // margin-top: 18px;
+      // padding-top: 16px;
+      margin-left: -18%;
+      .el-form-item{
+        margin-bottom: 0;
+      }
+      .el-form-item{
+        padding-right: 20px;
+      }
+    }
+  }
+}
+
+.dialog-block-add-peizhi{
+  .el-dialog__wrapper {
+    display: flex;
+    // padding: 24px; //添加上下间隙，可为任意值
+}
+  /deep/.el-dialog {
+    width: 580px;
+    min-height: 460px;
+    // margin-top: 15vh;
+    margin: auto !important;
+    .notice{
+      width: 420px;
+      padding-top: 0px;
+      // padding: 0 ;
+      .el-input{
+        width: 360px;
+      }
+      .el-input input{
+        width: 360px;
+      }
+    }
+    .add-config-container .form-search{
+      padding-bottom: 0;
+    }
+    .l-upload{
+      .el-dialog__header{
+       .el-dialog__headerbtn{
+         top:0
+       }
+     }
+     .el-dialog__body {
+       padding-bottom: 0;
+       padding-left: 0;
+       padding-right: 0;
+       padding-top: 0;
+       .pass-input{
+         padding-bottom: 18px;
+       }
+     }
+   }
+    .el-dialog__footer{
+      border-top: 0.0625rem solid #E9ECEF;
+      height: 72px;
+      line-height: 1;
+      padding: 16px 20px;
+      .dialog-footer{
+        display: inline-block;
+      }
+    }
+  }
+  .el-dialog__body{
+    padding: 40px 20px 18px 20px;
+  }
+  .el-dialog__header{
+    border-bottom: 1px solid #E9ECEF;
+    // padding: 10px 0 10px 20px;
+    height: 60px;
+    line-height: 1;
+    .el-dialog__headerbtn{
+      top:22px
+    }
+  }
+}

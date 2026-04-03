@@ -1,0 +1,222 @@
+.container {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    padding: 40px 0 40px 0;
+    color: #414658;
+    .add_bt{
+        border: 1px solid #2890FF;
+        background: #FFFFFF;
+        color: #2890FF;
+        width: 124px;
+        height: 40px;
+    }
+    .input-interval-block{
+      display: flex;
+      .auto{
+        margin-right: 8px;
+      }
+    }
+    /deep/.add-menu {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        overflow-y: auto;
+        .el-form {
+            padding-right: 10px;
+            .el-form-item {
+                &:not(:last-child) {
+                    .el-form-item__content {
+                        margin-left: 0px !important;
+                    }
+                }
+                display: flex;
+                .el-form-item__content {
+                    width: 580px;
+                }
+                .select-input {
+                    width: 580px;
+                    height: 40px;
+                    input{
+                        width: 580px;
+                        height: 40px;
+                    }
+                }
+                .select-input2 {
+                    width: 446px;
+                    height: 40px;
+                    margin-right: 10px;
+                    input{
+                        width: 446px;
+                        height: 40px;
+                        margin-right: 10px;
+                    }
+                }
+            }
+
+            .cascadeAddress {
+                .el-form-item__content {
+                    .cascadeAddress-block {
+                        .el-select {
+                            width: 188px;
+                            &:not(:first-child) {
+                                margin-left: 8px;
+                            }
+                            .el-input {
+                                width: 188px;
+                            }
+                            .el-input {
+                                width: 188px;
+                                input {
+                                    width: 188px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    .model {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.5;
+        background: #000;
+        z-index: 2000;
+      }
+    .dialog-brand {
+        .el-dialog__wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        /deep/.el-dialog {
+          width: 680px;
+          min-height: 456px;
+          margin-top: 0 !important;
+          .el-dialog__header {
+            width: 100%;
+            height: 58px;
+            line-height: 58px;
+            font-size: 16px;
+            margin-left: 19px;
+            font-weight: bold;
+            border-bottom: 1px solid #e9ecef;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0 0 0 19px;
+            .el-dialog__headerbtn {
+              font-size: 18px;
+              top: 0 !important;
+            }
+            .el-dialog__title {
+              font-weight: normal;
+            }
+          }
+          .el-dialog__body {
+            display: flex;
+            justify-content: center;
+            // padding: 40px 0;
+            .el-form {
+              padding-bottom: 0;
+            }
+            .el-form-item {
+              display: flex;
+              .el-form-item__content {
+                width: 472px;
+                margin-left: 0px !important;
+              }
+              .select-input {
+                width: 472px;
+                height: 40px;
+                input{
+                    width: 472px;
+                    height: 40px;
+                }
+              }
+    
+              .belongClass {
+                height: auto;
+                .el-input {
+                  height: auto;
+                }
+                .el-tag.el-tag--info .el-tag__close {
+                  color: #ffffff;
+                  margin-top: 1px;
+                }
+              }
+            }
+    
+            .upload-img {
+              .el-form-item__content {
+                display: flex;
+                align-items: center;
+                .avatar-uploader .el-upload {
+                  border: 1px dashed #d9d9d9;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  position: relative;
+                  overflow: hidden;
+                }
+                .avatar-uploader .el-upload:hover {
+                  border-color: #409eff;
+                }
+                .avatar-uploader-icon {
+                  font-size: 28px;
+                  color: #8c939d;
+                  width: 80px;
+                  height: 80px;
+                  line-height: 80px;
+                  text-align: center;
+                }
+                .avatar {
+                  width: 80px;
+                  height: 80px;
+                  display: block;
+                }
+                .removeImg {
+                  position: absolute;
+                  right: 0;
+                  top: 0;
+                }
+    
+                .text {
+                  margin-bottom: 10px;
+                  margin-left: 5px;
+                }
+              }
+            }
+    
+            .form-footer {
+              width: 100%;
+              height: 72px;
+              position: absolute;
+              bottom: 0;
+              right: 0;
+              border-top: 1px solid #e9ecef;
+              .el-form-item {
+                width: 100%;
+                padding: 0 !important;
+                height: 100%;
+                .el-form-item__content {
+                  height: 100%;
+                  width: 100%;
+                  line-height: 72px;
+                  margin: 0 !important;
+                  text-align: right;
+                  padding-right: 20px;
+                }
+              }
+            }
+          }
+        }
+      }
+    /deep/.el-form-item__label {
+        font-weight: normal;
+    }
+}

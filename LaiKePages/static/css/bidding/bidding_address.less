@@ -1,0 +1,106 @@
+.receivingAddress{
+    min-height: 100vh;
+    
+    .addBox{
+        .center();
+        color: @tabColor;
+        height: 98rpx;
+        font-size: 28rpx;
+        line-height: 28rpx;
+        
+        view{
+            font-size: 50rpx;
+            margin-right: 10rpx;
+            margin-top: -2rpx;
+        }
+        
+    }
+    
+    .list{
+        display: flex;
+        align-items: center;
+        padding: 0 30rpx;
+        height: 130rpx;
+        
+        &_left{
+            flex: 1;
+            overflow: hidden;
+            
+            &_top{
+                display: flex;
+                align-items: center;
+                font-size: 28rpx;
+                color: #020202;
+                font-weight: bold;
+                
+                view{
+                    font-weight: bold;
+                    margin-left: 30rpx;
+                }
+            }
+            
+            &_bottom{
+                display: flex;
+                align-items: center;
+                margin-top: 10rpx;
+                
+                view{
+                    .center();
+                    width: 52rpx;
+                    height: 28rpx;
+                    background: @priceColor;
+                    border-radius: 4rpx;
+                    font-size: 20rpx;
+                    color: #FFFFFF;
+                    margin-right: 10rpx;
+                }
+                
+                text{
+                    font-size: 24rpx;
+                    color: #888888;
+                    width: 556rpx;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                
+            }
+            
+        }
+        
+        >image{
+            width: 30rpx;
+            height: 30rpx;
+        }
+        
+    }
+    
+    .hr{
+        height: 20rpx;
+        background: #F6F6F6;
+    }
+    
+}
+
+.positionBtn{
+    height: 98rpx;
+    
+    button{
+        .center();
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        .solidBtn();
+        height: 98rpx;
+        z-index: 99;
+        border: 0;
+        border-radius: 0;
+        font-size: 30rpx;
+        padding: 0;
+    }
+    
+    button:after{
+        border: 0;
+    }
+}

@@ -1,0 +1,542 @@
+.container {
+    width: 100%; 
+    /deep/.nav-label .el-radio-button__inner{
+        background: #f3f5f7  ;
+    }
+    .form-search {
+        height: 100%;
+    }
+    .empty{
+        text-align: center;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    
+        img{
+            width: 300px;
+        }
+        p {
+            margin: 20px;
+            font-size: 16px;
+            color: #97A0B4;
+        }
+    }
+ 
+    .list-name{
+        position: absolute;
+        bottom: 0px;
+        left: 0px; 
+        width: 216px;
+        height: 120px;
+        display: flex; 
+        height: 120px; 
+        flex-direction: column;
+        justify-content: flex-end;
+        border-radius: 10px 10px 10px 10px; 
+        background-size: cover; /* 或使用 contain */
+        background-repeat: no-repeat; /* 不重复 */
+        background-position: center; /* 居中对齐 */
+    }
+    .default{
+        display: flex;
+        flex-direction: column;
+    }
+    /deep/ .btn-item{
+        .el-button{
+            background: transparent;
+            color: #414658;
+            border-radius: 4px 4px 4px 4px;
+            border: 1px solid #D5DBE8;
+        }
+        .el-button:hover{
+            color: #ffffff !important;
+            border-color: #2890ff !important;
+            background-color: #2890ff !important;
+        }
+    }
+    .textMask{
+         background-image: url(../../../../assets/images/diy/textMask.png);
+    }
+     .butMask{
+        height: 100px !important;
+        display: flex !important;
+        // align-items: center;
+         background-image: url(../../../../assets/images/diy/butMask.png);
+    }
+    .icon-img {
+        width: 20px !important;
+        height: 20px !important;
+        border: none !important;
+        margin: 0px !important;
+    }
+    .preview-box { 
+        // width: 305px;
+        // height: 620px;
+        width: 271px;
+        height: 549px;
+        position: relative;
+      
+        // display: flex;
+        // justify-content: center;
+        // align-items: center; 
+        .mobile-phone-model{
+            position: absolute;
+            top: -15px;
+            left: -8px;
+            z-index: 99;
+            // width: 246px;
+            // height: 500px;
+            width: 100%;
+            height: 100%;
+            background-image:url(../../../../assets/images/diy/ios.png);
+            background-size: cover;
+        }
+    }
+    /deep/ .el-divider {
+        margin-top: 5px;
+        background-color: #E9ECEF;
+        width: 95%;
+        margin-bottom: 0px;
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
+    /deep/.el-form {
+        // margin-top: 16px;
+        //height: 60rem;
+        overflow: hidden;
+        // overflow-y: auto;
+        .header {
+          width: 100%;
+          height: 61px;
+          line-height: 60px;
+          border-bottom: 1px solid #E9ECEF;
+        //   padding-left: 20px;
+          display: flex;
+          justify-content: space-between;
+
+          .title-type{
+              span {
+                  font-weight: 400;
+                  font-size: 16px; 
+                  margin: 27px;
+                  color: #97A0B4; 
+                  user-select: none;
+                  cursor: pointer;
+                  font-weight: bold;
+                }
+                span:last-child{
+                    margin-left: 19px;
+                }
+              .select-title {
+                  color: #414658;
+              }
+            }
+
+        }
+        .type-setting{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 132px;
+            height: 40px;
+            background: #E9ECEF;
+            border-radius: 4px;
+            user-select: none;
+            margin-right: 20px;
+            margin-top: 10px;
+            .item{
+                width: 60px;
+                height: 32px;
+                line-height: 32px;
+                font-size: 14px;
+                color: #333333;
+                text-align: center;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                img {
+                    height: 15px !important;
+                    width: 15px !important;
+                    margin-right: 3px !important;
+                }
+            }
+            .query-type{
+               
+                background: #FFFFFF;
+                border-radius: 4px;
+            }
+        }
+        .div-content {
+            width: 100%;
+            // height: 677px;
+            height: 100%;
+            // padding: 40px 80px;
+            display: flex;
+            justify-content: space-between;
+            overflow-y: auto;
+            .left-show {
+                // flex: 1;
+                width: 448px;
+                //    width: 20%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                background-color: #fff;
+                padding: 10px;
+                border-radius: 5px;
+                align-items: center;
+                justify-content: center;
+               .show-header {
+                   width: 100%;
+                   height: 52px;
+                   display: flex;
+                   justify-content: space-between;
+                   align-items: center;
+                   border-bottom: 0.5px solid #E9ECEF;
+                   .title {
+                       font-size: 14px;
+                       font-weight: bold;
+                   }
+                   .editor {
+                       color: #2890ff;
+                       cursor: pointer;
+                   }
+               }
+               .show-content {
+                   width: 100%;
+                   flex: 1;
+                   display: flex;
+                    justify-content: center;
+                    align-items: center;
+                   iframe {
+                    //    width: 100%;
+                    //    height: 100%;
+                       width: 247px;
+                       height: 515px;
+                   }
+               }
+            }
+
+            .right-template {
+                flex: 2;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                // margin-left: 200px;
+                background-color: #fff;
+                margin-right: 10px;
+                border-radius: 5px;
+
+                .template-header {
+                    width: 100%;
+                    // height: 40px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    
+                    .title {
+                        margin-left: 1.25rem;
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                    .add {
+                        cursor: pointer;
+                        margin: 19px;
+
+                    }
+                    >div:first-child{
+                        margin-left: 20px;
+                        margin-top: 10px;
+                        max-width: 900px;
+                        overflow-x: auto;
+                        cursor: pointer;
+                        user-select: none;
+                       .el-radio-group{
+                            display: flex;
+                        }
+                         /* 隐藏滚动条，适用于 WebKit 浏览器（如 Chrome、Safari） */
+                        -webkit-overflow-scrolling: touch;
+                        /* 隐藏滚动条，适用于 Chrome、Safari 和 Opera */
+                        &::-webkit-scrollbar {
+                            display: none;
+                        }
+                        /* 隐藏滚动条，适用于 IE 和 Edge */
+                        -ms-overflow-style: none;
+                        /* 隐藏滚动条，适用于 Firefox */
+                        scrollbar-width: none;
+                    }
+                  
+                }
+                .template-content {
+                    width: 100%;
+                    flex: 1;
+                    overflow-y: auto;
+                    ul {
+                        display: flex;
+                        justify-content: space-evenly;
+                        flex-wrap: wrap;
+                        user-select: none;
+                        li { 
+                            margin-top: 10px;
+                            // margin-left: 20px;
+                            margin-bottom: 10px; 
+                            position: relative; 
+ 
+                            width: 100%;
+                            height: 238px; 
+                            border-radius: 10px;
+                            border: 2px solid #E9ECEF;
+                            .current-box{
+                                display: flex;
+                                // align-items: center;
+                                justify-content: space-between;
+                                // height: 35px;
+                                margin: 0 15px;
+                                margin-right: 15px;
+                                margin-top: 20px;
+                            }
+                            .current-info{
+                                display: flex;
+                                margin: 0 15px;
+                                flex: 1; 
+                                align-items: center;
+                                /deep/.btn-item {
+                                    display: flex;
+                                    button {
+                                        width: 30%;
+                                    } 
+                                }
+                            }
+                            img { 
+                                width: 64px;
+                                height: 138px;
+                                border-radius: 4px;
+                                border: 1.9px solid #333333;
+                                margin-right: 15px;
+                            }
+                            .wt-icon {
+                                // box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+                                width: 64px;
+                                height: 138px;
+                            }
+                            .default-p {
+                                font-family: MicrosoftYaHei-Bold, MicrosoftYaHei-Bold;
+                                color: #414658; 
+                                font-weight: bold;
+                                font-size: 16px;  
+                                width: 120px;
+                                height: auto; 
+                                display:-webkit-inline-box;
+                                overflow: hidden; /*超出隐藏*/
+                                text-overflow: ellipsis;/*隐藏后添加省略号*/
+                                -webkit-box-orient:vertical;
+                                -webkit-line-clamp:1; //想显示多少行
+                            }
+                            .diy-info{
+                                font-family: MicrosoftYaHei, MicrosoftYaHei;
+                                font-weight: normal;
+                                font-size: 14px;
+
+                                display: -webkit-inline-box;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 4;
+                                height: 92px;
+                                line-height: 23px;
+                            }
+                            .current-use{
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                width: 96px;
+                                height: 28px;
+                                background: rgba(40,144,255,0.1);
+                                border-radius: 2px;
+
+                                font-size: 14px;
+                                color: #2890FF;
+                                line-height: 14px;
+                                text-align: left;
+                                font-style: normal;
+                            }
+                            .operation {
+                                width: 100%;
+                                height: 40px;
+                                border: 2px solid #2890FF;
+                                border-radius: 10px;
+                                // background-color: rgba(40,144,255,0.05); 
+                                .btn-item {
+                                    width: 100%;
+                                    height: 100%;
+                                    display: flex;
+                                    justify-content: space-evenly;
+                                    align-items: center;
+                                    button {
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        width: 56px !important;
+                                        height: 28px;
+                                        border-radius: 4px 4px 4px 4px;
+                                        border: 1px solid #2890FF;
+                                        color: #2890FF;
+                                        cursor: pointer;
+                                        line-height: 28px;
+                                    }
+                                 
+                                    .edit {
+                                        margin: 20px 0;
+                                    }
+                                    .edit,.del {
+                                        border: 1px solid #fff;
+                                        color: #fff;
+                                        background: rgba(255,255,255,0.1);
+                                    }
+                                    .del {
+                                        margin-right: 8px;
+                                    }
+                                    
+                                }
+                            }  
+                        }
+                        .operation1{  
+                            border: 2px solid #2890FF !important;
+                            background-color: #f3f9fe !important;
+                            .default-p { 
+                                color: #2890FF !important;
+                                font-style: normal;
+                                text-transform: none;
+                            }
+                        }
+                        .operation2{
+                            border-bottom: 2px solid #2890FF !important;
+                        }
+                        .list-soring { 
+                            margin:5px 6px;
+                            position: relative;
+
+                            width: 216px;
+                            height: 340px;
+                            background: linear-gradient( 180deg, #FBFBFB 0%, #F2F6FC 100%);
+                            border-radius: 10px 10px 10px 10px;
+                            border: 1px solid #E9ECEF;
+
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            .diy-inof{ 
+                                background: #EDF1F5;
+                                border-radius: 10px;
+                                border: 2px solid #E9ECEF;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                                
+                                width: 140px;
+                                height: 306px;
+                                box-shadow: 6px 6px 6px 1px rgba(0, 0, 0, 0.06);
+                                border-radius: 10px 10px 10px 10px;
+                                border: 6px solid #FFFFFF
+
+                            }
+                            .img-box{
+                                position: relative;  
+
+                            }
+                            img,.img-box {
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 10px;
+                                border: none;
+                                margin: 0px;
+                            }
+                            .list-icon{
+                                position: absolute;
+                                top: 0px;
+                                right: 0px;
+                                width: 40px !important;
+                                height: 42px !important;
+                                border-radius: 0px !important;
+                            }
+                            .default-p { 
+                                font-weight: 400;
+                                font-size: 15px;
+                                color: #97A0B4; 
+                                text-align: center;
+                                width: 100%;
+                                line-height: 50px;
+                                
+                            }
+                            .tw-diy-title{
+                                font-weight: 400 ;
+                                font-size: 15px !important;
+                            }
+                            .operation{
+                                // background: rgba(0,0,0,0.5);
+                                border-radius: 10px;
+                                border: none;
+                                button {
+                                    width: auto !important;
+                                    border: 1px solid #fff;
+                                    color: #fff;
+                                    background: rgba(255,255,255,0.1);
+                                    margin: 3px 0;
+                                }
+                            }
+                            .current-use{
+                                position: absolute;
+                                top: 0px;
+                                right: 0px;
+                                z-index: 99;
+                                border-radius: 0px 5px 0px 14px;
+                            }
+                            
+                           
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    .model-cut-flower{
+        width: 224px;
+        height: 48px;
+        background: #F4F5F6;
+        border-radius: 23px 23px 23px 23px;
+
+        position: absolute;
+        bottom: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        display: flex;
+        align-items: center;
+        user-select: none;
+        justify-content: center;
+        div{
+            width: 72px;
+            height: 40px;
+            border-radius: 0px 0px 0px 0px;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            img {
+                width: 21px;
+                height: 20px; 
+            }
+        }
+        .choose{
+            background: #fff;
+            border-radius: 50px;
+            box-shadow: 1px 4px 3px #ccc; 
+        }
+    }
+}

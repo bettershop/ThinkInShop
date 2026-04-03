@@ -1,0 +1,45 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  application:
+    name: laike-cloud-gateway
+  profiles:
+    active: @profiles.active@
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:9527
+        port: 8719
+      eager: true
+    nacos:
+      server-addr: @nacos.address@
+      config:
+        file-extension: yml
+        prefix: ${spring.application.name}
+        namespace: @nacos.namespace@
+        shared-configs[0]:
+          data-id: @nacos.comm@
+          refresh: true
+      discovery:
+        server-addr: @nacos.address@
+        #自定义服务访问名称
+        service: scgw
+        namespace: @nacos.namespace@
+
+    #    #都移过去 naocs 配置中心
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
+
+# 开放所有页面节点  默认只开启了health、info两个节点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# 网关日志
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
