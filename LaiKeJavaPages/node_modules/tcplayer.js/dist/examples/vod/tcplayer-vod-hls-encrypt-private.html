@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <title>腾讯云视频点播示例</title>
+  <!-- 引入播放器 css 文件 -->
+  <link href="https://web.sdk.qcloud.com/player/tcplayer/release/v4.3.0/tcplayer.min.css" rel="stylesheet">
+  <!-- 如需在IE8、9浏览器中初始化播放器，浏览器需支持Flash并在页面中引入 -->
+  <!--[if lt IE 9]>
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.3.0/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+  <!-- 如果需要在 Chrome Firefox 等现代浏览器中通过H5播放hls，需要引入 hls.js -->
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.3.0/libs/hls.min.0.13.2m.js"></script>
+  <!-- 引入播放器 js 文件 -->
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.3.0/tcplayer.v4.3.0.min.js"></script>
+  <!-- 示例 CSS 样式可自行删除 -->
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+    }
+    .tcplayer {
+      margin: 0 auto;
+    }
+    @media screen and (max-width: 640px) {
+      #player-container-id {
+        width: 100%;
+        height: 270px;
+      }
+    }
+
+</style>
+</head>
+<body>
+<!-- 设置播放器容器 -->
+<video id="player-container-id" preload="auto" width="640" height="360" playsinline webkit-playsinline>
+</video>
+
+<!--
+注意事项：
+* 播放器容器必须为 video 标签
+* player-container-id 为播放器容器的ID，可自行设置
+* 播放器区域的尺寸请按需设置，建议通过 css 进行设置，通过css可实现容器自适应等效果
+* playsinline webkit-playsinline 这几个属性是为了在标准移动端浏览器不劫持视频播放的情况下实现行内播放，此处仅作示例，请按需使用
+* 设置 x5-playsinline 属性会使用 X5 UI 的播放器
+-->
+
+<script>
+
+// https://vods.cloud.tencent.com/signature/super-player-sign.html
+
+// params3: {
+//   1500005696
+//   3701925921299637010
+//   1626860176
+//   2626859179
+//   private
+//   9c92b0ab ().toString(16)
+//   2626859179
+//   2
+//   yd02dsLY2GJBvptS9GRe
+// }
+
+  // // 不开防盗链
+  // var params0 = {
+  //   fileID: '3701925919799336043', // 请传入需要播放的视频filID 必须
+  //   appID: '1500005692', // 请传入点播账号的appID 必须
+  // }
+
+  // // 不加密
+  // var params1 = { // player-container-id 为播放器容器ID，必须与html中一致
+  //   fileID: '3701925921299637010', // 请传入需要播放的视频filID 必须
+  //   appID: '1500005696', // 请传入点播账号的appID 必须
+  //   psign: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6MTUwMDAwNTY5NiwiZmlsZUlkIjoiMzcwMTkyNTkyMTI5OTYzNzAxMCIsImN1cnJlbnRUaW1lU3RhbXAiOjE2MjY4NjAxNzYsImV4cGlyZVRpbWVTdGFtcCI6MjYyNjg1OTE3OSwicGNmZyI6ImRlZmF1bHQiLCJ1cmxBY2Nlc3NJbmZvIjp7InQiOiI5YzkyYjBhYiJ9LCJkcm1MaWNlbnNlSW5mbyI6e319.RQvfYWmrFLXghw5QWZ5WE-3jC0eilv69o99DC1A-wx0',
+  // };
+
+  // // 标准加密
+  // var params2 = { // player-container-id 为播放器容器ID，必须与html中一致
+  //   fileID: '3701925921299637010', // 请传入需要播放的视频filID 必须
+  //   appID: '1500005696', // 请传入点播账号的appID 必须
+  //   psign: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6MTUwMDAwNTY5NiwiZmlsZUlkIjoiMzcwMTkyNTkyMTI5OTYzNzAxMCIsImN1cnJlbnRUaW1lU3RhbXAiOjE2MjY4NjAxNzYsImV4cGlyZVRpbWVTdGFtcCI6MjYyNjg1OTE3OSwicGNmZyI6ImJhc2ljRHJtUHJlc2V0IiwidXJsQWNjZXNzSW5mbyI6eyJ0IjoiOWM5MmIwYWIifSwiZHJtTGljZW5zZUluZm8iOnt9fQ.XIO5Aa4Sl6CBHxc6ICJE3g84Xrw4cbrKmpv6CrRsMoQ',
+  // };
+
+  // 私有加密 计算psign时将 strictMode设置为2
+  var params3 = { // player-container-id 为播放器容器ID，必须与html中一致
+    fileID: '3701925921299637010', // 请传入需要播放的视频filID 必须
+    appID: '1500005696', // 请传入点播账号的appID 必须
+    psign: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6MTUwMDAwNTY5NiwiZmlsZUlkIjoiMzcwMTkyNTkyMTI5OTYzNzAxMCIsImN1cnJlbnRUaW1lU3RhbXAiOjE2MjY4NjAxNzYsImV4cGlyZVRpbWVTdGFtcCI6MjYyNjg1OTE3OSwicGNmZyI6InByaXZhdGUiLCJ1cmxBY2Nlc3NJbmZvIjp7InQiOiI5YzkyYjBhYiJ9LCJkcm1MaWNlbnNlSW5mbyI6eyJleHBpcmVUaW1lU3RhbXAiOjI2MjY4NTkxNzksInN0cmljdE1vZGUiOjJ9fQ.Bo5K5ThInc4n8AlzIZQ-CP9a49M2mEr9-zQLH9ocQgI',
+  };
+
+  var player = TCPlayer('player-container-id', params3);
+
+</script>
+</body>
+</html>

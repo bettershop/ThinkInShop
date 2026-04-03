@@ -1,0 +1,229 @@
+.container {
+    min-height: 100vh;
+    background: #F4F5F6;
+    
+    .header_info {
+        .content {
+            width: 100%;
+            ul {
+                width: 100%;
+                padding: 32rpx;
+                padding-top: 0;
+                background-color: #ffffff;
+                box-sizing: border-box;
+                padding-bottom: 0;
+                border-radius: 0px 0px 24rpx 24rpx;
+                li {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 108rpx;
+                    width: 100%;
+                    &:not(:last-child) {
+                        border-bottom: 1rpx solid #e5e5e5;
+                    }
+                    .title {
+                        font-size: 32rpx;
+                        color: #333333;
+                        min-width: 128rpx;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 1;
+                    }
+                    .con {
+                        font-size: 32rpx;
+                        font-weight: 500;
+                        color: #333333;
+                        display: inline-block;
+                        white-space: nowrap; 
+                        width: 100%; 
+                        overflow: hidden;
+                        text-overflow:ellipsis;
+                        text-align: right;
+                        padding-left: 20rpx;
+                    }
+                    .red {
+                        color: #FA5151;
+                    }
+                }
+            }
+            
+            .emile {
+                width: 100%;
+                height: 140rpx;
+                background-color: #ffffff;
+                padding: 0 32rpx;
+                // padding: 0 32rpx 0 0;
+                margin-top: 24rpx;
+                display: flex;
+                align-items: center;
+                border-radius: 24rpx;
+                box-sizing: border-box;
+                display: flex;
+                // justify-content: flex-end;
+                justify-content: space-between;
+                .emile_left {
+                    display: flex;
+                    align-items: left;
+                    span {
+                        &:first-child {
+                            color: #FA5151;
+                            font-size: 32rpx;
+                            margin-right: 6rpx;
+                        }
+                        &:last-child {
+                            font-size: 32rpx;
+                            color: #333333;
+                        }
+                    }
+                }
+                .emile_right {
+                    margin-left: 32rpx;
+                    input {
+                        width: 498rpx;
+                        height: 80rpx;
+                        border-radius: 16rpx;
+                        border: 1rpx solid rgba(0,0,0,0.1);
+                        padding-left: 20rpx;
+                        box-sizing: border-box;
+                        font-size: 32rpx;
+                    }
+                }
+            }
+        }
+    }
+    
+    .btn {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        // padding-bottom: 16rpx;
+        background-color: #ffffff;
+        /* #ifdef MP-WEIXIN */
+        padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
+        padding-bottom: env(safe-area-inset-bottom); 
+        /* #endif */
+        .change_header {
+            width: 100%;
+            height: 92rpx;
+            background: #FFF7CC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            p {
+                font-size: 32rpx;
+                font-weight: 500;
+                color: #FA5151;
+            }
+            image {
+                width: 32rpx;
+                height: 44rpx;
+            }
+        }
+        .submit {
+            width: 100%;
+            // height: 92rpx;
+            background: #FFFFFF;
+            padding: 16rpx 32rpx;
+            box-sizing: border-box;
+            p {
+                width: 100%;
+                height: 92rpx;
+                background: linear-gradient(270deg, #FF6F6F 0%, #FA5151 100%);
+                border-radius: 52rpx;
+                color: #ffffff;
+                font-size: 32rpx;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+    
+    .headerMask {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 9999;
+        width: 100vw;
+        .mask_header {
+            width: 100%;
+            height: 134rpx;
+            background: #F4F5F6;
+            border-radius: 24rpx 24rpx 0px 0px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40rpx;
+            box-sizing: border-box;
+            p {
+                font-size: 40rpx;
+                font-weight: 500;
+                color: #333333;
+            }
+            image {
+                width: 48rpx;
+                height: 48rpx;
+            }
+        }
+        .mask_content {
+            width: 100%;
+            background-color: #ffffff;
+            ul {
+                width: 100%;
+                padding: 0 32rpx;
+                box-sizing: border-box;
+                // max-height: 624rpx;
+                height: 694rpx;
+                max-height: 694rpx;
+                overflow: hidden;
+                overflow-y: scroll;
+                li {
+                    width: 100%;
+                    height: 156rpx;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    &:not(:last-child) {
+                        border-bottom: 2rpx solid #e5e5e5;
+                    }
+                    .header_info_left {
+                        display: flex;
+                        flex-direction: column;
+                        span {
+                            &:first-child {
+                                font-size: 32rpx;
+                                font-weight: 500;
+                                color: #333333;
+                            }
+                            &:last-child {
+                                font-size: 28rpx;
+                                color: #999999;
+                            }
+                        }
+                    }
+                    .header_info_right {
+                        image {
+                            width: 32rpx;
+                            height: 32rpx;
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    .model {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000000;
+        opacity: 0.3;
+        z-index: 9998;
+    }
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <title></title>
+  <link href="//imgcache.qq.com/open/qcloud/video/tcplayer/tcplayer.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/ie8/videojs-ie8.js"></script>
+  <![endif]-->
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/libs/hls.min.0.12.4.js"></script>
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/libs/dash.all.min.2.9.3.js"></script>
+  <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/tcplayer.min.js"></script>
+
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+    }
+    .tcp-skin{
+      margin:0 auto;
+    }
+  </style>
+</head>
+<body>
+
+<video id="player" preload="auto" playsinline webkit-playsinline>
+</video>
+
+<script>
+  (function(){
+    function getParams(name) {
+      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) {
+        return decodeURIComponent(r[2]);
+      }
+      return null;
+    }
+    function getPathParams(){
+      var path = location.pathname.split('/');
+      if(path[1] == 'vod-player'){
+        return{
+          'path' : '//'+location.host + path.slice(0, 4).join('/'),
+          'appID' : path[2],
+          'fileID' : path[3]
+        }
+      }else{
+        return null;
+      }
+    }
+    function getViewportSize(){
+      var doc = document;
+      var docE = doc.documentElement;
+      var body = doc.body;
+      return {
+        'width': (docE && docE.clientWidth) || (body && body.offsetWidth) || window.innerWidth || 0,
+        'height': (docE && docE.clientHeight) || (body && body.offsetHeight) || window.innerHeight || 0
+      };
+    }
+    var fileID = getParams('fileID'),
+      appID = getParams('appID'),
+      width = getParams('width'),
+      height = getParams('height'),
+      autoplay = (getParams('autoplay') == 'true' ? true : false),
+      ssign = getParams('ssign'),
+      t = getParams('t'),
+      us = getParams('us'),
+      sign = getParams('sign'),
+      exper = getParams('exper'),
+      playerID = getParams('playerID'),
+      definition = getParams('definition'),
+      playDefinition = getParams('playDefinition'),
+      swf = (function(){
+        var params = getPathParams();
+        if(params){
+          return params.path +'/tcplayer/player.swf';
+        }
+      })();
+    // 避免设置宽度超过页面宽度，进行等比缩放。
+    var vpSize = getViewportSize();
+    if(vpSize['width'] < width){
+      height = vpSize['width']*height/width;
+      width = vpSize['width'];
+    }
+
+    var options = {
+      appID : appID,
+      fileID: fileID,
+      playerID: playerID,
+      definition: definition,
+      t: t,
+      us: us,
+      sign: sign,
+      exper: exper,
+      autoplay: autoplay,
+      width: width,
+      height: height,
+      swf: swf
+    };
+    // IE10\9\8在iframe中无法使用全屏按钮
+    if(TCPlayer.browser.IE_VERSION && TCPlayer.browser.IE_VERSION < 11 && window != window.top){
+      options['controlBar']={
+        'fullscreenToggle': false
+      }
+    }
+    if(ssign){
+      options['ssign'] = ssign;
+    }
+
+    var pathParams = getPathParams();
+    if(pathParams){
+      options.appID = options.appID || pathParams.appID;
+      options.fileID = options.fileID || pathParams.fileID;
+      options.playDefinition = options.playDefinition || pathParams.playDefinition;
+    }
+
+    var player = TCPlayer('player', options);
+    window.player = player;
+
+  })();
+</script>
+</body>
+</html>

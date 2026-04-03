@@ -1,0 +1,266 @@
+.btnBox {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 98rpx;
+    display: flex;
+    font-size: 32rpx;
+
+    .btn {
+        .solidBtn();
+        flex: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.container {
+background-color: #f6f6f6;
+min-height: 100vh;
+&.pb {
+    padding-bottom: 100rpx;
+}
+
+
+
+&_top {
+    position: sticky;
+    z-index: 888;
+    top: 0;
+    
+    
+
+    .tab {
+        display: flex;
+        background-color: #ffffff;
+
+        .li {
+            flex: 1;
+            height: 90rpx;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30rpx;
+            color: #999999;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .active {
+            position: relative;
+            color: @tabColor;
+            font-weight: bold;
+        }
+
+        .active:after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 150rpx;
+            height: 2px;
+            background-color: @tabColor;
+        }
+    }
+}
+
+.pro {
+    padding-left: 30rpx;
+    background-color: #ffffff;
+    margin-bottom: 20rpx;
+
+    &_top {
+        display: flex;
+        padding: 30rpx 0;
+        border-bottom: 1px solid #e6e6e6;
+
+        .image {
+            width: 160rpx;
+            height: 160rpx;
+            margin-right: 22rpx;
+        }
+
+        &_right {
+            flex: 1;
+            overflow: hidden;
+            padding-right: 20rpx;
+
+            .proTitle {
+                font-size: 26rpx;
+                line-height: 30rpx;
+                color: #020202;
+                text-overflow: -o-ellipsis-lastline;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .proSize {
+                color: #999999;
+                font-size: 24rpx;
+                line-height: 24rpx;
+                margin-top: 20rpx;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .proPrice {
+                display: flex;
+                align-items: center;
+                margin-top: 34rpx;
+                color: #666666;
+                font-size: 24rpx;
+                line-height: 24rpx;
+
+                .red {
+                    color: @priceColor;
+                    font-weight: bold;
+                    margin-right: 40rpx;
+                }
+                .black {
+                    color: #343434;
+                }
+            }
+        }
+    }
+
+    &_bottom {
+        display: flex;
+        height: 80rpx;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10rpx;
+
+        .btn {
+            width: 140rpx;
+            height: 50rpx;
+            border-radius: 6rpx;
+            margin-right: 20rpx;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24rpx;
+            .outBtn();
+        }
+    }
+}
+}
+.mask {
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(000, 000, 000, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mask_content {
+    width: 550rpx;
+    height: 414rpx;
+    background-color: #fff;
+    text-align: center;
+    font-size: 30rpx;
+    border-radius: 23rpx;
+    position: relative;
+}
+
+.mask_content > .btns {
+    border-top: 1px solid #eee;
+    width: 100%;
+    font-size: 34rpx;
+    color: #005edf;
+    height: 94rpx;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.cancel {
+    border-right: 1px solid #eee;
+    color: #999999;
+}
+
+.cancel, .confirm {
+    width: 50%;
+    float: left;
+    height: 100%;
+    line-height: 98rpx;
+    font-size: 34rpx;
+}
+
+.confirm {
+    color: @tabColor;
+}
+
+.mask_content {
+    .title {
+        position: relative;
+        border: none;
+        background: @bgColor;
+        color: @tabColor;
+        font-size: 34rpx;
+        font-weight: 500;
+        border-top-right-radius: 22rpx;
+        border-top-left-radius: 22rpx;
+        line-height: 94rpx;
+    }
+
+    .total {
+        display: flex;
+        height: 24rpx;
+        align-items: center;
+        width: 490rpx;
+        margin: 0 auto;
+        margin-top: 24rpx;
+        img {
+            width: 24rpx;
+            height: 24rpx;
+        }
+
+        p {
+            color: #888888;
+            font-size: 24rpx;
+        }
+    }
+    
+
+    input {
+        width: 490rpx;
+        height: 70rpx;
+        border: 1rpx solid #DDDDDD;
+        border-radius: 8rpx;
+        margin: 0 auto;
+        margin-top: 58rpx;
+        text-align: left;
+        box-sizing: border-box;
+        padding-left: 21rpx;
+        &.input-placeholder {
+            font-size: 28rpx;
+            font-weight: 500;
+            color: #B8B8B8;
+        }
+    }
+}
+
+.noFindDiv {
+    .noFindButton {
+        width: 240rpx;
+        height: 70rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30rpx;
+        margin: 61rpx auto 0;
+        .outBtn();
+    }
+}

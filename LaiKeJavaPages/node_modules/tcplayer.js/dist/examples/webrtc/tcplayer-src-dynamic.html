@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <title>TCPlayer</title>
+  <link href="https://static.yololiv.com/static/files/tcplayer/tcplayer.min.css" rel="stylesheet" />
+  <script src="https://static.yololiv.com/static/files/tcplayer/libs/TXLivePlayer-1.2.0.min.js"></script>
+  <script src="https://static.yololiv.com/static/files/tcplayer/libs/hls.min.0.13.2m.js"></script>
+  <script src="https://static.yololiv.com/static/files/tcplayer/libs/flv.min.1.6.2.js"></script>
+  <script src="https://static.yololiv.com/static/files/tcplayer/tcplayer.v4.5.2.min.js"></script>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .tcplayer {
+      margin: 0 auto;
+    }
+
+    @media screen and (max-width: 640px) {
+      #player-container-id {
+        width: 100%;
+        height: 270px;
+      }
+    }
+
+    /* 设置logo在高分屏的显示样式 */
+    @media only screen and (min-device-pixel-ratio: 2),
+    only screen and (-webkit-min-device-pixel-ratio: 2) {
+      .tcp-logo-img {
+        width: 50%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="player-container-id">
+
+  </div>
+  <button id="button">init player</button>
+  <script>
+    document.getElementById('button').addEventListener('click', init);
+    let player, playing
+    function init() {
+      const video = document.createElement('video');
+      video.id = 'player-id'
+      video.autoplay = false;
+      video.controls = false;
+      video.muted = false;
+      video.height = 360;
+      video.width = 640;
+
+      video.setAttribute('playsInline', '');
+      video.setAttribute('webkit-playsinline', '');
+
+      const container = document.getElementById('player-container-id');
+
+      container.appendChild(video)
+      player = TCPlayer('player-id', {
+        sources: [{
+          src: 'https://stream-pull-test.yololiv.com/yololiv/939069875606675457_yo480p30f.m3u8?txSecret=2d876289500eac2c62e4865c6f9646ef&txTime=75ca2e44',
+        }]
+      });
+
+      player.one('playing', (event) => {
+        playing = true;
+      })
+
+      setTimeout(() => {
+        if (!playing) {
+          reInit();
+        }
+      }, 2000);
+      player.play();
+    }
+
+    function reInit() {
+      player.dispose();
+      init();
+    }
+
+  </script>
+</body>
+
+</html>

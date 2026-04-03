@@ -1,0 +1,387 @@
+.closeImg {
+    position: absolute;
+    top: 0rpx;
+    right: 0rpx;
+    margin: 10rpx;
+    width: 32rpx;
+    height: 32rpx;
+    z-index:99;
+}
+.btn{
+        position: fixed;
+        bottom: 0;
+        z-index: 999;
+        width: 100%;
+        height: 124rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 0 rgba(0,0,0,0.2);
+        padding-bottom: constant(safe-area-inset-bottom); /* 兼容 iOS < 11.2 */
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+.submitBtn {
+    width: 686rpx;
+    height: 92rpx;
+    font-size: 32rpx;
+    color: #fff;
+    text-align: center;
+    line-height: 92rpx;
+    border-radius: 52rpx;
+    margin: 0 auto;
+    padding:0;
+    .solidBtn()
+}
+
+.upLoadPic {
+    width: 100%;
+    height: 270rpx;
+    border: 2rpx #CCCCCC dashed;
+    border-radius: 16rpx;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top:24rpx;
+    &:nth-child(1){
+        margin-top: 0;
+    }
+}
+
+.radio {
+    font-size: 28rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dzf uni-radio .uni-radio-input {
+    width: 34rpx;
+    height: 34rpx;
+}
+
+uni-radio .uni-radio-input.uni-radio-input-checked:before {
+    font-size: 28rpx;    
+    //font-weight: 500;
+}
+
+.warnImg {
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
+}
+
+// .formDiv {
+//     border-bottom: 1rpx solid #e9ecef;
+// }
+
+.formList {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom:24rpx;
+}
+
+.leftText {
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    width: 30%;
+    font-size: 28rpx;
+    justify-content: flex-start;
+    padding-left: 10rpx;
+}
+
+.rightInput {
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    width: 70%;
+}
+
+.leftText1 {
+    height: 76rpx;
+    display: flex;
+    align-items: center;
+    // width: 30%;
+    margin-right:32rpx;
+    font-size: 28rpx;
+    justify-content: flex-start;
+    padding-left: 12rpx;
+}
+
+.rightInput1 {
+    height: 76rpx;
+    display: flex;
+    align-items: center;
+    // width: 70%;
+    flex: 1;
+    color: #999999;
+    font-size: 32rpx;
+    //font-weight: 500;
+    .checkBox{
+        word-break: break-all;
+        margin-top:120rpx;
+        width: 100%;
+        height: 208rpx;
+        border-radius: 16rpx;
+        padding: 16rpx;
+        box-sizing: border-box;
+        border: 1rpx solid rgba(0,0,0,0.1);
+        color:#333333;
+        font-size:32rpx;
+        // font-weight:500;
+    }
+    view{
+        font-size: 32rpx;
+        
+        //font-weight: 500;
+        color: #333333;
+    }
+}
+
+.rightInput input {
+    font-size: 32rpx;
+    //font-weight: 500;
+    color: #333333;
+    width: 100%;
+    height:100%;
+    box-sizing: border-box;
+    padding-left:16rpx;
+    border:1rpx solid rgba(0,0,0,.1);
+    border-radius: 16rpx;
+}
+
+.rightInput1 input {
+    font-size: 32rpx;
+    //font-weight: 500;
+    color: #333333;
+    width: 100%;
+    height:100%;
+    box-sizing:border-box;
+    padding:0 16rpx;
+    border:1rpx solid rgba(0,0,0,.1);
+    border-radius: 16rpx;
+}
+
+.warningText {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30rpx;
+    font-size: 24rpx;
+    color: red;
+    width: 70%;
+    margin-left: 30%;
+    margin-bottom: 20rpx;
+}
+
+.must {
+    width: 12rpx;
+    color: red;
+    margin-right:12rpx;
+}
+
+.formList .rightInput1 .uni-radio-wrapper .uni-radio-input {
+    width: 36rpx !important;
+    height: 36rpx !important;
+}
+
+.ri_outer {
+    position: relative;
+    margin-right: 60rpx;
+    font-size: 28rpx;
+}
+
+.ri_outer .quan_img {
+    position: relative;
+    left: 0rpx;
+    top: 8rpx;
+    left: 0rpx;
+    margin-right: 10rpx;
+    width: 34rpx;
+    height: 34rpx;
+}
+
+.rightInput1 input {
+    font-size: 32rpx;
+    //font-weight: 500;
+    color: #333333;
+}
+
+.contentBox {
+    padding: 32rpx 32rpx 8rpx;
+    margin-bottom: 24rpx;
+    border-radius: 24rpx;
+    background-color: #ffffff;
+    &:nth-child(1){
+        border-radius: 0 0 24rpx 24rpx;
+    }
+}
+
+.permit {
+    height: 280rpx;
+    // margin-top: 20rpx;
+    align-items: flex-start;
+    place-self: flex-start;
+}
+
+.permitDiv {
+    // height: 280rpx;
+    height: 100%;
+    // margin-top: 20rpx;
+    border-radius: 10rpx;
+    display: block;
+}
+.upLoadPic .img {
+    width: 48rpx;
+    height: 48rpx;
+    margin-bottom: 20rpx;
+}
+
+.upLoadPic .img1 {
+    width: 100%;
+    height: 100%;
+}
+
+.permitDiv .text {
+    font-size: 24rpx;
+    
+    //font-weight: 400;
+    color: #333333;
+}
+
+.protocol {
+    color: #666;
+    text-align: center;
+    font-size: 24rpx;
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    // margin-top: 20rpx;
+    padding-bottom: 276rpx;
+    margin-left: 32rpx;
+}
+
+.protocol > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.protocol > div:last-child {
+    color:@titleBackground;
+    text-decoration: underline;
+}
+
+.font_28 {
+    font-size: 32rpx;
+}
+
+.hr {
+    background-color: #f4f5f6;
+    height: 20rpx;
+}
+
+.tc {
+    text-align: center;
+}
+
+.addressC{
+    display: flex;
+    align-items: center;
+}
+
+.jiantouDiv{
+    margin-left: 20rpx;
+}
+.jiantouDiv img{
+    width: 15rpx;
+    height: 27rpx;
+}
+
+
+.addressC_left{
+    display: flex;
+    flex-direction: column;
+}
+
+.mask_addInvoice {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .mask_invoice_content {
+         width: 640rpx;
+         background-color: #ffffff;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         border-radius: 24rpx;
+         .invoice_content_top {
+             flex: 1;
+             width: 100%;
+             display: flex;
+             flex-direction: column;
+             justify-content: center;
+             align-items: center;
+             p {
+                 &:first-child {
+                     font-size: 32rpx;
+                     //font-weight: 500;
+                     color: #333333;
+                     margin-bottom: 16rpx;
+                 }
+                 &:last-child {
+                     font-size: 32rpx;
+                 }
+             }
+             .remarksTitle{
+                 padding-top: 64rpx;
+                 margin-bottom: 32rpx !important;
+             }
+             .remarksContent{
+                 margin-top: 64rpx;
+                 margin-bottom:66rpx !important;
+             }
+         }
+         .invoice_content_bottom {
+             width: 100%;
+             height: 108rpx;
+             border-top: 2rpx solid #e5e5e5;
+             display: flex;
+             justify-content: space-evenly;
+             align-items: center;
+             p {
+                 &:first-child {
+                     color: #333333;
+                     // border-right: 2rpx solid #e5e5e5;
+                 }
+                 &:last-child {
+                     color: #D73B48;
+                 }
+             }
+             p {
+                 width: 100%;
+                 height: 100%;
+                 display: flex;
+                 justify-content: center;
+                 align-items: center;
+                 font-size: 32rpx;
+                 //font-weight: 500;
+             }
+         }
+     }
+     .mask_remarks_content{
+         padding:0 48rpx;
+         box-sizing: border-box;
+     }
+}

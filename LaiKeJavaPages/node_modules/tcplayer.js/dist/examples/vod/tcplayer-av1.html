@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <title>TCPlayer Demo</title>
+  <!-- 引入播放器 css 文件 -->
+  <link href="https://web.sdk.qcloud.com/player/tcplayer/release/v4.5.2/tcplayer.min.css" rel="stylesheet"/>
+  <!--如果需要在 Chrome 和 Firefox 等现代浏览器中通过 H5 播放 Webrtc 视频，需要在 tcplayer.vx.x.x.min.js 之前引入 TXLivePlayer-x.x.x.min.js。-->
+  <!--有些浏览器环境不支持 Webrtc，播放器会将 Webrtc 流地址自动转换为 HLS 格式地址，因此快直播场景同样需要引入hls.min.x.xx.xm.js。-->
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.5.1/libs/TXLivePlayer-1.2.0.min.js"></script>
+  <!--如果需要在 Chrome 和 Firefox 等现代浏览器中通过 H5 播放 HLS 协议的视频，需要在 tcplayer.vx.x.x.min.js 之前引入 hls.min.x.xx.xm.js。-->
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.5.2/libs/hls.min.0.13.2m.js"></script>
+  <!--如果需要在 Chrome 和 Firefox 等现代浏览器中通过 H5 播放 FLV 格式的视频，需要在 tcplayer.vx.x.x.min.js 之前引入 flv.min.x.x.x.js。-->
+  <script src="https://testmig-1306264703.cos.ap-guangzhou.myqcloud.com/wm/flv.min.av1.js"></script>
+  <!--播放器脚本文件-->
+  <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.5.2/tcplayer.v4.5.2.min.js"></script>
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+    }
+    .tcplayer {
+      margin: 0 auto;
+    }
+    .buttons {
+      width: 100vw;
+      height: 60px;
+      font-size: 14px;
+    }
+    .buttons button {
+      height: 30px;
+      min-width: 24px;
+      padding: 0 20px;
+      background-color: #006eff;
+      color: #fff;
+      border: 1px solid #006eff;
+      line-height: 28px;
+      text-align: center;
+      display: inline-block;
+      cursor: pointer;
+      outline: 0 none;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-size: 12px;
+      vertical-align: middle;
+      white-space: nowrap;
+      border-radius: 0;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="buttons">
+    <button id="play">播放</button>
+    <button id="pause">暂停</button>
+    <button id="stop">停止</button>
+    <button id="destroy">销毁</button>
+
+    <div>
+      <input type="text" id="inputurl">
+      <button id="switch">切换</button>
+    </div>
+  </div>
+  
+
+  <video id="player-container-id" preload="auto" width="640" height="360" playsinline webkit-playsinline>
+
+
+
+<script>
+
+  function getParams(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+      return decodeURIComponent(r[2]);
+    }
+    return null;
+  }
+  var player = TCPlayer('player-container-id', {
+
+  });
+
+  var url = getParams('url') || 'https://testmig-1306264703.cos.ap-guangzhou.myqcloud.com/wm/av1.flv';
+  player.src(url);
+
+
+  document.getElementById('play').addEventListener('click', function() {
+
+    if (!player.tech_.flvProvider) {
+      player.src(url);
+    }
+    console.log('player', player);
+    player.play();
+  });
+
+  document.getElementById('pause').addEventListener('click', function() {
+    player.pause();
+  });
+
+  document.getElementById('stop').addEventListener('click', function() {
+    player.tech_.flvProvider.dispose();
+  });
+  document.getElementById('destroy').addEventListener('click', function() {
+    player.dispose();
+  });
+  document.getElementById('switch').addEventListener('click', function() {
+    var url = document.getElementById('inputurl').value;
+    if (url) {
+      player.src(url);
+    } else {
+      alert('请输入直播流地址');
+    }
+  });
+  
+
+</script>
+</body>
+</html>
