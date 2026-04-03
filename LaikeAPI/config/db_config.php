@@ -1,0 +1,9 @@
+<?php 
+define('MYSQL_TYPE','mysql');
+define('MYSQL_SERVER','127.0.0.1');  
+define('MYSQL_USER','root'); 
+define('MYSQL_PASSWORD','000000');
+define('MYSQL_DATABASE','tp_db'); 
+define('MYSQL_PORT',3306);
+define('MYSQL_CHARSET','utf8mb4');
+define('MYSQL_DEBUG',true);
