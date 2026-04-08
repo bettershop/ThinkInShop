@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.MenuModelMapper">
+
+    <sql id="selectDynamicSQL">
+        <if test="main_id != null">and main_id = #{main_id}</if>
+        <if test="id != null">and id = #{id}</if>
+        <if test="sid != null">and sid = #{sid}</if>
+        <if test="type != null">and `type` = #{type}</if>
+        <if test="key != null">and (`id` = #{key} or `name` like concat('%',#{key},'%'))</if>
+        <if test="main_ids != null">
+            <foreach collection="main_ids" item="mchId" separator="," open="and main_id in(" close=")">
+                #{mchId,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="is_display_off == null">
+            <choose>
+                <when test="is_display != null">and is_display = #{is_display}</when>
+                <otherwise>and is_display = 0</otherwise>
+            </choose>
+        </if>
+        <if test="storeId != null">and name not in (select plugin_name from lkt_plugins where store_id=#{storeId} and status = 0)</if>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select * from lkt_menu
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="sort_sort!=null and sort_sort!=''">sort ${sort_sort},</if>
+            <choose>
+                <when test="add_date_sort == 'asc'">add_date ASC,</when>
+                <when test="add_date_sort == 'desc'">add_date DESC,</when>
+            </choose>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_menu
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <sql id="getMenuListSQL">
+        <if test="role_id != null">and a.id = #{role_id}</if>
+        <if test="id != null">and d.id = #{id}</if>
+        <if test="sid != null">and d.sid = #{sid}</if>
+        <if test="type != null">and d.type = #{type}</if>
+        <if test="level != null">and d.`level` = #{level}</if>
+        <if test="main_id != null">and d.main_id = #{main_id}</if>
+        <if test="user_id != null">and b.main_id = #{user_id}</if>
+        <if test="lang_code != null">and d.lang_code = #{lang_code}</if>
+        <if test="authority_type != null">and b.type = #{authority_type}</if>
+        <if test="type_authority != null">and b.type = #{type_authority}</if>
+        <if test="key != null">and (d.`id` = #{key} or d.`name` like concat('%',#{key},'%'))</if>
+        <if test="main_ids != null">
+            <foreach collection="main_ids" item="mchId" separator="," open="and d.main_id in(" close=")">
+                #{mchId,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="is_display_off == null">
+            <choose>
+                <when test="is_display != null">and d.is_display = #{is_display}</when>
+                <otherwise>and d.is_display = 0</otherwise>
+            </choose>
+        </if>
+    </sql>
+    <select id="getMenuList" parameterType="Map" resultType="Map">
+        select distinct d.* from lkt_user_role a RIGHT JOIN lkt_user_authority b on b.role_id=a.id
+        RIGHT JOIN lkt_authority_mapping c on c.role_id = a.id RIGHT JOIN lkt_menu d on d.id = c.menu_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getMenuListSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="sort_sort!=null and sort_sort!=''">d.sort ${sort_sort},</if>
+            <choose>
+                <when test="add_date_sort == 'asc'">d.add_date ASC,</when>
+                <when test="add_date_sort == 'desc'">d.add_date DESC,</when>
+            </choose>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="countMenuList" parameterType="Map" resultType="int">
+        select count(distinct d.id) from lkt_user_role a RIGHT JOIN lkt_user_authority b on b.role_id=a.id
+        RIGHT JOIN lkt_authority_mapping c on c.role_id = a.id RIGHT JOIN lkt_menu d on d.id = c.menu_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getMenuListSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <choose>
+                <when test="add_date_sort == 'asc'">d.add_date ASC,</when>
+                <when test="add_date_sort == 'desc'">d.add_date DESC,</when>
+            </choose>
+        </trim>
+    </select>
+
+</mapper>

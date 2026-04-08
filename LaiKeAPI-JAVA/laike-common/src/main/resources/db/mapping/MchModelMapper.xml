@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.MchModelMapper">
+    <select id="getMchDynamic" parameterType="com.laiketui.domain.mch.MchModel"
+            resultType="com.laiketui.domain.mch.MchModel">
+        SELECT
+        *
+        FROM
+        lkt_mch
+        WHERE
+        review_status = 1
+        AND store_id = #{store_id}
+        <if test="mchList!=null">
+            <foreach collection="mchList" item="mchid" separator="," open="and id in(" close=")">
+                #{mchid,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </select>
+
+    <sql id="getMchUserInfoSQL">
+        <if test="store_id != null and store_id != ''">and a.store_id = #{store_id}</if>
+        <if test="recovery != null">
+            <choose>
+                <when test="recovery == null">and a.recovery = 0</when>
+                <otherwise>and a.recovery = #{recovery}</otherwise>
+            </choose>
+        </if>
+        <if test="id != null">and a.id = #{id}</if>
+        <if test="is_open != null ">and a.is_open =#{is_open}</if>
+        <if test="is_lock != null ">and a.is_lock =#{is_lock}</if>
+        <if test="review_status != null">and a.review_status =#{review_status}</if>
+        <if test="not_examine != null">and (a.review_status = 0 or a.review_status = 2)</if>
+        <if test="promiseStatus != null">
+            <choose>
+                <when test="promiseStatus==1">and EXISTS (select x.id from lkt_mch_promise x where x.mch_id=a.id and status=1)</when>
+                <otherwise>and not EXISTS (select x.id from lkt_mch_promise x where x.mch_id=a.id and status=1)</otherwise>
+            </choose>
+        </if>
+        <if test="mchName1 != null and mchName1 != ''">and (a.user_id like concat('%',#{mchName1},'%') or a.name
+            like concat('%',#{mchName1},'%') or a.tel=#{mchName1})
+        </if>
+        <if test="name != null and name != ''">and a.name like concat('%',#{name},'%')</if>
+        <if test="cid != null and cid != ''">and a.cid = #{cid}</if>
+    </sql>
+    <select id="getMchUserInfo" parameterType="Map" resultType="Map">
+        select a.*,cast(u.user_name as char) user_name,u.headimgurl,u.source,p.status promiseStatus,u.cpc from lkt_mch a
+        left join lkt_user as u on a.user_id = u.user_id
+        left join lkt_mch_promise p on p.mch_id=a.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getMchUserInfoSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="collection_num_sort!=null and collection_num_sort!=''">a.collection_num ${collection_num_sort},</if>
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countMchUserInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_mch a
+        left join lkt_user as u on a.user_id = u.user_id
+        left join lkt_mch_promise p on p.mch_id=a.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getMchUserInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getMchOrderRecordByDateMoney" resultType="BigDecimal" parameterType="map">
+        select ifnull(sum(money),0) from lkt_mch_order_record
+        <where>
+            store_id = #{storeId} and recycle=0 and mch_id=#{mchId}
+            <choose>
+                <when test="index==2">
+                    and DATE_FORMAT( count_day, '%Y-%m' ) = #{date}
+                </when>
+                <otherwise>
+                    and DATE_FORMAT( count_day, '%Y-%m-%d' ) = #{date}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+    <select id="getMchOrderRecordByDateNumber" resultType="BigDecimal" parameterType="map">
+        select ifnull(sum(order_num),0) from lkt_mch_order_record
+        <where>
+            store_id = #{storeId} and recycle=0 and mch_id=#{mchId}
+            <choose>
+                <when test="index==2">
+                    and DATE_FORMAT( count_day, '%Y-%m' ) = #{date}
+                </when>
+                <otherwise>
+                    and DATE_FORMAT( count_day, '%Y-%m-%d' ) = #{date}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <select id="getMchBuyPower" resultType="map" parameterType="map">
+        select u.user_name,u.headimgurl as img,a.money from lkt_mch_buy_power a
+        left join lkt_user u on u.user_id = a.user_id
+        where a.store_id = #{storeId} and a.recycle=0 and a.mch_id=#{mchId}
+        order by a.money desc;
+    </select>
+
+    <select id="getProList" resultType="map" parameterType="map">
+        select a.product_title,a.imgurl,(a.volume+a.real_volume) as volume,a.id as pid from lkt_product_list a
+        where a.store_id = #{storeId} and a.recycle=0 and a.mch_id=#{mchId}
+        order by volume desc;
+    </select>
+    <select id="getRelationMch" resultType="java.util.Map">
+        SELECT
+        z.id,
+        z.name,
+        z.add_date,
+        z.upNum,
+        z.lowerNum,
+        z.orderNum,
+        z.settlementPrice
+        FROM (
+        SELECT
+        b.id,
+        b.name,
+        a.add_date,
+        (
+        SELECT COUNT(1)
+        FROM lkt_product_list AS p
+        WHERE
+        p.gongyingshang = #{supplierId}
+        AND p.mch_id = b.id
+        AND p.status = 2
+        AND p.recycle = 0
+        ) AS upNum,
+        (
+        SELECT COUNT(1)
+        FROM lkt_product_list AS p
+        WHERE
+        p.gongyingshang = #{supplierId}
+        AND p.mch_id = b.id
+        AND p.status = 3
+        AND p.recycle = 0
+        ) AS lowerNum,
+        (
+        SELECT COUNT(DISTINCT o.sNo)
+        FROM lkt_order o
+        RIGHT JOIN lkt_order_details d ON o.sNo = d.r_sNo
+        LEFT JOIN lkt_product_list p ON d.p_id = p.id
+        WHERE
+        p.gongyingshang = #{supplierId}
+        AND p.mch_id = b.id
+        AND o.is_lssued = 1
+        ) AS orderNum,
+        IFNULL(
+        (
+        SELECT SUM(d.supplier_settlement)
+        FROM lkt_order o
+        RIGHT JOIN lkt_order_details d ON o.sNo = d.r_sNo
+        LEFT JOIN lkt_product_list p ON d.p_id = p.id
+        WHERE
+        p.gongyingshang = #{supplierId}
+        AND p.mch_id = b.id
+        AND o.settlement_status = 1
+        AND o.is_lssued = 1
+        ),
+        0
+        ) AS settlementPrice,
+        ROW_NUMBER() OVER (
+        PARTITION BY b.id
+        ORDER BY a.add_date DESC
+        ) AS rn
+        FROM
+        lkt_product_list a
+        LEFT JOIN lkt_mch b ON a.mch_id = b.id
+        WHERE
+        a.store_id = #{storeId}
+        AND a.gongyingshang = #{supplierId}
+        AND a.recycle = 0
+        AND a.mch_id != 0
+        <if test="mchName != null and mchName != ''">
+            AND b.name LIKE CONCAT('%', #{mchName}, '%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND a.add_date >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND a.add_date &lt;= #{endTime}
+        </if>
+        ORDER BY
+        a.add_date DESC
+        limit #{pageStart},#{pageEnd}
+        ) as z
+        WHERE
+        z.rn = 1
+    </select>
+    <select id="getListByParams" resultType="java.util.Map">
+        SELECT
+        sub.*
+        FROM (
+        SELECT
+        m.*,
+        (
+        SELECT COUNT(DISTINCT p2.id)
+        FROM lkt_product_list p2
+        WHERE
+        p2.mch_id = m.id
+        AND p2.status = 2
+        AND p2.mch_status = 2
+        ) AS pro_num,
+        (
+        SELECT COUNT(DISTINCT c2.id)
+        FROM lkt_user_collection c2
+        WHERE
+        c2.mch_id = m.id
+        AND c2.type = 1
+        AND c2.user_id = #{userId}
+        ) AS is_collect,
+        (
+        SELECT COUNT(DISTINCT luc2.id)
+        FROM lkt_user_collection luc2
+        WHERE
+        luc2.mch_id = m.id
+        AND luc2.type = 1
+        ) AS collectionNum,
+        ROW_NUMBER() OVER (
+        PARTITION BY m.id
+        ORDER BY m.id DESC
+        ) AS rn
+        FROM
+        lkt_mch m
+        WHERE
+        m.store_id = #{storeId}
+        AND m.review_status = 1
+        AND m.recovery = 0
+        <if test="mchName != null and mchName!=''">
+            AND m.name LIKE CONCAT('%',#{mchName},'%')
+        </if>
+        ) sub
+        WHERE
+        sub.rn = 1
+        ORDER BY
+        sub.id DESC
+        LIMIT
+        #{pageStart}, #{pageEnd}
+    </select>
+
+</mapper>

@@ -1,2 +1,0 @@
-ALTER TABLE lkt_supplier_brand ADD COLUMN country_num INT DEFAULT 156 COMMENT '国家代码' AFTER producer
-ALTER TABLE lkt_return_order ADD COLUMN ali_out_request_no VARCHAR(64) COMMENT '支付宝退款请求号' AFTER pay_pal_return_id

@@ -1,1 +1,0 @@
-ALTER TABLE lkt_order ADD COLUMN user_read TINYINT(1) COMMENT '用户是否已读 0：未读 1：已读' AFTER readd

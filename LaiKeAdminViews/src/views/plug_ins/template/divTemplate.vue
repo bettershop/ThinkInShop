@@ -13,6 +13,8 @@
             </div>
 
             <div class="add" style="margin-right: 20px;">
+              <el-button type="primary" @click="openLinkDialog" >openLinkDialog</el-button>
+
               <!-- 新建模板 -->
               <el-button type="primary" @click="dialogFormVisible = true" v-if="(typeIndex == 2 || isLkt) && typeIndex !=3">{{$t('template.divTemplate.xjmb')}}</el-button>
             </div>
@@ -168,6 +170,7 @@
         <el-button type="primary" @click="addCoupons('createdFromRef')">{{ $t('template.okk') }}</el-button>
       </div>
     </el-dialog>
+    <linkDialog  ref="linkDialog"></linkDialog>
   </div>
 </template>
 

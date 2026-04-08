@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.DistributionIncomeModelMapper">
+    <select id="IncomeStatementStatistics" parameterType="Map" resultType="Map">
+        select ifnull(sum(estimated_income), 0) as estimatedIncome, ifnull(sum(order_num), 0) as orderNum,
+            ifnull(sum(order_price), 0) as orderPrice, ifnull(sum(new_customer),0) as newCustomer, ifnull(sum(new_invitation),0) as newInvitation
+        from lkt_distribution_income
+        <where>
+            store_id = #{storeId}
+            and user_id = #{userId}
+            <if test="day !=null and day !=''">  and DATE_FORMAT(add_time,"%Y-%m-%d") = #{day}</if>
+            <if test="Month !=null and Month !=''">  and DATE_FORMAT(add_time,"%Y-%m") = #{Month}</if>
+            <if test="startTime !=null and endTime !=null">  and DATE_FORMAT(add_time,"%Y-%m-%d") <![CDATA[  >=  ]]>  #{startTime}
+                and DATE_FORMAT(add_time,"%Y-%m-%d") <![CDATA[  <=  ]]>  #{endTime}
+            </if>
+        </where>
+    </select>
+</mapper>

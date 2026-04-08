@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.SupplierBankCardModelMapper" >
+
+    <select id="getBankCard" parameterType="Map" resultType="Map">
+        select * from lkt_supplier_bank_card
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getWithdrawLeftUserBankSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart!=null and pageEnd!=null">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="countBankCard" parameterType="Map" resultType="int">
+        select count(*) from lkt_supplier_bank_card
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getWithdrawLeftUserBankSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <sql id="getWithdrawLeftUserBankSQL">
+        and store_id = #{storeId}
+        and recycle = 0
+        <if test="id != null">AND id = #{id}</if>
+        <if test="supplierId != null">AND supplier_id = #{supplierId}</if>
+        <if test="number != null">AND Bank_card_number = #{number}</if>
+        <if test="startTime != null">AND add_date <![CDATA[ >= ]]> #{startTime}</if>
+        <if test="endTime != null">AND add_date <![CDATA[ <= ]]> #{endTime}</if>
+    </sql>
+
+</mapper>

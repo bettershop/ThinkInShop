@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.LivingAudienceModelMapper" >
+    <select id="queryLivingUserByRoomId" parameterType="int" resultType="map">
+        SELECT a.user_id,
+               a.uid,
+               a.user_name,
+               a.headimgurl
+        FROM (SELECT u.user_id,
+                     a.user_id AS uid,
+                     ROW_NUMBER() over(partition by a.user_id) AS top, u.user_name,
+                     u.headimgurl
+              FROM lkt_living_audience a
+                       LEFT JOIN lkt_user u ON a.user_id = u.user_id
+              WHERE a.living_id = #{roomId}
+                AND a.recycle = 0
+                -- a.sc = 0--
+                AND a.end_time IS NULL
+              ORDER BY a.add_time ASC) AS a
+        WHERE a.top = 1
+    </select>
+
+    <sql id="selectDynamicSQL">
+        and a.store_id = #{store_id} and a.living_id = #{roomId} and a.recycle=0
+        <if test="keyWord!=null and keyWord!=''">and (u.user_id=#{keyWord} or u.user_name like concat ('%',#{keyWord},'%') or u.mobile =#{keyWord})</if>
+        <if test="start_time!=null">and a.add_time <![CDATA[  >=  ]]> #{start_time}</if>
+        <if test="end_time!=null">and a.add_time <![CDATA[  <=  ]]> #{end_time}</if>
+    </sql>
+
+    <select id="adminQueryAudience" resultType="map" parameterType="map">
+        SELECT
+        a.uid,
+        a.user_id,
+        a.user_name,
+        a.headimgurl,
+        a.mobile,
+        a.add_time,
+        a.store_id,
+        a.living_id,
+        a.recycle,
+        a.startTime,
+        a.sc
+        FROM
+        (
+        SELECT
+        a.user_id AS uid,
+        u.user_id,
+        u.user_name,
+        u.headimgurl,
+        u.mobile,
+        a.add_time,
+        a.store_id,
+        a.living_id,
+        a.recycle,
+        min(
+        date_format( a.start_time, '%Y-%m-%d
+        %H:%i:%s' )) over(partition by a.user_id) AS startTime,
+        sum( a.sc ) over(partition by a.user_id) AS sc,
+        ROW_NUMBER() over(partition by a.user_id) as top
+        FROM
+        lkt_living_audience a
+        LEFT JOIN lkt_user u ON a.user_id = u.user_id
+        and a.store_id = #{store_id} and a.living_id = #{roomId} and a.recycle=0
+        <if test="keyWord!=null and keyWord!=''">and (a.user_id=#{keyWord} or a.user_name like concat
+            ('%',#{keyWord},'%') or a.mobile =#{keyWord})
+        </if>
+        <if test="start_time!=null">and a.add_time <![CDATA[  >=  ]]> #{start_time}</if>
+        <if test="end_time!=null">and a.add_time <![CDATA[  <=  ]]> #{end_time}</if>
+        order by a.add_time asc
+        ) AS a
+        where a.top &lt;2
+        <if test="pageNo != null and pageSize != ''">limit #{pageNo},#{pageSize}</if>
+    </select>
+
+
+    <select id="countQueryAudience" parameterType="map" resultType="map">
+        SELECT
+        COUNT(1)
+        FROM
+        lkt_living_audience a
+        LEFT JOIN lkt_user u ON a.user_id = u.user_id
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+        group by a.user_id
+    </select>
+</mapper>

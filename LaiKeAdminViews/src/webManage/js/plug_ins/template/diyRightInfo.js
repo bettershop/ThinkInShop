@@ -593,8 +593,8 @@ export default {
         // 添加tabBer
         addTabBerItem() {
             const tabBarList = this.$store.state.admin.mobildConfig.tabBarList
-            if (tabBarList.length == 4) {
-                this.warnMsg('最多只能配置四条')
+            if (tabBarList.length == 5) {
+                this.warnMsg('最多只能配置五条')
                 return
             }
             console.log(tabBarList)

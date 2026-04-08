@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  laike-apis:
+    image: registry.example.com/laike/laike-apis:0.0.1
+    container_name: laike-apis
+    restart: always
+    ports:
+      - "21898:21898"
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Xms1g -Xmx1g -XX:+UseG1GC -Dfile.encoding=UTF-8"
+    volumes:
+      - /opt/laike/apis/config:/opt/laike/apis/config:ro
+      - /opt/laike/apis/logs:/opt/laike/apis/logs
+      - /opt/laike/apis/upload:/opt/laike/apis/upload
+      - /opt/laike/apis/xxl-logs:/opt/laike/apis/xxl-logs

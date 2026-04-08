@@ -1,0 +1,27 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: laike-plugins
+  profiles:
+    active: @profiles.active@
+  cloud:
+    bootstrap:
+      enabled: true
+    nacos:
+      server-addr: @nacos.address@
+      config:
+        file-extension: yml
+        prefix: ${spring.application.name}
+        namespace: @nacos.namespace@
+        shared-configs[0]:
+          data-id: @nacos.comm@
+          refresh: true
+        shared-configs[1]:
+          data-id: @nacos.base.mybatis@
+          refresh: true
+      discovery:
+        server-addr: @nacos.address@
+        #自定义服务访问名称
+        service: plugins
+        namespace: @nacos.namespace@

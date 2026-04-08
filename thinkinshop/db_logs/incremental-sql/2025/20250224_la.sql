@@ -1,1 +1,0 @@
-ALTER TABLE lkt_user ADD COLUMN country_num INT DEFAULT 156 COMMENT '国家代码' AFTER cpc

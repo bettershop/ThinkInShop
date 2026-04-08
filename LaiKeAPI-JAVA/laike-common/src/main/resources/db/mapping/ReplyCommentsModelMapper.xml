@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.ReplyCommentsModelMapper">
+
+    <sql id="selectDynamicSQL">
+        <if test="store_id != null and store_id != ''">and a.store_id=#{store_id}</if>
+        <if test="id!=null and id!=''">AND a.id = #{id}</if>
+        <if test="commentId!=null and commentId!=''">AND a.cid = #{commentId}</if>
+        <if test="sid!=null and sid!=''">AND a.sid = #{sid}</if>
+        <if test="key!=null and key!=''">AND (b.user_id = #{key} or b.user_name like concat('%',#{key},'%') or b.user_id like concat('%',#{key},'%'))</if>
+        <if test="type!=null">AND a.type = #{type}</if>
+        <if test="notMch!=null and notMch!=''">AND not exists (select mch.user_id from lkt_comments com left join lkt_product_list list on list.id=com.pid left join lkt_mch mch on mch.id=list.mch_id
+            where com.id=a.cid and mch.user_id=b.user_id)
+        </if>
+        <if test="sid_null!=null and sid_null!=''">AND a.sid is null</if>
+        <if test="startDate != null and startDate != ''">and a.add_time <![CDATA[  >=  ]]> #{startDate}</if>
+        <if test="endDate != null and endDate != ''">and a.add_time <![CDATA[  <=  ]]> #{endDate}</if>
+    </sql>
+
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.id,a.cid,a.content,b.user_name replyName,b.headimgurl,b.headimgurl replyHeadimgurl,b.user_id replyUserId,c.user_name byName,c.user_id byUserId,a.add_time
+        from lkt_reply_comments a left join lkt_user b on a.uid=b.user_id left join lkt_user c on c.user_id=a.to_uid
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_reply_comments a left join lkt_user b on a.uid=b.user_id left join lkt_user c on c.user_id=a.to_uid
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+</mapper>

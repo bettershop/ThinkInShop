@@ -1,0 +1,1 @@
+ALTER TABLE lkt_config ADD COLUMN mail_config VARCHAR(255) COMMENT '邮箱配置' AFTER default_currency

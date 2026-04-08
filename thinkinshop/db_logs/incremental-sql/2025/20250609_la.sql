@@ -1,1 +1,0 @@
-ALTER TABLE lkt_return_order ADD COLUMN pay_pal_return_id VARCHAR(255) COMMENT '贝宝退款id' AFTER sNo

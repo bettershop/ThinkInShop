@@ -92,7 +92,7 @@
                           </div>
                         </div>
                       </draggable>
-                      <div class="add-tabbar" @click="addTabBerItem" v-if="tabBarList.length < 4">
+                      <div class="add-tabbar" @click="addTabBerItem" v-if="tabBarList.length < 5">
                         <span>+ </span>
                         <span style="margin-left: 6px;"> 添加</span>
                       </div>

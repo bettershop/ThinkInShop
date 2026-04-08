@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.MchDistributionRecordModelMapper" >
+
+    <sql id="selectDynamicSQL">
+        <if test="storeId != null">and b.store_id = #{storeId}</if>
+        <if test="mchId != null">and a.mch_id = #{mchId}</if>
+
+        <if test="condition != null">
+        and (a.order_no = #{condition} or a.account = #{condition} or b.name = #{condition})
+        </if>
+        <if test="startDate != null and startDate != ''">and a.add_date <![CDATA[  >=  ]]> #{startDate}</if>
+        <if test="endDate != null and endDate != ''">and a.add_date <![CDATA[  <=  ]]> #{endDate}</if>
+        <if test="relationship != null">and relationship = #{relationship}</if>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.*,b.name,c.z_price,c.z_freight from lkt_mch_distribution_record a RIGHT JOIN lkt_mch b on a.mch_id = b.id RIGHT JOIN lkt_order c on a.order_no = c.sNo
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="sort_sort!=null and sort_sort!=''">sort ${sort_sort},</if>
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${sort_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_mch_distribution_record a RIGHT JOIN lkt_mch b on a.mch_id = b.id RIGHT JOIN lkt_order c on a.order_no = c.sNo
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.LivingDataModelMapper" >
+    <sql id="orderDataSql">
+        <trim prefixOverrides="and">
+            a.store_id = #{store_id} and a.recycle=0 and a.oType='ZB'
+            <if test="statusList != null">
+                <foreach collection="statusList" item="status" separator="," open="and a.status in(" close=")">
+                    #{status,jdbcType=INTEGER}
+                </foreach>
+            </if>
+            <if test="mch_id!=null">and a.mch_id like concat(',',#{mch_id},',')</if>
+            <if test="startTime!=null">and a.add_time <![CDATA[  >=  ]]> #{startTime}</if>
+            <if test="endTime!=null">and a.add_time <![CDATA[  <=  ]]> #{endTime}</if>
+            <if test="keyWord!=null">and (a.sNo like concat('%',#{keyWord},'%') or m.name like concat('%',#{keyWord},'%') or u.user_id like concat('%',#{keyWord},'%')
+            or u.user_name like concat('%',#{keyWord},'%') or a.name like concat('%',#{keyWord},'%') or r.living_theme like concat('%',#{keyWord},'%') or r.id like concat('%',#{keyWord},'%')) </if>
+        </trim>
+    </sql>
+    <select id="selectOrderData" parameterType="map" resultType="map">
+        select count(1) as orderNum,sum(a.num) as orderVolume,sum(a.z_price) as orderRevenue,sum(ifnull(d.commission,0)) as orderCommission
+        from lkt_order a left join lkt_order_details d on d.r_sNo=a.sNo LEFT JOIN lkt_product_list as p on p.id = d.p_id
+        left join lkt_living_room r on d.living_room_id = r.id left join lkt_mch m on m.id = p.mch_id left join lkt_user u on a.user_id = u.user_id
+        <where>
+            <include refid="orderDataSql"/>
+        </where>
+    </select>
+
+    <select id="getOrdersNumDynamic" parameterType="Map" resultType="Map">
+        select a.*,r.id as roomId,r.living_theme as title,m.logo,d.commission from lkt_order a RIGHT JOIN lkt_order_details d ON a.sNo = d.r_sNo LEFT JOIN lkt_product_list as p on p.id = d.p_id
+        left join lkt_living_room r on d.living_room_id = r.id left join lkt_mch m on m.id = p.mch_id left join lkt_user u on a.user_id = u.user_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="orderDataSql"/>
+            </trim>
+        </where>
+        order by add_time desc
+        <if test="pageNo!=null and pageSize!=null">
+            limit #{pageNo},#{pageSize}
+        </if>
+    </select>
+
+
+    <sql id="returnDataSql">
+        <trim prefixOverrides="and">
+            a.store_id = #{store_id} and a.recycle=0 and a.oType='ZB'
+           and re.r_type in (9,13,15,4)
+            <if test="mch_id!=null">and a.mch_id like concat(',',#{mch_id},',')</if>
+            <if test="startTime!=null">and re.audit_time <![CDATA[  >=  ]]> #{startTime}</if>
+            <if test="endTime!=null">and re.audit_time <![CDATA[  <=  ]]> #{endTime}</if>
+        </trim>
+    </sql>
+    <select id="selectReturnOrder" resultType="map" parameterType="map">
+        select sum(re.re_money) as returnMoney from lkt_return_order re left join lkt_order a on re.sNo=a.sNo
+        <where>
+            <include refid="returnDataSql"/>
+        </where>
+    </select>
+
+
+    <select id="countProNumByData" parameterType="map" resultType="int">
+        select count(1)
+        from
+        (
+        SELECT a.id
+        FROM lkt_product_list a
+        LEFT JOIN lkt_configure b ON a.id = b.pid
+        WHERE ifnull(b.commission,'')!=''
+        and a.mch_id=#{mch_id}
+        and b.recycle=0
+        and a.status=2
+        <if test="startTime!=null">and b.update_time <![CDATA[  >=  ]]> #{startTime}</if>
+        <if test="endTime!=null">and b.update_time <![CDATA[  <=  ]]> #{endTime}</if>
+        group by a.id
+        ) p
+    </select>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.MessageLoggingModalMapper">
+    <sql id="selectDynamicSQL">
+        <if test="store_id!=null">and a.store_id=#{store_id}</if>
+        <if test="mch_id!=null">and a.mch_id=#{mch_id}</if>
+        <if test="read_or_not!=null">and a.read_or_not=#{read_or_not}</if>
+        <if test="type!=null">and a.type=#{type}</if>
+        <if test="supplierId!=null">and a.supplier_id=#{supplierId}</if>
+        <if test="supplierId==null">and a.supplier_id is null</if>
+        <if test="orderTypes != null">
+            <foreach collection="orderTypes" item="types" separator="," open="and a.type in(" close=")">
+                 #{types}
+            </foreach>
+        </if>
+    </sql>
+    <select id="selectDynamic" resultType="Map" parameterType="Map">
+        select * from lkt_message_logging a
+        <where>
+            <trim>
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+            <if test="readSort != null and readSort != ''"> a.read_or_not ${readSort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" resultType="int" parameterType="Map">
+        select count(id) from lkt_message_logging a
+        <where>
+            <trim>
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectByTypes" resultType="java.util.Map">
+        SELECT id, type, parameter, to_url, content, is_popup, add_date, mch_id
+        FROM lkt_message_logging
+        WHERE store_id = #{store_id}
+        AND read_or_not = #{read_or_not}
+        AND type IN
+        <foreach collection="types" item="type" open="(" separator="," close=")">
+            #{type}
+        </foreach>
+    </select>
+
+</mapper>

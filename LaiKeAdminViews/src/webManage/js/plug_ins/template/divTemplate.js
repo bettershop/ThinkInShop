@@ -4,12 +4,13 @@ import guideMap from '@/views/plug_ins/template/guideMap'
 import { addDiyInfo } from '@/api/diy/index'
 import diyModel from '@/common/DIYCommonMod'
 import { mapMutations } from 'vuex';
-
+import linkDialog from "@/components/link-dialog/linkDialog.vue";
 export default {
     name: 'divTemplate',
     data() {
         return {
             imgList: [],
+            linkFalg:false,
             loading: false,
             typeIndex: 1, // 标签 1 系统 、2 自定义 、3 页面管理
             H5_domain: '',
@@ -70,7 +71,8 @@ export default {
     },
     components: {
         pageManagement,
-        guideMap
+        guideMap,
+        linkDialog,
     },
     created() {
 
@@ -123,7 +125,11 @@ export default {
         ...mapMutations({
             setLabelList: 'admin/mobildConfig/SELECT_LABEL_LIST'
         }),
-
+        openLinkDialog(){
+            this.$nextTick(()=>{
+                this.$refs.linkDialog.dialogVisible = true
+            })
+        },
         calculateDimensions() {
             this.$nextTick(() => {
                 let iframeWidth = this.$refs.bgImg?.offsetWidth || 0

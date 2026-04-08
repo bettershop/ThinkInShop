@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.MchAdminModelMapper">
+    <sql id="selectDynamicSQL">
+        and recycle = 0
+        <if test="key != null and key != ''">and account_number like CONCAT('%',#{key},'%')</if>
+        <if test="storeId != null">and store_id=#{storeId}</if>
+        <if test="mchId != null and mchId != ''"> and mch_id = #{mchId}</if>
+        <if test="mch_store_id != null and mch_store_id != ''"> and mch_store_id = #{mch_store_id}</if>
+        <if test="account_number != null and account_number != ''">and account_number = #{account_number}</if>
+        <if test="notId != null and notId != null">and id != notId</if>
+    </sql>
+    <select id="selectDynamic" resultType="java.util.Map">
+        select * from lkt_mch_admin
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"></include>
+            </trim>
+        </where>
+        <if test="pageNo!=null and pageSize!=null">limit #{pageNo},#{pageSize}</if>
+    </select>
+    <select id="countDynamic" resultType="java.lang.Integer">
+        select count(*) from lkt_mch_admin
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"></include>
+            </trim>
+        </where>
+    </select>
+</mapper>

@@ -94,7 +94,7 @@ export default {
       moneyInfo: [],
       moneyInfoList: [],
     };
-  },
+  }, 
   created(){
     this.$store.dispatch("user/getSystemIcon") 
   },

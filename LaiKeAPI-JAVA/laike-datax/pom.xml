@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>laiketui-app</artifactId>
+        <groupId>com.laiketui</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <description>商城数据-对外接口</description>
+    <packaging>war</packaging>
+    <artifactId>laike-datax</artifactId>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <flink.version>1.19.0</flink.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.laiketui</groupId>
+            <artifactId>laike-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.laiketui</groupId>
+            <artifactId>laike-datax-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- rocketmq 依赖开始 -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.rocketmq</groupId>
+                    <artifactId>rocketmq-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>4.9.5</version>
+        </dependency>
+        <!-- rocketmq 依赖结束 -->
+
+        <!-- hutool工具类-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-bom</artifactId>
+            <version>5.8.10</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- redisson 缓存 -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+        </dependency>
+
+
+    </dependencies>
+    <build>
+        <finalName>datax</finalName>
+        <!--        <plugins>-->
+        <!--            <plugin>-->
+        <!--                <groupId>org.springframework.boot</groupId>-->
+        <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+        <!--                <configuration combine.self="override">-->
+        <!--                    <fork>true</fork>-->
+        <!--                    <mainClass>com.laiketui.file.LaikeFileApplication</mainClass>-->
+        <!--                    <addResources>true</addResources>-->
+        <!--                </configuration>-->
+        <!--            </plugin>-->
+        <!--            <plugin>-->
+        <!--                <groupId>org.apache.maven.plugins</groupId>-->
+        <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+        <!--                <configuration>-->
+        <!--                    <source>1.8</source>-->
+        <!--                    <target>1.8</target>-->
+        <!--                    <encoding>UTF-8</encoding>-->
+        <!--                    <compilerArguments>-->
+        <!--                        <extdirs>${project.basedir}/src/main/resources</extdirs>-->
+        <!--                    </compilerArguments>-->
+        <!--                </configuration>-->
+        <!--            </plugin>-->
+        <!--        </plugins>-->
+    </build>
+</project>

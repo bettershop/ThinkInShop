@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.GroupActivityModelMapper">
+
+    <sql id="selectDynamicSQL">
+        <where>
+            <trim prefixOverrides="and">
+                <choose>
+                    <when test="recycle!=null">and a.recycle =#{recycle}</when>
+                    <otherwise>
+                        and a.recycle = 0
+                    </otherwise>
+                </choose>
+                <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="name != null">and a.name = #{name}</if>
+                <if test="likeName != null">and (a.name like concat('%',#{likeName},'%') or a.id like concat('%',#{likeName},'%'))</if>
+                <if test="status != null">and a.status = #{status}</if>
+                <if test="mchId != null">and a.mch_id = #{mchId}</if>
+                <if test="startDate != null and startDate != ''">and a.start_date <![CDATA[  >=  ]]> #{startDate}</if>
+                <if test="endDate != null and endDate != ''">and a.end_date <![CDATA[  <=  ]]> #{endDate}</if>
+            </trim>
+        </where>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select * from lkt_group_activity a
+        <include refid="selectDynamicSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_date ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_group_activity a
+        <include refid="selectDynamicSQL"/>
+    </select>
+
+
+    <update id="delDynamic" parameterType="Map">
+        update lkt_group_activity a
+        <set>
+            <trim suffixOverrides=",">
+                <if test="recycle != null">a.recycle = #{recycle},</if>
+            </trim>
+        </set>
+        <where>
+            <trim prefixOverrides="and">
+                <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="idList != null">
+                    <foreach collection="idList" item="id" separator="," open="and a.id in(" close=")">
+                        #{id,jdbcType=INTEGER}
+                    </foreach>
+                </if>
+                <if test="not_status != null">and a.status != #{not_status}</if>
+            </trim>
+        </where>
+    </update>
+
+
+    <select id="countActivityNumByIdAndStatus" parameterType="Map" resultType="int">
+        select count(*) from lkt_group_activity a
+        <where>
+            <trim prefixOverrides="and">
+                <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="idList != null">
+                    <foreach collection="idList" item="id" separator="," open="and a.id in(" close=")">
+                        #{id,jdbcType=INTEGER}
+                    </foreach>
+                </if>
+                <if test="not_status != null">and a.status = #{not_status}</if>
+            </trim>
+        </where>
+    </select>
+</mapper>

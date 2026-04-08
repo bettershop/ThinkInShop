@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.RoleModelMapper">
+    <sql id="selectRoleInfoSQL">
+        <if test="id!=null">and a.id = #{id}</if>
+        <if test="existsMenu!=null"> and exists (select x.role_id from lkt_role_menu x where x.role_id=a.id limit 1)</if>
+        <if test="store_id_pt!=null">and a.store_id = #{store_id_pt}</if>
+        <if test="status!=null">and a.`status` = #{status}</if>
+    </sql>
+    <select id="selectRoleInfo" parameterType="Map" resultType="Map">
+        select * from lkt_role a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectRoleInfoSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countRoleInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_role a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectRoleInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectByIds" resultType="com.laiketui.domain.mch.RoleModel">
+        SELECT * FROM lkt_role
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

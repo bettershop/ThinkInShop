@@ -1,1 +1,0 @@
-ALTER TABLE `lkt_user_bank_card` COMMENT = '用户银行卡表';

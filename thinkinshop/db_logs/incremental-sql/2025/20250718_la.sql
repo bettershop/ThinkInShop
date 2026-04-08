@@ -1,1 +1,0 @@
-ALTER TABLE lkt_user MODIFY token_living_pc VARCHAR (400);

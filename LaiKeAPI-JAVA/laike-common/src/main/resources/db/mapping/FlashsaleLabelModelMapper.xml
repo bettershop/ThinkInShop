@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laiketui.common.mapper.FlashsaleLabelModelMapper">
+    <sql id="selectDynamicSQL">
+        and a.recovery = 0
+        <if test="key != null and key != ''">and (a.id = #{key} or a.name like CONCAT('%',#{key},'%'))</if>
+        <if test="status != null and status != ''">and a.status=#{status}</if>
+        <if test="storeId != null">and a.store_id=#{storeId}</if>
+        <if test="startDate != null and endDate != null">and a.starttime <![CDATA[  >=  ]]> #{startDate}
+        and a.endtime <![CDATA[  <=  ]]> #{endDate}</if>
+        <if test="mchId != null and mchId != null">and a.mch_id = #{mchId}</if>
+    </sql>
+    <select id="selectDynamic" resultType="java.util.Map">
+        select
+        a.* ,
+        count(b.id) as goodsNum
+        FROM
+        lkt_flashsale_label a
+        LEFT JOIN lkt_flashsale_activity b ON a.id = b.label_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"></include>
+            </trim>
+        </where>
+        group by a.id
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="sort_sort!=null and sort_sort!=''">a.starttime ${sort_sort},</if>
+        </trim>
+        <if test="pageNo!=null and pageSize!=null">limit #{pageNo},#{pageSize}</if>
+    </select>
+    <select id="countDynamic" resultType="java.lang.Integer">
+        select count(1) from lkt_flashsale_label a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"></include>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getActivityListByMchId" resultType="java.util.Map">
+        SELECT
+        a.id,
+        a.discount,
+        a.buylimit,
+        a.fsGoodsId,
+        a.goodsId,
+        a.fsMaxStockNum,
+        a.goodsName,
+        a.imgUrl,
+        a.fsStatus,
+        a.remainingTime,
+        a.goodsPrice,
+        a.mch_id,
+        a.pId
+        FROM
+        (
+        SELECT
+        b.id,
+        b.discount,
+        b.buylimit,
+        b.id AS fsGoodsId,
+        b.goods_id AS goodsId,
+        p.num AS fsMaxStockNum,
+        p.product_title AS goodsName,
+        p.imgurl AS imgUrl,
+        a.STATUS AS fsStatus,
+        a.endtime AS remainingTime,
+        c.price AS goodsPrice,
+        a.mch_id,
+        p.id AS pId,
+        ROW_NUMBER() over (PARTITION by p.id ) AS top
+        FROM
+        lkt_flashsale_label a
+        RIGHT JOIN lkt_flashsale_activity b ON a.id = b.label_id
+        INNER JOIN lkt_product_list p ON b.goods_id = p.id
+        LEFT JOIN lkt_configure AS c ON p.id = c.pid
+        WHERE
+        a.store_id = #{storeId}
+        AND a.STATUS = 2
+        AND recovery = 0
+        AND c.recycle = 0
+        <if test="mchId != null">
+            AND a.mch_id = #{mchId}
+        </if>
+        <if test="key != null and key != ''">
+            AND p.product_title LIKE CONCAT( '%',#{key}, '%' )
+        </if>
+        ) as a
+        where a.top &lt; 2
+    </select>
+</mapper>

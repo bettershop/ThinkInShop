@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.DiyProjectModelMapper" >
+  <resultMap id="BaseResultMap" type="com.laiketui.domain.diy.DiyProjectModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="store_id" property="store_id" jdbcType="INTEGER" />
+    <result column="admin_id" property="admin_id" jdbcType="INTEGER" />
+    <result column="pro_title" property="pro_title" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="is_show" property="is_show" jdbcType="INTEGER" />
+    <result column="is_del" property="is_del" jdbcType="INTEGER" />
+    <result column="mch_id" property="mch_id" jdbcType="INTEGER" />
+    <result column="sp_id" property="sp_id" jdbcType="INTEGER" />
+    <result column="add_date" property="add_date" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="update_date" jdbcType="TIMESTAMP" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="pro_config" property="pro_config" jdbcType="VARCHAR" />
+    <result column="pro_pages" property="pro_pages" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, store_id, admin_id, pro_title, logo, cover, is_show, is_del, mch_id, sp_id, add_date, industry, pro_config, pro_pages
+    update_date
+  </sql>
+
+</mapper>
