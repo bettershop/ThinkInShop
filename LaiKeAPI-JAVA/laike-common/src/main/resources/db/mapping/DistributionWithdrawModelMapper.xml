@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.DistributionWithdrawModelMapper">
+
+    <sql id="selectDynamicSQL">
+        <trim prefixOverrides="and">
+            <if test="id != null">and a.id = #{id}</if>
+            <if test="store_id != null">and a.store_id = #{store_id}</if>
+            <if test="user_id != null and user_id != ''">and a.user_id=#{user_id}</if>
+            <if test="examineType != null">and a.`status` =#{examineType}</if>
+            <if test="moneyGT != null">and a.money <![CDATA[  >  ]]> #{moneyGT}</if>
+            <if test="status != null">and a.`status`=#{status}</if>
+            <if test="startDate != null">and a.add_date <![CDATA[  >=  ]]> #{startDate}</if>
+            <if test="endDate != null">and a.add_date <![CDATA[  >=  ]]> #{endDate}</if>
+        </trim>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select * from lkt_distribution_withdraw a
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_distribution_withdraw a
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+    </select>
+
+    <sql id="selectUserWithdrawInfoSQL">
+        <if test="store_id != null">and a.store_id = #{store_id} and c.store_id=a.store_id and a.is_mch = 0</if>
+        <if test="userName != null and userName != ''">and ( a.name like concat('%',#{userName},'%') or a.mobile
+            like concat('%',#{userName},'%'))
+        </if>
+        <if test="bankName != null and bankName != ''">and b.Cardholder=#{bankName}</if>
+        <if test="examineType != null">and a.status =#{examineType}</if>
+
+        <if test="startDate != null and startDate != ''">and a.add_date <![CDATA[  >=  ]]> #{startDate}</if>
+        <if test="endDate != null and endDate != ''">and a.add_date <![CDATA[  <=  ]]> #{endDate}</if>
+    </sql>
+    <select id="selectUserWithdrawInfo" parameterType="Map" resultType="Map">
+        select
+        a.id,a.user_id,a.name,a.add_date,a.money,a.s_charge,a.mobile,a.status,b.Cardholder,b.Bank_name,b.branch,b.Bank_card_number,c.source,a.refuse,
+        case when a.status=0 then '审核中' when a.status=1 then '审核通过' else '拒绝' end examinName
+        from lkt_distribution_withdraw as a left join lkt_bank_card as b on a.Bank_id = b.id right join lkt_user as c on
+        a.user_id = c.user_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectUserWithdrawInfoSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="countUserWithdrawInfo" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_distribution_withdraw as a left join lkt_bank_card as b on a.Bank_id = b.id right join lkt_user as c on
+        a.user_id = c.user_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectUserWithdrawInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+
+</mapper>

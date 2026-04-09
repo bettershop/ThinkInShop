@@ -1,0 +1,5 @@
+ docker build -t laike-xxl-job:1.0 .
+ docker save -o laike-xxl-job-image.tar laike-xxl-job:1.0
+ 复制到服务器tars下面
+ 加载到docker 中
+ docker save -o laike-xxl-job-image.tar laike-xxl-job:1.0

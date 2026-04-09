@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.GroupProductModelMapper">
+    <sql id="getGroupActivityGoodsInfoSQL">
+        <if test="store_id != null and store_id!=''">and a.store_id = #{store_id}</if>
+        <choose>
+            <when test="is_delete != null and is_delete!=''">and a.is_delete = #{is_delete}</when>
+            <otherwise>and a.is_delete = 0</otherwise>
+        </choose>
+        <if test="goodsName != null">and b.goodsName like concat('%', #{goodsName},'%'}</if>
+        <if test="groupStatus != null">and a.status =#{groupStatus}</if>
+    </sql>
+
+    <select id="countGroupActivityGoodsInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_group_product a inner join lkt_product_list b on a.product_id=b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getGroupActivityGoodsInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <sql id="selectDynamicSQL">
+        <if test="group_activity_no!=null">and a.top &lt;2</if>
+        <if test="store_id != null">and a.store_id = #{store_id}</if>
+        <if test="endtime_GT!=null">and a.endtime <![CDATA[  >  ]]> #{endtime_GT}</if>
+        <if test="attridList != null">
+            <foreach collection="attridList" item="attrId" separator="," open="and a.attr_id in(" close=")">
+                #{attrId,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        SELECT
+        a.id,
+        a.store_id,
+        a.group_title,
+        a.attr_id,
+        a.product_id,
+        a.group_level,
+        a.group_data,
+        a.starttime,
+        a.endtime,
+        a.activity_no,
+        a.g_status,
+        a.is_show,
+        a.is_delete,
+        a.is_copy,
+        a.platform_activities_id,
+        a.mch_id,
+        a.audit_status,
+        a.reason,
+        a.num,
+        a.sales_volume,
+        a.price,
+        a.addtime,
+        a.free_freight
+        FROM
+        (
+        SELECT
+        a.id,
+        a.store_id,
+        a.group_title,
+        a.attr_id,
+        a.product_id,
+        a.group_level,
+        a.group_data,
+        a.starttime,
+        a.endtime,
+        a.activity_no,
+        a.g_status,
+        a.is_show,
+        a.is_delete,
+        a.is_copy,
+        a.platform_activities_id,
+        a.mch_id,
+        a.audit_status,
+        a.reason,
+        a.num,
+        a.sales_volume,
+        a.price,
+        a.addtime,
+        a.free_freight,
+        ROW_NUMBER() over ( PARTITION BY a.activity_no ) AS top
+        FROM
+        lkt_group_product a
+        ) AS a
+        <where>
+            <trim prefixOverrides="and">
+                and a.is_delete = 0
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_group_product a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <sql id="getGroupGoodsListSQL">
+        <if test="id != null">and b.id = #{id}</if>
+        <if test="activity_no != null">and b.activity_no = #{activity_no}</if>
+        <if test="product_id != null">and b.product_id = #{product_id}</if>
+        <if test="store_id != null">and b.store_id = #{store_id}</if>
+    </sql>
+    <select id="getGroupGoodsList" parameterType="Map" resultType="Map">
+        select b.*,c.price,c.num,c.attribute,c.min_inventory,p.product_title,c.img,p.mch_id,m.name shopName
+        from lkt_group_product as b
+        left join lkt_configure as c on b.attr_id=c.id
+        left join lkt_product_list as p on b.product_id=p.id
+        left join lkt_mch m on m.id = p.mch_id
+        <where>
+            <trim prefixOverrides="and">
+                and b.is_delete = 0
+                <include refid="getGroupGoodsListSQL"/>
+            </trim>
+        </where>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="selectGoodsDynamic" parameterType="Map" resultType="Map">
+        SELECT
+        a.id,
+        a.store_id,
+        a.group_title,
+        a.attr_id,
+        a.product_id,
+        a.group_level,
+        a.group_data,
+        a.starttime,
+        a.endtime,
+        a.activity_no,
+        a.g_status,
+        a.is_show,
+        a.is_delete,
+        a.is_copy,
+        a.platform_activities_id,
+        a.mch_id,
+        a.audit_status,
+        a.reason,
+        a.num,
+        a.sales_volume,
+        a.price,
+        a.addtime,
+        a.free_freight
+        FROM
+        (
+        SELECT a.*,ROW_NUMBER() over(partition by a.activity_no) AS top
+        FROM
+        lkt_group_product a,
+        lkt_product_list b
+        WHERE a.product_id=b.id and a.is_delete = 0
+        ) AS a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGoodsDynamic" parameterType="Map" resultType="int" statementType="STATEMENT">
+        select
+        <choose>
+            <when test="add_time_sort!=null and add_time_sort!=''">count(distinct a.activity_no)</when>
+            <otherwise>count(1)</otherwise>
+        </choose>
+        from lkt_group_product a,lkt_product_list b
+        <where>
+            <trim prefixOverrides="and">
+                and a.product_id=b.id
+                and a.is_delete = 0
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <sql id="getGroupActivityGoodsInfo1SQL">
+        and g.store_id = #{store_id}
+        and g.is_delete = 0
+        and g.platform_activities_id =0
+        <if test="g_status != null">and g.g_status = #{g_status}</if>
+        <if test="product_title != null">and p.product_title like concat('%',#{product_title},'%')</if>
+    </sql>
+    <select id="getGroupActivityGoodsInfo1" parameterType="Map" resultType="Map">
+        SELECT
+        g.attr_id,
+        g.shopname,
+        g.group_title,
+        g.product_id,
+        g.group_level,
+        g.group_data,
+        g.g_status,
+        g.is_show,
+        g.product_title,
+        g.STATUS,
+        g.product_class,
+        g.imgurl,
+        g.price,
+        g.pid,
+        g.activity_no,
+        g.is_copy,
+        g.id,
+        g.store_id,
+        g.is_delete,
+        g.platform_activities_id
+        FROM
+        (
+        SELECT
+        min( g.attr_id ) over(partition by g.activity_no) AS attr_id,
+        m.NAME AS shopname,
+        g.group_title,
+        g.product_id,
+        g.group_level,
+        g.group_data,
+        CASE
+        WHEN g.g_status = 1 THEN
+        1
+        WHEN g.endtime &lt; now()
+        OR g.g_status = 3 THEN
+        3 ELSE 2
+        END AS g_status,
+        g.is_show,
+        p.product_title,
+        p.STATUS,
+        p.product_class,
+        p.imgurl,
+        MIN( c.price ) over(partition by g.activity_no) AS price,
+        p.id AS pid,
+        g.activity_no,
+        g.is_copy,
+        g.id,
+        g.store_id,
+        g.is_delete,
+        g.platform_activities_id,
+        ROW_NUMBER() over(partition by g.activity_no) AS top
+        FROM
+        lkt_group_product AS g
+        LEFT JOIN lkt_product_list AS p ON g.product_id = p.id
+        LEFT JOIN lkt_configure AS c ON g.attr_id = c.id
+        LEFT JOIN lkt_mch AS m ON p.mch_id = m.id
+        ) AS g
+        <where>
+            <trim prefixOverrides="and">
+                and g.store_id = #{store_id}
+                and g.is_delete = 0
+                and g.platform_activities_id =0
+                <if test="g_status != null">and g.g_status = #{g_status}</if>
+                <if test="product_title != null">and g.product_title like concat('%',#{product_title},'%')</if>
+                <if test="group_activity_no!=null">and g.top &lt;2</if>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="g_status_sort!=null">g.g_status ${g_status_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGroupActivityGoodsInfo1" parameterType="Map" resultType="int">
+        select count(distinct g.activity_no)
+        from lkt_group_product as g left join lkt_product_list as p on g.product_id=p.id left join lkt_configure as c on
+        g.attr_id=c.id
+        left join lkt_mch as m on p.mch_id=m.id where g.is_delete = 0
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="getGroupActivityGoodsInfo1SQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getGroupProductIndex" parameterType="Map" resultType="Map">
+        SELECT
+        a.id,
+        a.attr_id,
+        a.product_id,
+        a.store_id,
+        a.group_level,
+        a.g_status,
+        a.group_data,
+        a.sum,
+        a.image,
+        a.market_price,
+        a.pro_name,
+        a.pro_name1,
+        a.imageurl,
+        a.STATUS,
+        a.recycle,
+        a.activity_no,
+        a.is_show,
+        a.starttime,
+        a.endtime,
+        a.platform_activities_id,
+        a.audit_status,
+        a.sales_volume,
+        a.is_delete,
+        a.addtime,
+        a.is_open
+        FROM
+        (
+        SELECT
+        p.id,
+        min( p.attr_id ) over ( PARTITION BY p.activity_no ) AS attr_id,
+        ROW_NUMBER() over ( PARTITION BY p.activity_no ) AS top,
+        p.product_id,
+        p.store_id,
+        p.group_level,
+        p.g_status,
+        p.group_data,
+        s.sum,
+        c.img AS image,
+        c.price AS market_price,
+        p.group_title AS pro_name,
+        l.product_title AS pro_name1,
+        l.imgurl AS imageurl,
+        l.STATUS,
+        l.recycle,
+        p.activity_no,
+        p.is_show,
+        p.starttime,
+        p.endtime,
+        p.platform_activities_id,
+        p.audit_status,
+        p.sales_volume,
+        p.is_delete,
+        p.addtime,
+        m.is_open
+        FROM
+        lkt_group_product AS p
+        LEFT JOIN (
+        SELECT
+        sum( o.num ) AS sum,
+        d.p_id
+        FROM
+        lkt_go_group_order AS o
+        LEFT JOIN lkt_go_group_order_details AS d ON o.sNo = d.r_sNo
+        WHERE
+        o.store_id = #{store_id} and o.status>0 and o.status != 6 and o.otype='pt'
+        GROUP BY
+        d.p_id
+        ) AS s ON p.product_id = s.p_id
+        LEFT JOIN lkt_configure AS c ON p.attr_id = c.id
+        LEFT JOIN lkt_product_list AS l ON p.product_id = l.id
+        LEFT JOIN lkt_mch AS m ON m.id = l.mch_id
+        LEFT JOIN lkt_group_config AS conf ON m.store_id = conf.store_id
+        ) AS a
+        <where>
+            a.store_id = #{store_id}
+            AND a.is_open = 1
+            AND a.is_show = 1
+            AND a.STATUS = 2
+            AND a.recycle = 0
+            AND a.is_delete = 0
+            AND a.starttime != '0000-00-00 00:00:00'
+            AND a.endtime != '0000-00-00 00:00:00'
+            <if test="g_status!=null">and a.g_status=#{g_status}</if>
+            <if test="not_no_start!=null">and a.g_status!=1</if>
+            <if test="startTime_GT_HOUR!=null">and a.starttime <![CDATA[  <  ]]> date_add(CURRENT_TIMESTAMP,interval
+                #{startTime_GT_HOUR} HOUR)
+            </if>
+            <if test="group_activity_no!=null">and a.top &lt;2</if>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="addtime_sort!=null and addtime_sort!=''">a.`addtime` ${addtime_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="getGroupGoodsInfo" resultType="java.util.Map">
+        SELECT m.*,
+               c.img   AS      image,
+               c.price AS      market_price,
+               (SELECT IF
+                       (
+                               max(num) IS NULL, 0, max(num)) num
+                FROM lkt_configure
+                WHERE pid = #{goodsId}
+                  and num > 0) num
+        FROM (SELECT ANY_VALUE(attr_id)            attr_id,
+                     ANY_VALUE(g.product_id)       product_id,
+                     ANY_VALUE(g.group_level)      group_level,
+                     ANY_VALUE(g.group_data)       group_data,
+                     ANY_VALUE(g.g_status)         g_status,
+                     ANY_VALUE(l.product_title) AS pro_name,
+                     ANY_VALUE(l.content)          content,
+                     ANY_VALUE(l.`status`)         `status`,
+                     ANY_VALUE(l.imgurl)           imgurl,
+                     ANY_VALUE(l.mch_id)           mch_id,
+                     g.activity_no,
+                     ANY_VALUE(g.is_show)          is_show,
+                     ANY_VALUE(g.free_freight)     free_freight
+              FROM lkt_group_product g
+                       LEFT JOIN lkt_product_list l ON g.product_id = l.id
+              WHERE g.store_id = #{storeId}
+                AND g.product_id = #{goodsId}
+                AND g.is_delete = 0
+                AND g.activity_no = #{activityId}
+              GROUP BY g.activity_no) m
+                 LEFT JOIN lkt_configure c ON m.attr_id = c.id LIMIT 0, 1
+    </select>
+    <select id="getGroupActivityGoodsInfo" resultType="java.util.Map">
+        SELECT p.id,
+               p.attr_id,
+               p.sales_volume AS sum,
+    p.product_id,
+    p.group_level,
+    p.g_status,
+    p.group_data,
+    s.sum AS sum_total,
+    c.img AS image,
+    c.price AS market_price,
+    p.group_title AS pro_name,
+    l.product_title AS pro_name1,
+    l.imgurl AS imageurl,
+    p.activity_no,
+    p.platform_activities_id,
+    p.audit_status
+        FROM (
+            SELECT
+            gp.*, ROW_NUMBER() OVER (
+            PARTITION BY gp.activity_no
+            ORDER BY gp.id DESC
+            ) AS rn
+            FROM lkt_group_product gp
+            WHERE
+            gp.store_id = 1
+            AND gp.is_show = 1
+            AND gp.g_status = 2
+            AND gp.is_delete = 0
+            ) p
+            LEFT JOIN (
+            SELECT
+            SUM (o.num) AS sum, d.p_id
+            FROM
+            lkt_order o
+            LEFT JOIN lkt_order_details d ON o.sNo = d.r_sNo
+            WHERE
+            o.store_id = #{storeId}
+            AND o.`STATUS` > 0
+            AND o.`STATUS` != 6
+            AND o.otype = 'pt'
+            GROUP BY
+            d.p_id
+            ) s
+        ON p.product_id = s.p_id
+            LEFT JOIN lkt_configure c ON p.attr_id = c.id
+            LEFT JOIN lkt_product_list l ON p.product_id = l.id
+        WHERE
+            p.rn = 1 -- 只取每个活动编号的最新记录
+          AND l.`status` = 2
+          AND l.recycle = 0
+        ORDER BY
+            p.id DESC
+            limit #{pageStart}, #{pageEnd}
+    </select>
+
+</mapper>

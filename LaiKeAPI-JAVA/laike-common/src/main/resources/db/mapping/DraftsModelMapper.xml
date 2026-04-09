@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.DraftsModelMapper">
+
+    <resultMap id="BaseResultMap" type="com.laiketui.domain.product.DraftsModel">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="mch_id" property="mch_id" jdbcType="INTEGER"/>
+        <result column="supplier_id" property="supplier_id" jdbcType="INTEGER"/>
+        <result column="store_id" property="store_id" jdbcType="INTEGER"/>
+        <result column="text" property="text" jdbcType="VARCHAR"/>
+        <result column="add_time" property="add_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="selectDynamicSQL">
+        <if test="storeId != null">and store_id = #{storeId}</if>
+        <if test="mchId != null">and mch_id = #{mchId}</if>
+        <if test="supplierId != null">and supplier_id = #{supplierId}</if>
+    </sql>
+    <select id="count" resultType="int">
+        SELECT COUNT(1) FROM lkt_drafts
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+    </select>
+
+    <select id="list" resultType="java.util.Map">
+        SELECT id, `text`,`add_time` from lkt_drafts
+        <where>
+            <include refid="selectDynamicSQL"/>
+        </where>
+        <if test="pageNo != null and pageSize != null">
+            LIMIT #{pageNo},#{pageSize}
+        </if>
+    </select>
+
+    <delete id="deleteBatch">
+        delete from lkt_drafts
+        where id in
+            <foreach collection="list" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+    </delete>
+
+    <insert id="add" parameterType="com.laiketui.domain.product.DraftsModel">
+        INSERT INTO lkt_drafts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="model.store_id != null">
+                store_id,
+            </if>
+            <if test="model.mch_id != null">
+                mch_id,
+            </if>
+            <if test="model.supplier_id != null">
+                supplier_id,
+            </if>
+            <if test="model.text != null and model.text != ''">
+                `text`,
+            </if>
+            <if test="model.add_time != null">
+                add_time
+            </if>
+        </trim>
+        values
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="model.store_id != null">
+                #{model.store_id},
+            </if>
+            <if test="model.mch_id != null">
+                #{model.mch_id},
+            </if>
+            <if test="model.supplier_id != null">
+                #{model.supplier_id},
+            </if>
+            <if test="model.text != null and model.text != ''">
+                #{model.text},
+            </if>
+            <if test="model.add_time != null">
+                #{model.add_time}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select * from  lkt_drafts where id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.laiketui.domain.product.DraftsModel">
+        UPDATE lkt_drafts
+        <trim prefix="set" suffixOverrides="," suffix="where id = #{model.id}">
+            <if test="model.store_id != null">
+                store_id = #{model.store_id},
+            </if>
+            <if test="model.mch_id != null">
+                mch_id = #{model.mch_id},
+            </if>
+            <if test="model.supplier_id != null">
+                supplier_id = #{model.supplier_id},
+            </if>
+            <if test="model.text != null and model.text != ''">
+                `text` = #{model.text},
+            </if>
+            <if test="model.add_time != null">
+                add_time = #{model.add_time},
+            </if>
+        </trim>
+    </update>
+</mapper>

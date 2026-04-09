@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.InvoiceInfoModelMapper" >
+
+    <sql id="getDynamicSQL">
+        <where>
+            <trim prefixOverrides="and">
+                AND a.store_id = #{storeId}
+                AND a.recovery = 0
+                <if test="id != null">AND a.id = #{id}</if>
+                <if test="userId != null">AND a.user_id = #{userId}</if>
+                <if test="mchId != null">AND a.mch_id = #{mchId}</if>
+                <if test="userName != null">AND u.user_name like CONCAT('%',#{userName},'%')</if>
+                <if test="type != null">AND a.type = #{type}</if>
+                <if test="companyName != null">AND a.company_name like CONCAT('%',#{companyName},'%')</if>
+                <if test="companyTaxNumber != null">AND a.company_tax_number = #{companyTaxNumber}</if>
+                <if test="sNo != null">AND a.s_no = #{sNo}</if>
+                <if test="invoiceStatus != null">AND a.invoice_status = #{invoiceStatus}</if>
+                <if test="condition != null">AND (a.company_name like CONCAT('%', #{condition},'%') or a.company_tax_number like CONCAT('%', #{condition},'%') or a.s_no like CONCAT('%', #{condition},'%'))</if>
+            </trim>
+        </where>
+    </sql>
+
+    <select id="getList" parameterType="Map" resultType="Map">
+        SELECT a.*, u.user_name FROM lkt_invoice_info a LEFT JOIN lkt_user u ON a.user_id = u.user_id
+        <include refid="getDynamicSQL"/>
+        <trim prefix=" ORDER BY " suffixOverrides=",">
+            <if test="addTimeSort != null">add_time ${addTimeSort},</if>
+        </trim>
+        <if test="page != null and pageSize!=null">LIMIT #{page},#{pageSize}</if>
+    </select>
+
+    <select id="countList" parameterType="Map" resultType="Integer">
+        SELECT count(1) FROM lkt_invoice_info a LEFT JOIN lkt_user u ON a.user_id = u.user_id
+        <include refid="getDynamicSQL"/>
+    </select>
+
+
+</mapper>

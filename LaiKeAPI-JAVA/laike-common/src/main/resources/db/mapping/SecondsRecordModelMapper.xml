@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.SecondsRecordModelMapper">
+<!--    <sql id="selectRecordListSQL">-->
+<!--        AND o.status != 0-->
+<!--        AND sr.attr_id != 0-->
+<!--        AND sp.platform_activities_id = 0-->
+<!--        AND (o.status != 6 and pay_time != 'null')-->
+<!--        AND sr.is_delete = 0-->
+<!--        <if test="store_id != null">and sr.store_id = #{store_id}</if>-->
+<!--        <if test="product_title != null">AND pl.product_title LIKE CONCAT('%', #{product_title},'%')</if>-->
+<!--        <if test="name != null">AND st.name LIKE CONCAT('%', #{name},'%')</if>-->
+<!--        <if test="user != null">AND(u.user_name LIKE CONCAT('%', #{user},'%') or u.user_id =#{user}) </if>-->
+<!--        <if test="time_id != null">and sp.time_id = #{time_id}</if>-->
+<!--        <if test="startdate != null">and sp.add_time <![CDATA[ > ]]> #{add_time}</if>-->
+<!--        <if test="enddate != null">and sp.add_time <![CDATA[ < ]]>  #{enddate}</if>-->
+<!--    </sql>-->
+
+<!--    <select id="selectRecordList" parameterType="Map" resultType="Map">-->
+<!--        SELECT-->
+<!--        sr.*, st.starttime,st.endtime,st.name,pl.product_title,c.img as imgurl,u.user_name,-->
+<!--        sp.starttime AS stime,sp.endtime AS etime,c.attribute-->
+<!--        FROM-->
+<!--        lkt_seconds_record AS sr-->
+<!--        LEFT JOIN lkt_seconds_pro as sp on sr.sec_id = sp.id-->
+<!--        LEFT JOIN lkt_configure as c on c.id = sr.attr_id-->
+<!--        LEFT JOIN lkt_seconds_time AS st ON st.id = sr.time_id-->
+<!--        LEFT JOIN lkt_product_list AS pl ON sr.pro_id = pl.id-->
+<!--        LEFT JOIN lkt_user AS u ON sr.user_id = u.user_id-->
+<!--        LEFT JOIN lkt_order as o on sr.sNo = o.sNo-->
+<!--        <where>-->
+<!--            <trim prefixOverrides="and">-->
+<!--                <include refid="selectRecordListSQL"/>-->
+<!--            </trim>-->
+<!--        </where>-->
+<!--        <trim prefix=" ORDER BY " suffixOverrides=",">-->
+<!--            <if test="add_time_sort != null">sr.add_time ${price_sort},</if>-->
+<!--        </trim>-->
+<!--        <if test="pageStart != null and pageEnd!=null">LIMIT #{pageStart},#{pageEnd}</if>-->
+<!--    </select>-->
+<!--    <select id="countRecordList" parameterType="Map" resultType="int">-->
+<!--        SELECT count(sr.id) FROM lkt_seconds_record AS sr-->
+<!--        LEFT JOIN lkt_seconds_pro as sp on sr.sec_id = sp.id-->
+<!--        LEFT JOIN lkt_configure as c on c.id = sr.attr_id-->
+<!--        LEFT JOIN lkt_seconds_time AS st ON st.id = sr.time_id-->
+<!--        LEFT JOIN lkt_product_list AS pl ON sr.pro_id = pl.id-->
+<!--        LEFT JOIN lkt_user AS u ON sr.user_id = u.user_id-->
+<!--        LEFT JOIN lkt_order as o on sr.sNo = o.sNo-->
+<!--        <where>-->
+<!--            <trim prefixOverrides="and">-->
+<!--                <include refid="selectRecordListSQL"/>-->
+<!--            </trim>-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <!-- 2021新版秒杀 -->
+    <sql id="selectRecordListSQL">
+        AND o.status != 0
+        <choose>
+            <when test="is_delete==null">AND sr.is_delete = 0</when>
+            <otherwise>and sr.is_delete=#{is_delete}</otherwise>
+        </choose>
+        <if test="store_id != null">and sr.store_id = #{store_id}</if>
+        <if test="mchId != null">and o.mch_id = CONCAT(',',  #{mchId},',')</if>
+        <if test="product_title != null">AND pl.product_title LIKE CONCAT('%', #{product_title},'%')</if>
+        <if test="name != null">AND st.name LIKE CONCAT('%', #{name},'%')</if>
+        <if test="user != null">AND(u.user_name LIKE CONCAT('%', #{user},'%') or u.user_id =#{user}) </if>
+        <if test="startdate != null">and sp.starttime <![CDATA[ >= ]]> #{startdate}</if>
+        <if test="enddate != null">and sp.endtime <![CDATA[ <= ]]>  #{enddate}</if>
+        <if test="startAddTime != null">and sr.add_time <![CDATA[ >= ]]> #{startAddTime}</if>
+        <if test="endAddTime != null">and sr.add_time <![CDATA[ <= ]]>  #{endAddTime}</if>
+    </sql>
+    <select id="selectRecordList" parameterType="Map" resultType="Map">
+        SELECT sr.*, pl.product_title,cast(u.user_name as char) user_name, sp.starttime,sp.endtime,c.attribute,sr.pro_id,c.img attrImg
+        FROM lkt_seconds_record AS sr
+        LEFT JOIN lkt_seconds_activity as sp on sr.sec_id = sp.id
+        LEFT JOIN lkt_product_list AS pl ON sr.pro_id = pl.id
+        LEFT JOIN lkt_configure as c on c.id = sr.attr_id
+        LEFT JOIN lkt_user AS u ON sr.user_id = u.user_id
+        LEFT JOIN lkt_order as o on sr.sNo = o.sNo
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectRecordListSQL"/>
+            </trim>
+        </where>
+        <trim prefix=" ORDER BY " suffixOverrides=",">
+            <if test="add_time_sort != null">sr.add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd!=null">LIMIT #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countRecordList" resultType="java.lang.Integer">
+        SELECT count(1) FROM lkt_seconds_record AS sr
+        LEFT JOIN lkt_seconds_activity as sp on sr.sec_id = sp.id
+        LEFT JOIN lkt_configure as c on c.id = sr.attr_id
+        LEFT JOIN lkt_seconds_time AS st ON st.id = sr.time_id
+        LEFT JOIN lkt_product_list AS pl ON sr.pro_id = pl.id
+        LEFT JOIN lkt_user AS u ON sr.user_id = u.user_id
+        LEFT JOIN lkt_order as o on sr.sNo = o.sNo
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectRecordListSQL"/>
+            </trim>
+        </where>
+    </select>
+
+</mapper>

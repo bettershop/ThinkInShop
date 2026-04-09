@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.AuctionSessionModelMapper" >
+
+    <sql id="getAuctionSessionListSQL">
+        <where>
+            <trim prefixOverrides="and">
+                a.special_id=b.id and a.recovery=0 and a.recovery=b.recovery
+                <if test="id != null">and a.id = #{id}</if>
+                <if test="special_id != null">and b.id = #{special_id}</if>
+                <if test="store_id != null">and b.store_id = #{store_id}</if>
+                <if test="status != null">and a.status = #{status}</if>
+                <if test="is_show != null">and a.is_show = #{is_show}</if>
+                <if test="sessionName != null">and a.name = #{sessionName}</if>
+                <if test="specialId != null">and a.special_id = #{specialId}</if>
+                <if test="keyName != null">and (a.id = #{keyName} or a.name like concat('%',#{keyName},'%'))</if>
+                <if test="sessionName != null">and a.name = #{sessionName}</if>
+                <if test="startDate != null and startDate != ''">and a.start_date <![CDATA[  >=  ]]> #{startDate}</if>
+                <if test="endDate != null and endDate != ''">and a.end_date <![CDATA[  <=  ]]> #{endDate}</if>
+                <if test="statusList != null">
+                    <foreach collection="statusList" item="status" separator="," open="and a.status in(" close=")">
+                        #{status,jdbcType=INTEGER}
+                    </foreach>
+                </if>
+            </trim>
+        </where>
+    </sql>
+
+    <select id="selectAuctionSessionList" parameterType="Map" resultType="Map">
+        select a.id,b.id specialId,a.name sessionName,b.name,a.start_date,a.end_date,a.status,a.is_show,a.add_date,b.start_date specialStartDate,
+               b.end_date specialEndDate,b.img,b.content,b.unit,b.promise_amt,b.number,b.mark_up_amt
+            from lkt_auction_session a,lkt_auction_special b
+        <include refid="getAuctionSessionListSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countAuctionSessionList" parameterType="Map" resultType="int">
+        select count(distinct a.id) from lkt_auction_session a,lkt_auction_special b
+        <include refid="getAuctionSessionListSQL"/>
+    </select>
+
+    <sql id="selectAuctionGoodsListSQL">
+        <where>
+            <trim prefixOverrides="and">
+                a.id=b.pid and a.recycle=0 and b.recycle=a.recycle and substring_index(substring_index(a.product_class, '-', 2), '-', -1)=c.cid
+                and not exists (select distinct y.id from lkt_auction_session x,lkt_auction_product y,lkt_auction_goods z where x.recovery=0 and x.recovery=y.recovery and x.recovery=z.recovery and x.status!=3 and y.status not in (3,4,5) and z.attr_id= y.attr_id and y.attr_id=b.id)
+                <if test="store_id != null">and a.store_id = #{store_id}</if>
+                <if test="active != null">and a.active = #{active}</if>
+                <if test="mchId != null">and a.mch_id = #{mchId}</if>
+                <if test="classId != null">AND a.product_class like CONCAT('%-',#{classId},'-%')</if>
+                <if test="key != null">and ( a.id=#{key} or a.product_title like concat('%',#{key},'%') )</if>
+            </trim>
+        </where>
+    </sql>
+    <select id="selectAuctionGoodsList" parameterType="Map" resultType="Map">
+        select a.id,b.id attrId,a.product_title,c.pname,b.price,b.size,b.img from lkt_product_list a,lkt_configure b,lkt_product_class c
+        <include refid="selectAuctionGoodsListSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countAuctionGoodsList" parameterType="Map" resultType="int">
+        select count(distinct b.id) from lkt_product_list a,lkt_configure b,lkt_product_class c
+        <include refid="selectAuctionGoodsListSQL"/>
+    </select>
+</mapper>

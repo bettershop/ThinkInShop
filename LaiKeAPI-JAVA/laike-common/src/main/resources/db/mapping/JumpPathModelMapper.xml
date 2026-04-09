@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.JumpPathModelMapper">
+    <sql id="selectDynamicSQL">
+        <if test="store_id != null">and a.store_id = #{store_id}</if>
+        <if test="id != null">and a.id = #{id}</if>
+        <if test="type != null">and a.type = #{type}</if>
+        <if test="type0 != null">and a.type0 = #{type0}</if>
+        <if test="status != null">and a.status = #{status}</if>
+        <if test="mch_id != null">and a.mch_id = #{mch_id}</if>
+        <if test="lang_code != null and lang_code != ''">and a.lang_code = #{lang_code}</if>
+        <choose>
+            <when test="type0 == 1 and mchId!=null">and EXISTS(select y.id from lkt_product_list y where y.product_class like concat('%-',x.cid,'-%') and x.recycle=0 and y.mch_id=#{mchId})
+            </when>
+            <when test="type0 == 2 and mchId!=null">and x.mch_id=#{mchId} </when>
+        </choose>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map" flushCache="true" useCache="false">
+        select a.id,a.store_id,a.type0,a.type,a.url,a.status,a.parameter_status,a.parameter,a.add_date,a.sid
+        <choose>
+            <when test="type0 == 1">,x.pname name</when>
+            <when test="type0 == 2">,x.product_title name</when>
+            <otherwise>,x.name</otherwise>
+        </choose>
+        from lkt_jump_path a
+        <choose>
+            <when test="type0 == 1">right join lkt_product_class x on a.sid = x.cid and x.recycle=0 and x.is_display=1 </when>
+            <when test="type0 == 2">right join lkt_product_list x on a.sid = x.id and x.recycle=0 and x.mch_status =2 and x.status=2 </when>
+            <when test="type0 == 3">right join lkt_mch x on a.sid = x.id and x.recovery=0 and x.review_status = 1 </when>
+        </choose>
+        <where>
+            <trim prefixOverrides="and">
+                <choose>
+                    <when test="type0 == 1">and x.level=0 and x.recycle = 0 and x.store_id=a.store_id</when>
+                    <when test="type0 == 2">and x.recycle = 0 and x.store_id=a.store_id</when>
+                    <when test="type0 == 3">and x.recovery = 0 and x.store_id=a.store_id</when>
+                </choose>
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int" flushCache="true" useCache="false">
+        select count(1) from lkt_jump_path
+        <choose>
+            <when test="type0 == 1">right join lkt_product_class x on a.sid = x.cid and x.recycle=0 and x.is_display=1 </when>
+            <when test="type0 == 2">right join lkt_product_list x on a.sid = x.id and x.recycle=0 and x.mch_status =2 and x.status=2 </when>
+            <when test="type0 == 3">right join lkt_mch x on a.sid = x.id and x.recovery=0</when>
+        </choose>
+        <where>
+            <trim prefixOverrides="and">
+                <choose>
+                    <when test="type0 == 1">and x.level=0 and x.recycle = 0 and x.store_id=a.store_id</when>
+                    <when test="type0 == 2">and x.recycle = 0 and x.store_id=a.store_id</when>
+                    <when test="type0 == 3">and x.recovery = 0 and x.store_id=a.store_id</when>
+                </choose>
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getMchList" resultType="java.util.Map">
+        select name,CONCAT('shop_id=', id) AS parameter,id as sid from lkt_mch where recovery=0 and review_status = 1 and store_id = #{store_id}
+    </select>
+</mapper>

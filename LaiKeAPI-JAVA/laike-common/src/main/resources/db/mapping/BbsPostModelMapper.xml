@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.BbsPostModelMapper">
+    <sql id="selectDynamicSQL">
+        <where>
+            <trim prefixOverrides="and">
+                <if test="id != null">and p.id = #{id}</if>
+                <if test="store_id != null">and p.store_id = #{store_id}</if>
+                <if test="name != null and name !=''">and f.name like concat('%',#{name},'%')</if>
+                <if test="title != null and title != ''">and p.title like concat('%',#{title},'%')</if>
+                <if test="status != null">and p.status = #{status}</if>
+                <if test="recycle != null">and p.recycle = #{recycle}</if>
+                <if test="is_home_recommend != null">and p.is_home_recommend = #{is_home_recommend}</if>
+                <if test="is_hide != null">and p.is_hide = #{is_hide}</if>
+                <if test="is_video != null">and p.video_id is not null</if>
+                <if test="cid != null and cid != ''">and p.category_id = #{cid}</if>
+                <if test="post_ids != null">
+                    and p.id in
+                    <foreach collection="post_ids" item="id" open="(" close=")" separator=",">
+                        #{id}
+                    </foreach>
+                </if>
+                <if test="user_id != null and user_id != ''">
+                    and p.user_id = #{user_id}
+                </if>
+                <if test="typeList != null">
+                    and p.type in
+                    <foreach collection="typeList" item="type" open="(" close=")" separator=",">
+                        #{type}
+                    </foreach>
+                </if>
+                <if test="type != null">
+                    and p.type = #{type}
+                </if>
+                <if test="key_word != null and key_word != ''">and (p.title like concat('%',#{key_word},'%') or p.content like concat ('%',#{key_word},'%')) </if>
+            </trim>
+        </where>
+    </sql>
+    <update id="del">
+        update lkt_bbs_post set recycle = 1 where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        SELECT
+            p.id,
+            p.browse_num,
+            p.collect_num,
+            p.comment_num,
+            p.forward_num,
+            DATE_FORMAT( p.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+            p.is_home_recommend,
+            p.like_num,
+            f.name,
+            f.need_platform_review,
+            p.title,
+            p.status,
+            p.user_id,
+            p.content,
+            p.images,
+            p.video_id,
+            p.type,
+            p.forward_num,
+            f.name as user_name,
+            f.head_img as headimgurl,
+            p.pro_ids,
+            p.forum_id,
+            v.cover_img,
+            p.cover_img as p_cover_img,
+            p.text
+        FROM
+            lkt_bbs_post p
+            LEFT JOIN lkt_bbs_forum f ON f.id = p.forum_id
+            LEFT JOIN lkt_bbs_video v ON v.file_id = p.video_id
+        <include refid="selectDynamicSQL"/>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="sort != null and sort != ''">p.create_time desc,</if>
+            <if test="sort_post_id !=null ">p.id = #{sort_post_id} desc,p.create_time desc,</if>
+        </trim>
+        <if test="pageNo != null and pageSize != null">
+            limit #{pageNo},#{pageSize}
+        </if>
+    </select>
+
+
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from  lkt_bbs_post p
+        LEFT JOIN lkt_bbs_forum f ON f.id = p.forum_id
+        LEFT JOIN lkt_bbs_video v ON v.file_id = p.video_id
+        <include refid="selectDynamicSQL"/>
+    </select>
+    <select id="getById" resultType="java.util.Map">
+        SELECT
+            p.content,
+            DATE_FORMAT( p.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+            p.id,
+            p.`status`,
+            p.is_home_recommend,
+            p.title,
+            p.user_id,
+            u.user_name,
+            p.type,
+            p.video_id,
+            p.images,
+            p.cover_img,
+            p.text
+        FROM
+            lkt_bbs_post p
+                INNER JOIN lkt_user u ON u.user_id = p.user_id
+        where p.id = #{id}
+    </select>
+    <select id="details" resultType="java.util.Map">
+        SELECT
+            p.collect_num,
+            p.comment_num,
+            p.content,
+            DATE_FORMAT( p.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+            p.id,
+            p.like_num,
+            p.title,
+            p.user_id,
+            u.user_name,
+            f.head_img AS headimgurl,
+            p.pro_ids,
+            p.video_id,
+            p.forward_num,
+            p.type,
+            p.images,
+            p.forum_id,
+            p.cover_img,
+            p.status,
+            p.text,
+            p.category_id
+        FROM
+            lkt_bbs_post p
+            LEFT JOIN lkt_user u ON u.user_id = p.user_id
+            LEFT JOIN lkt_bbs_forum f ON f.id = p.forum_id
+        where p.id = #{id}
+    </select>
+    <select id="getLikeNumAndCollectNum" resultType="java.util.Map">
+        SELECT SUM(like_num) AS like_num,SUM(collect_num) AS collect_num FROM lkt_bbs_post WHERE id IN
+        <foreach collection="postIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getIdByForumIds" resultType="java.lang.Long">
+        SELECT id FROM lkt_bbs_post WHERE forum_id IN
+        <foreach collection="focusList" item="forum_id" open="(" close=")" separator=",">
+            #{forum_id}
+        </foreach>
+        and recycle = 0 and status = 2
+    </select>
+
+    <select id="getFocusForumIdsByUserId" resultType="java.lang.Long">
+        SELECT f.id
+        FROM lkt_bbs_forum f
+        WHERE f.recycle = 0
+        <if test="store_id != null">
+            AND f.store_id = #{store_id}
+        </if>
+        AND f.user_id IN (
+            SELECT DISTINCT a.be_user_id
+            FROM lkt_bbs_post_action a
+            WHERE a.user_id = #{user_id}
+            AND a.action_type = 4
+            AND a.recycle = 0
+            AND a.be_user_id IS NOT NULL
+            AND a.be_user_id != ''
+        )
+    </select>
+</mapper>

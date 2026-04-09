@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.LivingCommissionModelMapper" >
+    <select id="queryLivingCommission" resultType="map" parameterType="map">
+        select concat('订单号:',c.s_no) as enevt,date_format(d.add_time,'%Y-%m-%d %H:%i:%s') as time,d.commission as moeny
+        ,case when c.status=101 then '待发放' else '已发放' end as status
+        ,c.status as type
+        from lkt_living_commission c
+        left join lkt_order_details d on c.s_no = d.r_sNo
+        where c.store_id=#{store_id} and c.recycle=0 and c.user_id=#{user_id}
+        union all
+        select event,date_format(add_date,'%Y-%m-%d %H:%i:%s') as time,money,'已完成' as status,102 as type from lkt_record
+        where store_id=#{store_id} and user_id=#{user_id} and type=42
+        order by time desc
+        <if test="page != null and pageSize!=null">LIMIT #{page},#{pageSize}</if>
+    </select>
+
+    <select id="countLivingCommission" resultType="int" parameterType="map">
+        select sum(a.num) from (
+        select count(1) as num from lkt_living_commission c
+        left join lkt_order_details d on c.s_no = d.r_sNo
+        where c.store_id=#{store_id} and c.recycle=0 and c.user_id=#{user_id}
+        union all
+        select count(1) as num from lkt_record
+        where store_id=#{store_id} and user_id=#{user_id} and type=42) a
+    </select>
+</mapper>

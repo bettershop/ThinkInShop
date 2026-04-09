@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.PluginsModelMapper" >
+  <resultMap id="BaseResultMap" type="com.laiketui.domain.config.PluginsModel" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plugin_name" property="plugin_name" jdbcType="VARCHAR" />
+    <result column="plugin_code" property="plugin_code" jdbcType="VARCHAR" />
+    <result column="plugin_img" property="plugin_img" jdbcType="VARCHAR" />
+    <result column="optime" property="optime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="opuser" property="opuser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    a
+    .
+    id
+    ,
+    a.plugin_name,
+    a.plugin_code,
+    a.plugin_img,
+    a.optime,
+    a.STATUS,
+    a.flag,
+    a.opuser,
+    a.store_id,
+    a.jump_address,
+    a.content,
+    a.menu_id,
+    a.is_mch_plugin
+  </sql>
+  <select id="getPluginInfo" resultType="com.laiketui.domain.config.PluginsModel">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    (
+    SELECT
+    *,
+    ROW_NUMBER() over(partition by plugin_code) as top
+    FROM
+    lkt_plugins
+    WHERE
+    flag = 0
+    AND plugin_code = #{code}
+    AND store_id = #{storeId}
+    ) AS a
+    WHERE a.top &lt;2
+  </select>
+    <select id="getPluginsAll" resultType="com.laiketui.domain.config.PluginsModel">
+      SELECT
+        a.plugin_code,
+        a.plugin_name
+      FROM
+        (
+          SELECT
+            plugin_code,
+            plugin_name,
+            ROW_NUMBER() over(partition by plugin_code) as top
+          FROM
+            lkt_plugins
+          WHERE
+            flag = 0
+            AND store_id = #{store_id}
+        ) AS a
+      WHERE a.top = 1
+    </select>
+</mapper>

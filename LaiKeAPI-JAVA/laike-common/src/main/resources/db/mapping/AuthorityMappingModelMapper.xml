@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.AuthorityMappingModelMapper" >
+
+    <insert id="saveList" parameterType="Map">
+        INSERT INTO lkt_authority_mapping  ( id,role_id,menu_id,add_date ) VALUES
+        <foreach collection ="list" item="item" separator =",">
+            (#{item.id},#{item.role_id},#{item.menu_id},#{item.add_date})
+        </foreach >
+    </insert>
+</mapper>

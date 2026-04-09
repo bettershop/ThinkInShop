@@ -127,6 +127,10 @@
 					</template> 
                     
 					<!-- 推荐商家 -->
+					<template v-if="shaco_plugin.mch"  >
+						<publicModeMCH :opensetting="opensetting"  
+							:title="language.home.tjsj"  >
+						</publicModeMCH>
 					</template>
                     
 					<!-- 各分类推荐商品 -->

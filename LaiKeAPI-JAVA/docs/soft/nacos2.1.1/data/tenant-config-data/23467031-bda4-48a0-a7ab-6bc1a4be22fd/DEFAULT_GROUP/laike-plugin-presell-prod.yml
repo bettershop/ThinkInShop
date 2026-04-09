@@ -1,0 +1,63 @@
+server:
+  port: 19001
+  ssl:
+    enabled: false
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /presell
+
+node:
+  ip: 0.0.0.0
+
+#dubbo:
+#  application:
+#    name: laike-presell
+#  registry:
+#    id: zookeeper-registryapplication.yml
+#    protocol: zookeeper
+#    address: 127.0.0.1:2181
+#  protocol:
+#    name: dubbo
+#    port: 21924
+#    accesslog: dubbo-access.log
+#  provider:
+#    retries: 1 # 远程服务调用重试次数, 不包括第一次调用, 不需要重试请设为0
+#    timeout: 3000 # 远程服务调用超时时间(毫秒)
+#    delay: -1 # 延迟注册服务时间(毫秒)- , 设为-1时, 表示延迟到Spring容器初始化完成时暴露服务
+#    filter: -exception # 服务提供方远程调用过程拦截器名称, 多个名称用逗号分隔
+#  monitor:
+#    protocol: registry
+
+# Nacos 注册中心
+dubbo:
+  application:
+    name: laike-plugin-presell
+    # 禁用QOS同一台机器可能会有端口冲突现象
+    qos-enable: false
+    qos-accept-foreign-ip: false
+    # 配置注册中心
+  registry:
+    address: nacos://localhost:8848
+    parameters: laike-dubbo-nacos
+  # 设置超时时间
+  consumer:
+    timeout: 6000
+  protocol:
+    name: dubbo
+    port: ${NACOS_PORT:21924}
+
+
+#swagger 配置
+swagger:
+  title: 来客电商-预售接口
+  desc: 来客电商预售接口API
+  version: 0.0.1.SNAPSHOT
+  termsOfServiceUrl: javascript:void(0)
+  license: Apache 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+  basePackage: com.laiketui.presell
+  groupName: 预售
+  contactName: presell
+  contactUrl: http://www.laiketui.com/
+  contactEmail: 36309839@qq.com

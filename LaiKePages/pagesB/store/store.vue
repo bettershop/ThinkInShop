@@ -178,6 +178,8 @@
                 <!-- 省钱好券 -->
                 <div
                     class="mytab_div"
+                    @click="maskclick"
+                    v-if="shaco_plugin.coupon == 1"
                 >
                     <div class="mytab_div_img">
                         <img :src="dianpuzy4" alt="" />
@@ -200,6 +202,134 @@
             </div>
             <storeDiy v-if="is_diy" @getHomeBg="getHomeBg" :is_open="is_open" :shop_id="shop_id"></storeDiy>
 
+            <view @touchmove.stop.prevent class="bounced" v-if="maskcoupon">
+                <view class="bounced-box">
+                    <view class="bounced-box-box">
+                        <view class="bounced-box-box-title">{{
+                            language.store.lqyhq
+                        }}</view>
+                        <image
+                            :src="guanbi"
+                            class="bounced-box-box-img"
+                            @click="maskclick"
+                        ></image>
+                    </view>
+                    <view class="bounced-box-list">
+                        <scroll-view
+                            class="bounced-box-list_scroll"
+                            scroll-y="true"
+                        >
+                            <ul class="coupon_ul">
+                                <li
+                                    class="coupon_li"
+                                    v-for="(item, index) in coupon_list"
+                                    :class="{
+                                        active_background: isNone[index],
+                                    }"
+                                    :key="index"
+                                >
+                                    <img
+                                        class="bg_img"
+                                        :src="
+                                            isNone[index]
+                                                ? coupon_bg1
+                                                : item.point_type == 4 ||
+                                                  item.point_type == 2
+                                                ? coupon_bg2
+                                                : coupon_bg
+                                        "
+                                    />
+                                    <div class="coupon_li_data">
+                                        <div
+                                            class="coupon_left"
+                                            :class="{
+                                                active_border: isNone[index],
+                                            }"
+                                        >
+                                            <p
+                                                class="coupon_p"
+                                                :style="
+                                                    isNone[index]
+                                                        ? 'color:#333333'
+                                                        : 'color:#FA5151'
+                                                "
+                                            >
+                                                {{ item.name }}
+                                            </p>
+                                            <div
+                                                class="coupon_price"
+                                                :class="{
+                                                    active_color: isNone[index],
+                                                }"
+                                            >
+                                                <div
+                                                    class="coupon_price_div"
+                                                    v-if="
+                                                        item.activity_type == 2
+                                                    "
+                                                >
+                                                    <span
+                                                        class="coupon_price_span"
+                                                        :class="{
+                                                            active_color:
+                                                                isNone[index],
+                                                        }"
+                                                        >{{LaiKeTuiCommon.DEFAULT_STORE_SYMBOL}}</span
+                                                    >
+                                                    <span
+                                                        class="coupon_price_money"
+                                                        :class="{
+                                                            active_color:
+                                                                isNone[index],
+                                                        }"
+                                                        >{{ LaiKeTuiCommon.formatPrice(item.money) }}</span
+                                                    >
+                                                    <span
+                                                        class="coupon_t"
+                                                        :class="{
+                                                            active_color:
+                                                                isNone[index],
+                                                        }"
+                                                        >{{ item.limit }}</span
+                                                    >
+                                                </div>
+                                                <div
+                                                    class="coupon_price_div color_ff3"
+                                                    v-else-if="
+                                                        item.activity_type == 3
+                                                    "
+                                                >
+                                                    <span
+                                                        class="coupon_price_money"
+                                                        :class="{
+                                                            active_color:
+                                                                isNone[index],
+                                                        }"
+                                                    >
+                                                        {{ item.discount }}
+                                                        <span
+                                                            class="font_28"
+                                                            :class="{
+                                                                active_color:
+                                                                    isNone[
+                                                                        index
+                                                                    ],
+                                                            }"
+                                                            >{{
+                                                                language.shop
+                                                                    .coupon.fold
+                                                            }}</span
+                                                        >
+                                                    </span>
+                                                    <span
+                                                        class="coupon_t"
+                                                        :class="{
+                                                            active_color:
+                                                                isNone[index],
+                                                        }"
+                                                        >{{ item.limit }}</span
+                                                    >
+                                                </div>
                                                 <div
                                                     class="color_ff3"
                                                     v-else-if="

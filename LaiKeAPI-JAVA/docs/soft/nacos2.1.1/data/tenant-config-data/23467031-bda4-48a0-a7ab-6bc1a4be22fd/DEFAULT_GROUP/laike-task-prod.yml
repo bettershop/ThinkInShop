@@ -1,0 +1,78 @@
+server:
+  port: 18001
+  ssl:
+    enabled: false
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /task
+
+#dubbo:
+#  application:
+#    name: laike_app
+#  registry:
+#    id: zookeeper-registryapplication.yml
+#    protocol: zookeeper
+#    address: 127.0.0.1:2181
+#  protocol:
+#    name: dubbo
+#    port: 21898
+#    accesslog: dubbo-access.log
+#  provider:
+#    retries: 1 # 远程服务调用重试次数, 不包括第一次调用, 不需要重试请设为0
+#    timeout: 3000 # 远程服务调用超时时间(毫秒)
+#    delay: -1 # 延迟注册服务时间(毫秒)- , 设为-1时, 表示延迟到Spring容器初始化完成时暴露服务
+#    filter: -exception # 服务提供方远程调用过程拦截器名称, 多个名称用逗号分隔
+#  monitor:
+#    protocol: registry
+
+# Nacos 注册中心
+dubbo:
+  application:
+    name: laike-task
+    # 禁用QOS同一台机器可能会有端口冲突现象
+    qos-enable: false
+    qos-accept-foreign-ip: false
+    # 配置注册中心
+  registry:
+    address: nacos://localhost:8848
+    parameters: laike-dubbo-nacos
+  # 设置超时时间
+  consumer:
+    timeout: 6000
+  protocol:
+    name: dubbo
+    port: ${NACOS_PORT:21898}
+
+# logging:
+#   level:
+#     com:
+#       laiketui: info
+#   config: classpath:logback.xml
+
+#swagger 配置
+swagger:
+  title: 来客电商-任务调度
+  desc: 来客电商任务调度
+  version: 0.0.1.SNAPSHOT
+  termsOfServiceUrl: javascript:void(0)
+  license: Apache 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+  basePackage: com.laiketui.task
+  groupName: 任务调度
+  contactName: task
+  contactUrl: http://www.laiketui.com/
+  contactEmail:
+#xxl-job
+xxl:
+  job:
+    accessToken:
+    admin:
+      addresses: http://127.0.0.1:3366/task # 任务调度中心部署根地址（必填）
+    executor:
+      appname: laike-task                   # 对应 执行管理器 AppName
+      ip: 127.0.0.1                         # 执行器ip，可以不填，会自动识别注册
+      logpath: ./xxljob-logs               # 执行器运行日志文件存储磁盘路径
+      logretentiondays: 30                  # 执行器日志保存天数，值大于3时生效，启用执行器log文件定期清理功能，否则不生效。
+      port: 2024                            # 执行器端口号
+      #AccessToken：执行器通讯token，非空时启用

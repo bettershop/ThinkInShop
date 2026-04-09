@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.SensitiveWordsModelMapper" >
+
+    <select id="selectList" resultType="com.laiketui.domain.vo.systems.SensitiveVo" parameterType="Map">
+        SELECT * FROM lkt_sensitive_words
+        <where>
+            <include refid="selectRecordListSQL"/>
+        </where>
+        ORDER BY add_time DESC
+        <if test="pageNo != null and pageSize != null">limit #{pageNo},#{pageSize}</if>
+    </select>
+
+    <sql id="selectRecordListSQL">
+        <if test="storeId != null">and store_id = #{storeId}</if>
+        <if test="keyword != null and keyword != ''"> and word like concat ('%',#{keyword},'%')</if>
+        <if test="recycle != null">and recycle = #{recycle}</if>
+
+    </sql>
+
+    <select id="count" resultType="Integer" parameterType="Map">
+        SELECT COUNT(1) FROM  lkt_sensitive_words
+        <where>
+            <include refid="selectRecordListSQL"/>
+        </where>
+    </select>
+
+    <update id="delBatchByIds">
+        UPDATE lkt_sensitive_words SET recycle = 1 WHERE store_id = #{storeId}
+        AND id in
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+    </update>
+
+    <insert id="insertBatch">
+        insert into lkt_sensitive_words(store_id,word,add_time)
+            values
+                <foreach collection="wordList" item="word" separator=",">
+                    (#{storeId},#{word},#{date})
+                </foreach>
+    </insert>
+
+    <select id="getWordList" resultType="java.lang.String">
+        select word from lkt_sensitive_words where store_id = #{storeId} and recycle = 0
+    </select>
+    <select id="check" resultType="java.lang.Integer">
+        select count(1) from lkt_sensitive_words where store_id = #{storeId} and word = #{word}
+        <if test="id != null">
+            and id &lt;&gt;#{id}
+        </if>
+    </select>
+</mapper>

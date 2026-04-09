@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.ProductMappingModelMapper">
+
+
+    <delete id="batchDelById" parameterType="List">
+        delete a.* from lkt_block_product a
+        <where>
+            <if test="mainId!=null">a.main_id=#{mainId}</if>
+            <if test="productId!=null">a.product_id=#{productId}</if>
+            <if test="productIsList!=null">
+                <foreach collection="productIsList" item="id" separator="," open="and a.product_id in(" close=")">
+                    #{id,jdbcType=INTEGER}
+                </foreach>
+            </if>
+            <if test="mainIdList!=null">
+                <foreach collection="mainIdList" item="id" separator="," open="and a.main_id in(" close=")">
+                    #{id,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+</mapper>

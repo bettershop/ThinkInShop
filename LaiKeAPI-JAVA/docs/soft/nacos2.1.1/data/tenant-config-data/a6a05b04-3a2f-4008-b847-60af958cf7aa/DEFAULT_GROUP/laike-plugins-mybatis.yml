@@ -1,0 +1,13 @@
+mybatis:
+  mapper-locations: classpath:/db/mapping/*Mapper.xml
+  type-aliases-package: com.laiketui.plugin.common.domain.base
+  mapper:
+    identity: MYSQL
+    mappers: tk.mybatis.mapper.commgeneratoron.Mapper
+    not-empty: true
+  ######### 分页插件 ##########
+  pagehelper:
+    helper-dialect: mysql
+    reasonable: true
+    params: count=countSql
+    support-methods-arguments: true

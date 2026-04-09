@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.DistributionGoodsModelMapper">
+    <sql id="columnAll">
+        a
+        .
+        id
+        ,a.store_id,a.p_id,a.s_id,a.pv,a.uplevel,cast(a.distribution_rule as char) distribution_rule,a.rules_set,a.add_time,a.recycle
+    </sql>
+
+    <sql id="selectGoodsInfoSQL">
+        <trim prefixOverrides="and">
+            <choose>
+                <when test="recycle != null">and a.recycle=#{recycle}</when>
+                <otherwise>and a.recycle != 1</otherwise>
+            </choose>
+            <if test="store_id != null">and a.store_id = #{store_id} and b.recycle = 0 and c.status = 2
+            </if>
+            <if test="id != null">and a.id=#{id}</if>
+            <if test="pid != null">and a.p_id=#{pid}</if>
+            <if test="sid != null">and a.s_id=#{sid}</if>
+            <if test="goodsName != null and goodsName != ''">and c.product_title like concat('%',#{goodsName},'%')
+            </if>
+            <if test="goodsClassId != null and goodsClassId != ''">and c.product_class like
+                concat('%-',#{goodsClassId},'-%')
+            </if>
+            <if test="goodsStatus != null and goodsStatus != ''">and c.status = #{goodsStatus}</if>
+            <if test="goodsRecycle != null and goodsRecycle != ''">and c.recycle =#{goodsRecycle}</if>
+            <if test="uplevel1 != null">and a.uplevel = #{uplevel1}</if>
+            <if test="uplevel != null">
+                <choose>
+                    <when test="uplevel!=null and uplevel.toString() == 'all' ">
+                        and a.uplevel is not null
+                    </when>
+                    <otherwise>
+                        and a.uplevel > #{uplevel}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="mchName != null"> and m.name like concat('%',#{mchName},'%')</if>
+            <if test="stockNum != null and stockNum!=''">AND c.num <![CDATA[ >  ]]>  0</if>
+        </trim>
+    </sql>
+    <select id="selectGoodsInfo" parameterType="Map" resultType="Map">
+        SELECT
+        a.id,
+        a.store_id,
+        a.p_id,
+        a.s_id,
+        a.uplevel,
+        a.distribution_rule,
+        a.rules_set,
+        a.add_time,
+        a.recycle,
+        a.pv,
+        a.img,
+        a.imgurl,
+        a.attribute,
+        a.num,
+        a.min_inventory,
+        a.price,
+        a.product_title,
+        a.costprice,
+        a.NAME
+        FROM
+        (
+        SELECT
+        <include refid="columnAll"/>,
+        b.img,
+        c.imgurl,
+        b.attribute,
+        b.num,
+        b.recycle as brecycle,
+        b.min_inventory,
+        b.price,
+        c.product_title,
+        c.status as cstatus,
+        c.num as cnum,
+        b.costprice,
+        m.NAME,
+        ROW_NUMBER() over (partition by a.p_id ) AS top
+        FROM
+        lkt_distribution_goods AS a
+        LEFT JOIN lkt_configure AS b ON a.s_id = b.id
+        LEFT JOIN lkt_product_list AS c ON a.p_id = c.id
+        LEFT JOIN lkt_mch AS m ON c.mch_id = m.id
+        <where>
+            <include refid="selectGoodsInfoSQL"/>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">add_time ${add_time_sort},</if>
+            <if test="price_sort!=null and price_sort!=''">b.price ${price_sort},</if>
+            <if test="any_sort!=null and any_sort!='' and any_key!=null and any_key!=''">${any_key} ${any_sort},</if>
+        </trim>
+        ) AS a
+        <if test="pid_group!=null and pid_group!=''">where a.top &lt;2</if>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countGoodsInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_distribution_goods as a left
+        join lkt_configure as b on a.s_id = b.id
+        left join lkt_product_list as c on a.p_id = c.id
+        left join lkt_mch as m on c.mch_id = m.id
+        <where>
+            <include refid="selectGoodsInfoSQL"/>
+        </where>
+    </select>
+
+    <sql id="selectNotDistributionGoodsInfoSQL">
+        <if test="store_id != null">and b.store_id = #{store_id} AND b. STATUS = 2 and
+            a.recycle = 0 and b.recycle= 0
+        </if>
+        <if test="mchId != null">and d.id=#{mchId}</if>
+        <if test="commodity_type != null and commodity_type!=''"> and b.commodity_type = #{commodity_type}</if>
+        <if test="goodsName != null and goodsName != ''">and b.product_title like concat('%',#{goodsName},'%')
+        </if>
+        <if test="goodsClass != null and goodsClass != ''">and b.product_class like
+            concat('%-',#{goodsClass},'-%')
+        </if>
+        <if test="isPresell != null and isPresell != ''">
+        and b.is_presell = #{isPresell}
+        and (b.gongyingshang = '' or b.gongyingshang is null)</if>
+        <if test="mchName != null and mchName != ''"> and d.name like concat('%',#{mchName},'%') </if>
+        and not exists(select id from lkt_distribution_goods as c where a.id = c.s_id and recycle = 0)
+    </sql>
+    <select id="selectNotDistributionGoodsInfo" parameterType="Map" resultType="Map">
+        select a.*,b.product_title, d.name mchName, d.id mchId from lkt_configure as a left join lkt_product_list as b on a.pid = b.id left join
+        lkt_mch as d on b.mch_id = d.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectNotDistributionGoodsInfoSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countNotDistributionGoodsInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_configure as a left join lkt_product_list as b on a.pid = b.id left join
+        lkt_mch as d on b.mch_id = d.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectNotDistributionGoodsInfoSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getDistributionGoodInfos" parameterType="Map" resultType="Map">
+        select a.*, d.price, d.costprice
+        from lkt_distribution_goods a
+            left join lkt_order_details b on a.s_id=b.sid
+            left join lkt_order c on b.r_sNo = c.sNo
+            left join lkt_configure d on a.s_id = d.id
+        where a.store_id = #{store_id}
+          and c.sno=#{sno}
+          and a.recycle = 0
+    </select>
+
+    <update id="batchDelById" parameterType="List">
+        update lkt_distribution_goods
+        <set>recycle = 1</set>
+        <where>
+            <foreach collection="list" item="id" separator="," open="and id in(" close=")">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </where>
+    </update>
+</mapper>

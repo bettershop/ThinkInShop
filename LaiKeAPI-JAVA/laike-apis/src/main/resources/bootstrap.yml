@@ -1,0 +1,302 @@
+server:
+  port: 21898
+  ssl:
+    enabled: false
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    # 如果你希望所有 API 带统一前缀（如 /api/v1），可加下面一行
+    context-path: /apis
+    encoding:
+      force: true
+      enabled: true
+      charset: UTF-8
+
+# 节点 IP
+node:
+  # 建议配置当前机器能被访问到的ip （可选）
+  ip: 127.0.0.1
+  # 本地开发允许使用 localhost 127.0.0.1 0.0.0.0
+  allow-local-host: true
+  # 微信支付p12存储文件 线上
+  # wx-certp12-path: /pay/
+  # 微信支付证书路径
+  wx-certp12-path: /Users/wangxian/pay
+  # 服务存活时间生产环境 45秒 开放环境 可配置 3600 防止debugger时服务自毁
+  api:
+    register:
+      ttl:
+        seconds: 3600
+
+# 网关文件上传配置
+okhttp:
+  upload:
+    # 单个文件的最大允许大小
+    max-file-size: 100MB
+    # 单个文件的最大允许大小
+    max-total-size: 500MB
+    # 最多文件数
+    max-file-count: 50
+    # Servlet Multipart 请求总大小的最大值（Spring MultipartConfigElement使用）
+    max-request-size: 50MB
+    # 内容类型白名单
+    allowed-types:
+      - image/*
+      - application/pdf
+      - application/msword
+      - application/vnd.openxmlformats-officedocument
+      - text/
+      - application/zip
+      - video/mp4
+      - video/mpeg
+      - video/ogg
+      - video/webm
+      - video/quicktime
+      - video/x-msvideo
+      - video/x-ms-wmv
+      - video/x-flv
+      - video/3gpp
+      - video/3gpp2
+
+spring:
+  application:
+    name: laike-apis
+
+  mvc:
+    servlet:
+      load-on-startup: 0
+    static-path-pattern: /static/**
+    resources:
+      static-locations: classpath:/static/
+  freemarker:
+    template-loader-path: classpath:/templates/
+    suffix: .ftl
+    charset: UTF-8
+    request-context-attribute: request
+    settings:
+      number_format: "0.##########"
+
+  jooq:
+    sql-dialect: mysql
+
+  config:
+    import: classpath:application.properties
+
+  cloud:
+    nacos:
+      config:
+        enabled: false   # 禁用 Nacos 配置中心
+      discovery:
+        enabled: false   # 禁用 Nacos 服务注册与发现
+
+  messages:
+    fallbackToSystemLocale: false
+    basename: i18n/tips,i18n/messages
+    encoding: UTF-8
+
+  transaction:
+    default-timeout: 30000
+
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 1664089464@qq.com
+    password: jshkdchwkqybejcc
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  redis:
+    host: localhost
+    port: 6339
+    password: laiketui18
+    database: 5
+    timeout: 30000
+    lettuce:
+      pool:
+        max-idle: 100
+        min-idle: 0
+        max-active: 20
+        max-wait: -1
+
+
+  shardingsphere:
+    #    props:
+    #      sql-show: true
+    database-name: mysql
+    mode:
+      type: Memory
+      repository:
+        type: Memory
+      overwrite: true
+    datasource:
+      names: lkt-ds-master-0
+      lkt-ds-master-0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:lkt_db}?useUnicode=true&autoReconnect=true&failOverReadOnly=false&characterEncoding=utf-8&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&allowMultiQueries=true&rewriteBatchedStatements=true&connectTimeout=300000&socketTimeout=600000
+        username: ${DB_USER:root}
+        password: ${DB_PWD:123456}
+        druid:
+          initial-size: 1
+          min-idle: 2
+          max-active: 20
+          max-wait: 300000
+          async-init: true
+          time-between-eviction-runs-millis: 6000
+          min-evictable-idle-time-millis: 30000
+          validation-query: select 1
+          test-while-idle: true
+          test-on-borrow: false
+          test-on-return: false
+          pool-prepared-statements: true
+          max-pool-prepared-statement-per-connection-size: 20
+          filters: stat,slf4j
+          connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=50000
+
+  flyway:
+    enabled: false
+
+  jmx:
+    enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+      file-size-threshold: 1
+
+  main:
+    allow-bean-definition-overriding: true
+
+
+
+mybatis:
+  mapper-locations: classpath:/db/mapping/*Mapper.xml
+  type-aliases-package: com.laiketui.domain,com.xxl.job.admin.core.model
+  mapper:
+    identity: MYSQL
+    mappers: tk.mybatis.mapper.commgeneratoron.Mapper
+    not-empty: true
+  pagehelper:
+    helper-dialect: mysql
+    reasonable: true
+    params: count=countSql
+    support-methods-arguments: true
+
+# ========================
+# 自定义业务配置
+# ========================
+
+# 文件上传路径
+uploadFile:
+  path: /Users/wangxian/imgs/
+
+# 微信小程序配置
+client:
+  mpwexin:
+    # 小程序码版本 正式版为 "release"，体验版为 "trial"，开发版为 "develop"。默认是正式版。
+    env_version: trial
+
+
+
+# 网关安全配置（内嵌）
+lkt-gateway:
+  # SQL敏感字正则
+  regx: "insert|into|update|delete|from|where|and|trancate|drop|execute|grant|use|union|sleep|select"
+
+  # 单个IP每分钟请求次数上限
+  request-limit-per-ip:
+    limit: 50000
+    time: 60
+
+  # 负载均衡策略
+  load-balance-strategy: random
+
+  # 黑名单 IP（禁止访问）
+  blacklist:
+    - "192.168.0.222"
+
+  # 白名单 IP
+  whitelist:
+    - "192.168.0.12"
+
+  #慢接口阈值（毫秒）
+  slow-threshold-ms: 2000
+  #熔断统计窗口（秒）
+  circuit-window-seconds: 60
+  #触发熔断的最小请求数
+  min-request: 50
+  #错误率阈值（0.5 = 50%）
+  error-rate: 0.5
+  #慢请求比例阈值
+  slow-rate: 0.5
+  #熔断打开时间（秒）
+  open-seconds: 30
+
+
+management:
+  health:
+    rabbit:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        # 指定需要暴露的端点
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        # 开启 Prometheus 导出
+        enabled: true
+
+
+# XXL-JOB 执行器配置
+xxl:
+  job:
+    accessToken: ""
+    admin:
+      # 必须指向 Admin 的根路径（包含 context-path）
+      addresses: http://127.0.0.1:21898/apis
+    executor:
+      appname: laike-task
+      ip:
+      port: 2026
+      logpath: ./xxl-logs
+      logretentiondays: 30
+    i18n: zh_CN
+    triggerpool:
+      fast:
+        max: 200
+      slow:
+        max: 100
+    logretentiondays: 30
+
+
+
+# ========================
+# Swagger 统一配置（聚合所有模块）
+# ========================
+swagger:
+  title: 来客电商 - 统一API入口
+  desc: 聚合 admins/apps/comps/plugins 所有接口
+  version: 0.0.1-SNAPSHOT
+  termsOfServiceUrl: javascript:void(0)
+  license: Apache 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+  basePackage: com.laiketui  # 关键！扫描所有子模块
+  groupName: Unified-API
+  contactName: Dev Team
+  contactUrl: http://www.laiketui.com/
+  contactEmail: ""
+
+# ========================
+# 日志配置
+# ========================
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.laiketui: INFO
+    org.springdoc.webmvc.api.CachingOperationNameGenerator: WARN
+    org.springdoc: WARN

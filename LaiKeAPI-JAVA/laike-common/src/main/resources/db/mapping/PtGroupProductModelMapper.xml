@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.PtGroupProductModelMapper">
+    <resultMap id="BaseResultMap" type="com.laiketui.domain.plugin.group.PtGroupProductModel">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="store_id" property="store_id" jdbcType="INTEGER"/>
+        <result column="group_title" property="group_title" jdbcType="VARCHAR"/>
+        <result column="attr_id" property="attr_id" jdbcType="INTEGER"/>
+        <result column="product_id" property="product_id" jdbcType="INTEGER"/>
+        <result column="group_level" property="group_level" jdbcType="VARCHAR"/>
+        <result column="group_data" property="group_data" jdbcType="VARCHAR"/>
+        <result column="starttime" property="starttime" jdbcType="TIMESTAMP"/>
+        <result column="endtime" property="endtime" jdbcType="TIMESTAMP"/>
+        <result column="activity_no" property="activity_no" jdbcType="INTEGER"/>
+        <result column="g_status" property="g_status" jdbcType="TINYINT"/>
+        <result column="is_show" property="is_show" jdbcType="TINYINT"/>
+        <result column="is_delete" property="is_delete" jdbcType="TINYINT"/>
+        <result column="is_copy" property="is_copy" jdbcType="TINYINT"/>
+        <result column="platform_activities_id" property="platform_activities_id" jdbcType="INTEGER"/>
+        <result column="mch_id" property="mch_id" jdbcType="INTEGER"/>
+        <result column="audit_status" property="audit_status" jdbcType="TINYINT"/>
+        <result column="reason" property="reason" jdbcType="VARCHAR"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="sales_volume" property="sales_volume" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="addtime" property="addtime" jdbcType="TIMESTAMP"/>
+        <result column="free_freight" property="free_freight" jdbcType="TINYINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, store_id, group_title, attr_id, product_id, group_level, group_data, starttime,
+    endtime, activity_no, g_status, is_show, is_delete, is_copy, platform_activities_id, 
+    mch_id, audit_status, reason, num, sales_volume, price, `addtime`, free_freight
+    </sql>
+    <sql id="selectDynamicSQL">
+        and is_delete=0
+        <if test="id != null">and a.id = #{id}</if>
+        <if test="store_id != null">and a.store_id = #{store_id}</if>
+        <if test="platform_activities_id != null">and a.platform_activities_id = #{platform_activities_id}</if>
+        <if test="mch_id != null">and a.mch_id = #{mch_id}</if>
+        <if test="addtime != null">and a.`addtime` = #{addtime}</if>
+        <if test="is_delete != null">and a.is_delete = #{is_delete}</if>
+        <if test="name != null">and (a.product_id=#{name} or a.group_title like concat('%',#{name},'%')</if>
+        <if test="audit_not_status!=null">and a.audit_status <![CDATA[  <>  ]]> #{audit_not_status}</if>
+        <if test="audit_status!=null">and a.audit_status = #{audit_status}</if>
+        <if test="auditStatusList != null">
+            <foreach collection="auditStatusList" item="status" separator="," open="and a.audit_status in(" close=")">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.*
+        from lkt_pt_group_product a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="GROUP BY" suffixOverrides=",">
+            <if test="group_activity_no!=null">a.activity_no,</if>
+        </trim>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="addtime_sort!=null and addtime_sort!=''">a.`addtime` ${addtime_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1)
+        from lkt_pt_group_product a
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+</mapper>

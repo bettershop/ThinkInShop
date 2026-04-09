@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.AdminRecordModelMapper">
+
+    <sql id="selectDynamicSQL">
+        <if test="store_id != null and store_id != ''">and a.store_id=#{store_id}</if>
+        <if test="logOperationType != null and logOperationType != ''">and a.type = #{logOperationType}</if>
+        <if test="source != null and source != ''">and a.`source` = #{source}</if>
+        <if test="type != null and type != ''">and a.`type` = #{type}</if>
+        <if test="user_id != null and user_id != ''">and b.user_id=#{user_id}</if>
+        <if test="mch_id != null and mch_id != ''">and a.mch_id=#{mch_id}</if>
+        <if test="adminName_like != null and adminName_like != ''">and b.user_name like
+            concat('%',#{adminName_like},'%')
+        </if>
+        <if test="zhanghao_like != null and zhanghao_like != ''">and b.zhanghao like
+            concat('%',#{zhanghao_like},'%')
+        </if>
+        <if test="startDate != null and startDate != ''">and a.add_date <![CDATA[  >=  ]]> #{startDate}</if>
+        <if test="endDate != null and endDate != ''">and a.add_date <![CDATA[  <=  ]]> #{endDate}</if>
+    </sql>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.*,b.zhanghao,b.user_name from lkt_admin_record a left join lkt_user b on a.admin_name=b.user_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_admin_record a left join lkt_user b on a.admin_name=b.user_id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''">add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+
+    <select id="selectAdminLoggerInfo" parameterType="Map" resultType="Map">
+        select b.id as admin_id,
+        CASE b.type WHEN 0 THEN '系统管理员' WHEN 1 THEN '客户' WHEN 2 THEN '商城管理员' ELSE '店主' END AS account_type
+        ,a.*
+        from lkt_admin_record as a,lkt_admin as b
+        where a.operator_id = b.id
+        and a.store_id = #{store_id}
+        <if test="source != null and source != ''">and a.source = #{source}</if>
+        <if test="logAccountType != null and logAccountType != ''">and b.type = #{logAccountType}</if>
+        <if test="logOperationType != null and logOperationType != ''">and a.type = #{logOperationType}</if>
+        <if test="adminName_like != null and adminName_like != ''">and a.admin_name like
+            concat('%',#{adminName_like},'%')
+        </if>
+        <if test="startDate != null and startDate != ''">and a.add_date <![CDATA[  >=  ]]> #{startDate}</if>
+        <if test="endDate != null and endDate != ''">and a.add_date <![CDATA[  <=  ]]> #{endDate}</if>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_date_sort!=null and add_date_sort!=''"> a.add_date ${add_date_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countAdminLoggerInfo" parameterType="Map" resultType="int">
+        select count(1) from lkt_admin_record as a,lkt_admin as b
+        where  a.operator_id = b.id  and a.store_id = #{store_id}
+        <if test="source != null and source != ''">and source = #{source}</if>
+        <if test="logAccountType != null and logAccountType != ''">and b.type = #{logAccountType}</if>
+        <if test="logOperationType != null and logOperationType != ''">and a.type = #{logOperationType}</if>
+        <if test="adminName_like != null and adminName_like != ''">and a.admin_name like
+            concat('%',#{adminName_like},'%')
+        </if>
+        <if test="startDate != null and startDate != ''">and a.add_date <![CDATA[  >=  ]]> #{startDate}</if>
+        <if test="endDate != null and endDate != ''">and a.add_date <![CDATA[  <=  ]]> #{endDate}</if>
+    </select>
+
+    <delete id="delAdminLoggerInfo" parameterType="Map">
+        delete from lkt_admin_record
+        where store_id = #{store_id}
+        <if test="idList!=null">
+            <foreach collection="idList" item="id" separator="," open="and id in(" close=")">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </if>
+    </delete>
+</mapper>

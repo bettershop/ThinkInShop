@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.DiyPageModelMapper" >
+
+    <sql id="queryDynamic">
+        <where>
+            <if test="store_id != null"> and store_id = #{store_id}</if>
+            <if test="page_name != null and page_name != ''"> and page_name like concat('%',#{page_name},'%')</if>
+            <if test="recycle != null">and recycle = #{recycle}</if>
+            <if test="status != null">and `status` = #{status}</if>
+            <if test="type != null">and `type` = #{type}</if>
+        </where>
+    </sql>
+
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_diy_page
+        <include refid="queryDynamic"/>
+    </select>
+    <select id="getDiyPageList" resultType="java.util.Map">
+        select id,store_id,page_name,`type`,link,page_key,image,page_context,`status`,recycle,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') as create_time,
+        create_by,DATE_FORMAT(update_time, '%Y-%m-%d %H:%i:%s') as update_time  from lkt_diy_page
+        <include refid="queryDynamic"/>
+        order by create_time desc
+        <if test="pageSize != null and pageNo != ''"> limit #{pageNo},#{pageSize}</if>
+    </select>
+
+    <select id="checkCountName" resultType="java.lang.Integer">
+        select count(1) from  lkt_diy_page where  page_name = #{pageName}
+        <if test="id != null">
+            and id &lt;&gt; #{id}
+        </if>
+    </select>
+
+    <select id="getOneByLink" resultType="com.laiketui.domain.diy.DiyPageModel">
+        select *
+        from lkt_diy_page
+        where (link = #{link} and store_id = #{store_id})
+    </select>
+</mapper>

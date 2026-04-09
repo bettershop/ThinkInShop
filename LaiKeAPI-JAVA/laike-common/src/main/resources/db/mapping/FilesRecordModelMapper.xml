@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.FilesRecordModelMapper">
+
+    <resultMap id="BaseResultMap" type="com.laiketui.domain.log.FilesRecordModel">
+        <id property="id" column="id" jdbcType="BIGINT" />
+        <result property="store_id" column="store_id" jdbcType="VARCHAR" />
+        <result property="store_type" column="store_type" jdbcType="VARCHAR" />
+        <result property="group" column="group" jdbcType="VARCHAR" />
+        <result property="upload_mode" column="upload_mode" jdbcType="VARCHAR" />
+        <result property="image_name" column="image_name" jdbcType="VARCHAR" />
+        <result property="img_type" column="img_type" jdbcType="INTEGER" />
+        <result property="diy_img_type" column="diy_img_type" jdbcType="INTEGER" />
+        <result property="diy_id" column="diy_id" jdbcType="INTEGER" />
+        <result property="add_time" column="add_time" jdbcType="TIMESTAMP" />
+        <result property="mch_id" column="mch_id" jdbcType="INTEGER" />
+        <result property="supplier_id" column="supplier_id" jdbcType="INTEGER" />
+        <result property="recycle" column="recycle" jdbcType="INTEGER" />
+        <result property="type" column="type" jdbcType="INTEGER" />
+        <result property="name" column="name" jdbcType="VARCHAR" />
+        <result property="title" column="title" jdbcType="VARCHAR" />
+        <result property="add_user" column="add_user" jdbcType="VARCHAR" />
+        <result property="explain" column="explain" jdbcType="VARCHAR" />
+        <result property="alternative_text" column="alternative_text" jdbcType="VARCHAR" />
+        <result property="describe" column="describe" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="selectDynamicSQL">
+        <if test="store_id != null">and a.store_id = #{store_id}</if>
+        <if test="store_type != null">and a.store_type = #{store_type}</if>
+        <if test="upload_mode != null">and a.upload_mode = #{upload_mode}</if>
+        <if test="groupId != null">and a.`group` = #{groupId}</if>
+        <if test="startTime != null">AND a.add_time <![CDATA[  >=  ]]> #{startTime}</if>
+        <if test="endTime != null">and a.add_time <![CDATA[  <=  ]]> #{endTime}</if>
+        <if test="title != null">AND a.title LIKE CONCAT('%', #{title},'%')</if>
+        <if test="mchId != null">and a.`mch_id` = #{mchId}</if>
+        <if test="supplierId != null">and a.`supplier_id` = #{supplierId}</if>
+        <if test="type != null">and a.type = #{type}</if>
+        <if test="img_type != null">and a.img_type = #{img_type}</if>
+        <choose>
+            <when test="recycle==null">and a.recycle = 0</when>
+            <otherwise>and a.recycle = #{recycle}</otherwise>
+        </choose>
+        <if test="imgIds != null">
+            <foreach collection="imgIds" item="id" separator="," open="and id in(" close=")">
+                #{id,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="uploadList != null">
+            <foreach collection="uploadList" item="upload" separator="," open="and a.upload_mode in(" close=")">
+                #{upload}
+            </foreach>
+        </if>
+        <if test="imageName != '' and imageName != null">and (a.image_name LIKE CONCAT('%', #{imageName},'%') or b.name
+            LIKE CONCAT('%', #{mch_name},'%') )
+        </if>
+        <if test="name != '' and name != null">and (a.name LIKE CONCAT('%', #{name},'%') or b.name
+            LIKE CONCAT('%', #{name},'%') )
+        </if>
+        <if test="names != null">
+            <foreach collection="names" item="name" separator="," open="and a.name in(" close=")">
+                #{name}
+            </foreach>
+        </if>
+        <if test="notFile != '' and notFile != null"> and a.image_name not LIKE CONCAT('%', 'mp4','%') and a.image_name not LIKE CONCAT('%', 'webm','%') </if>
+    </sql>
+    <update id="delFileRecord">
+        UPDATE lkt_files_record a SET recycle = 1
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </update>
+    <select id="selectDynamic" parameterType="Map" resultType="Map">
+        select a.*,b.name mchName from lkt_files_record a left join lkt_mch b on a.mch_id=b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+        <trim prefix="order by" suffixOverrides=",">
+            <if test="add_time_sort!=null and add_time_sort!=''">a.add_time ${add_time_sort},</if>
+        </trim>
+        <if test="pageStart != null and pageEnd != ''">limit #{pageStart},#{pageEnd}</if>
+    </select>
+    <select id="countDynamic" parameterType="Map" resultType="int">
+        select count(1) from lkt_files_record a left join lkt_mch b on a.mch_id=b.id
+        <where>
+            <trim prefixOverrides="and">
+                <include refid="selectDynamicSQL"/>
+            </trim>
+        </where>
+    </select>
+
+    <select id="batchGetByImageNames" resultMap="BaseResultMap">
+        SELECT * FROM lkt_files_record
+        WHERE store_id = #{storeId}
+        AND image_name IN
+        <foreach collection="imageNames" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach>
+    </select>
+
+</mapper>

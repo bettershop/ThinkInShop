@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laiketui.common.mapper.BbsPostActionModelMapper">
+
+    <select id="getCountByPostId" resultType="com.laiketui.domain.plugin.bbs.BbsPostActionModel">
+        SELECT * FROM lkt_bbs_post_action
+        WHERE
+            user_id = #{user_id} AND post_id = #{post_id} AND recycle = 0 AND action_type = #{type}
+    </select>
+    <select id="focusCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        lkt_bbs_post_action a
+        WHERE
+        a.recycle = 0
+        AND a.action_type = 4
+        <choose>
+            <when test="type == 0">
+                <!-- 查询互相关注的记录 -->
+                AND EXISTS (
+                SELECT 1
+                FROM lkt_bbs_post_action b
+                WHERE b.user_id = a.be_user_id
+                AND b.be_user_id = a.user_id
+                AND b.action_type = 4
+                AND b.recycle = 0
+                )
+                AND a.user_id = #{user_id}
+            </when>
+            <when test="type == 1">
+                <!-- 查询当前用户关注的记录 -->
+                AND a.user_id = #{user_id}
+            </when>
+            <when test="type == 2">
+                <!-- 查询关注当前用户的记录 -->
+                AND a.be_user_id = #{user_id}
+            </when>
+        </choose>
+        ORDER BY
+        a.create_time desc
+    </select>
+    <select id="getFocusList" resultType="java.util.Map">
+        SELECT
+        a.user_id AS user1,
+        a.be_user_id AS user2,
+        a.forum_id
+        FROM
+        lkt_bbs_post_action a
+        WHERE
+        a.recycle = 0
+        AND a.action_type = 4
+        <choose>
+            <when test="type == 0">
+                <!-- 查询互相关注的记录 -->
+                AND EXISTS (
+                SELECT 1
+                FROM lkt_bbs_post_action b
+                WHERE b.user_id = a.be_user_id
+                AND b.be_user_id = a.user_id
+                AND b.action_type = 4
+                AND b.recycle = 0
+                )
+                AND a.user_id = #{user_id}
+            </when>
+            <when test="type == 1">
+                <!-- 查询当前用户关注的记录 -->
+                AND a.user_id = #{user_id}
+            </when>
+            <when test="type == 2">
+                <!-- 查询关注当前用户的记录 -->
+                AND a.be_user_id = #{user_id}
+            </when>
+        </choose>
+        ORDER BY
+        a.create_time desc
+        <if test="pageNo != null and pageSize != ''">
+            limit #{pageNo},#{pageSize}
+        </if>
+    </select>
+    <select id="isCount" resultType="java.util.Map">
+        SELECT COUNT(CASE WHEN action_type = 1 THEN id END) AS is_like,
+               COUNT(CASE WHEN action_type = 2 THEN id END) AS is_collect,
+               COUNT(CASE WHEN action_type = 4 THEN id END) AS is_follow
+        FROM lkt_bbs_post_action
+        WHERE user_id = #{user_id}
+        AND post_id = #{post_id}
+        AND recycle = 0
+    </select>
+</mapper>
