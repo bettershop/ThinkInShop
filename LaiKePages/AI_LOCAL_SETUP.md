@@ -11,11 +11,11 @@
 定位并修改 `LKT_ROOT_URL`，改为你本地后端网关地址（PHP 或 Java）：
 
 ```js
-// 例：Java 网关
+// 例：Java 网关 参考Java接口部署文档 参考文档： LaiKeAPI-JAVA/docs/11、单体部署篇（laike-apis）.md ，端口和路径可能不同，请根据实际情况修改
 const LKT_ROOT_URL = 'http://127.0.0.1:21898/apis'
 
-// 例：PHP 网关
-// const LKT_ROOT_URL = 'http://127.0.0.1:18001'
+// 例：PHP 网关：网关地址可能是你本地环境的地址，端口和路径可能不同，请根据实际情况修改 具体php接口部署文档  参考文档： LaiKeAPI/README.md
+// const LKT_ROOT_URL = 'http://127.0.0.1:18001' 
 ```
 
 注意：
@@ -42,14 +42,14 @@ rsync -av --delete \
 ## 3. 按顺序执行启动命令
 
 ```bash
-# 然后命令行切到 LaiKePages 当前目录执行以下两个命令 
+# 然后命令行切到 laike-pages/src 目录执行以下两个命令 
 npm i
 npm run build:packages
 
-# 然后命令行切到 laike-pages 当前目录执行以下命令  这是打包
+# 然后命令行切回 laike-pages 目录执行以下命令,打包
 npm run build:h5
 
-# 然后命令行切到 laike-pages 当前目录执行以下命令  这是本地运行
+# 然后命令行切回 laike-pages 目录执行以下命令,本地运行
 npm run serve
 ```
 

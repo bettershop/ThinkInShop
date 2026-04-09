@@ -306,8 +306,9 @@ app/admin/controller/
 composer install
 
 # 本地开发服务器
-php -S 127.0.0.1:8000 -t public
+php -S 127.0.0.1:8000 -t public 
 
+那么php对应的网关地址就是：http://127.0.0.1:8000  没有 /gw 前端配置网关地址的时候要去掉 /gw
 # 查看 ThinkPHP 命令
 php think
 

@@ -141,6 +141,8 @@ curl -f http://127.0.0.1:21898/apis/actuator/health
 curl -I http://127.0.0.1:21898/apis
 ```
 
+如果通了那么java对应网关地址就是 ：http://127.0.0.1:21898/apis/gw
+
 ### 5.6 systemd 守护（推荐）
 
 新建 `/etc/systemd/system/laike-apis.service`：
