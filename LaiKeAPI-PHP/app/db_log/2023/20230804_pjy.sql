@@ -1,1 +1,0 @@
-ALTER TABLE `lkt_config` ADD COLUMN `express_tel` VARCHAR(255) NULL COMMENT '顺丰用快递100查询电话' AFTER `express_key`;

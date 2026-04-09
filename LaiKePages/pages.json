@@ -559,16 +559,6 @@
           }
         },
         {
-          "path": "coupon/mycoupon",
-          "style": {
-            "app-plus": {
-              "titleNView": false
-            },
-            "navigationBarTitleText": "优惠券",
-            "navigationStyle": "custom"
-          }
-        },
-        {
           "path": "erCode/erCode",
           "style": {
             "app-plus": {

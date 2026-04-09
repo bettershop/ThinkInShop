@@ -163,6 +163,13 @@ export default {
         })
         return
       }
+      if (this.timer) {
+        uni.showToast({
+          title: '请等待倒计时结束后再获取验证码',
+          icon: 'none'
+        })
+        return
+      }
       getCode(this,2)
     }
   },

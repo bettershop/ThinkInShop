@@ -317,7 +317,7 @@
         border-top: 1rpx solid #eee;
         align-items: baseline;
     	width: 100%; 
-    	height: 250px; //此处必须用px，用于固定高度,不然聊天内容高度会乱 
+    	height: 250px; /* 此处必须用px，用于固定高度,不然聊天内容高度会乱 */
     }
     
 	@media screen and (min-width: 600px) {
@@ -345,11 +345,11 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		//justify-content: center;
+		/* justify-content: center; */
 	}
 
 	.slider-emoji-icon {
-		//此处必须使用固定宽高。不然不同浏览器之间不同尺寸都会有问题。
+		/* 此处必须使用固定宽高。不然不同浏览器之间不同尺寸都会有问题。 */
 		width: 42rpx;
 		height: 52rpx;
 		display: flex;
@@ -358,7 +358,7 @@
 		padding: 20rpx;
 	}
 
-	// <!-- 设置最后一列左靠齐 -->
+	/* 设置最后一列左靠齐 */
 	.lastbox {
 		justify-content: flex-start;
 	}
@@ -413,7 +413,7 @@
 	.input_box {
 		width: 100%;
 		display: flex;
-		height: 52px; //此处必须用px，用于固定高度，不然聊天内容高度会乱
+		height: 52px; /* 此处必须用px，用于固定高度，不然聊天内容高度会乱 */
 		justify-content: center;
 		align-items: center;
 	}

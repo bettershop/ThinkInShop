@@ -1,1 +1,0 @@
-ALTER TABLE lkt_order ADD COLUMN vip_source TINYINT(1) DEFAULT 0 COMMENT '是否为会员订单 0：否 1：是' AFTER grade_rate

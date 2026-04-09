@@ -94,7 +94,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        // margin-left: 22rpx;
+        /* margin-left: 22rpx; */
         position: relative;
         margin: 12rpx 22rpx;
     }

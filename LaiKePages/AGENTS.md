@@ -1,5 +1,10 @@
 # Repository Guidelines
 
+## AI Local Setup First
+- Before local run/deploy, read `AI_LOCAL_SETUP.md` first.
+- Follow that document for gateway config (`components/laiketuiCommon.js`) and sync flow (`LaiKePages -> laike-pages/src`).
+- Use the startup command order defined there.
+
 ## Project Structure & Module Organization
 - `App.vue` and `main.js` are the entry points for the Uni-app application.
 - Page routing and app metadata live in `pages.json` and the `manifest*.json` files.

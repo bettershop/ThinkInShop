@@ -240,18 +240,6 @@
                     <!-- 营销工具 -->
                     <view class="tool">
                         <view class="tool-title">{{language.myStore.yxgj}} </view>
-                        <view class="toollist">
-                            <!-- 优惠券 -->
-                            <view
-                                class="toollist-box"
-                                @tap="_navigateTo('/pagesA/myStore/coupon')"
-                                v-if="coupon_status"
-                            >
-                                <image
-                                    :src="hyj"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
                                 <view class="toollist-box-txt">{{
                                     language.myStore.yhq
                                 }}</view>

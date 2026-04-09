@@ -1,2 +1,0 @@
-ALTER TABLE `lkt_record_details`
-    MODIFY COLUMN `money_type_name` tinyint(4) NULL DEFAULT NULL COMMENT '收入/支出 名称   1用户充值 2平台充值 3 拼团活动开团佣金 4普通订单 5竞拍活动 6店铺保证金 7余额扣款 8预售定金缴纳  9会员开通 10 普通订单(代客下单) 11拼团订单 12竟拍订单 13预售订单 14分稍订单  15秒杀订单 16积分兑换订单 17限时折扣订单 18竞拍保证金缴纳' AFTER `money_type`;
