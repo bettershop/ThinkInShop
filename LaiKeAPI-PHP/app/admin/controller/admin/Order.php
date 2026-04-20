@@ -840,6 +840,7 @@ class Order extends BaseController
             {
                 foreach ($list['info'] as $k => $v)
                 {
+                    $r_status_name = '';
                     switch ($v['r_status'])
                     {
                         case 0 :
@@ -856,6 +857,15 @@ class Order extends BaseController
                             break;
                         case 7 :
                             $r_status_name = '已关闭';
+                            break;
+                        case 8 :
+                            if($v['otype'] != 'pt' && $v['otype'] != 'PT')
+                            {
+                                $r_status_name = '待核销';
+                            }
+                            break;
+                        default :
+                            $r_status_name = '未知状态';
                             break;
                     }
 

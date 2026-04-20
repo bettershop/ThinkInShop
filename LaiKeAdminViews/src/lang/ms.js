@@ -1043,6 +1043,7 @@ module.exports = {
             yxsjn1: "(Pengguna tidak boleh log masuk sistem dalam tempoh masa sah)",
             yxsjn2: "(Pengguna yang log masuk sistem dalam tempoh masa sah akan mendapat amaran kemas kini versi)",
             ggcd: "Panjang tajuk pengumuman tidak boleh melebihi 100 aksara",
+            ggnrcd: "Kandungan pengumuman melebihi 1000 aksara",
             cg: "Berjaya",
             ptgg: "Pengumuman Am",
             ptggtx: "Hanya digunakan untuk pemberitahuan kandungan, tidak akan menjejaskan operasi normal hujung pengguna dan hujung perkhidmatan",

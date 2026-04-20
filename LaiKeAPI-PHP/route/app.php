@@ -15,3 +15,7 @@ Route::get('think', function () {
 });
 
 Route::get('hello/:name', 'index/hello');
+
+Route::get('gw', function () {
+    return 'LaikeAPI Gateway Works!';
+});

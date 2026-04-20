@@ -113,7 +113,7 @@ class Test
             $res = PluginsModel::where(['status'=>1])->group('plugin_code')->field('plugin_code')->select()->toArray();
             foreach ($res as $item)
             {   
-                if ($item['plugin_code'] != 'coupon' && $item['plugin_code'] != 'mch' && $item['plugin_code'] != 'diy' && $item['plugin_code'] != 'prize')
+                if ($item['plugin_code'] != 'coupon' && $item['plugin_code'] != 'mch' && $item['plugin_code'] != 'diy' && $item['plugin_code'] != 'prize' && $item['plugin_code'] != 'advertising')
                 {
                     PluginUtils::invokeMethod($item['plugin_code'], 'dotask', $this);
                 }

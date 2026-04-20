@@ -5,11 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f0d5efdb-ce60-412e-b6e3-6d20e080269e" name="Changes" comment="修改：https://cd.houjiemeishi.com/bug-view-5477.html">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,10 +27,8 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="customMavenHome" value="D:\apache-maven-3.6.1-bin\apache-maven-3.6.1" />
-        <option name="localRepository" value="C:\Users\16640\.m2\repository" />
+        <option name="customMavenHome" value="/usr/local/Cellar/maven/3.6.3_1/libexec" />
         <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
-        <option name="userSettingsFile" value="C:\Users\16640\.m2\settings.xml" />
       </MavenGeneralSettings>
     </option>
     <option name="explicitlyEnabledProfiles" value="local" />
@@ -71,6 +64,8 @@
     &quot;Spring Boot.LaikeAppsApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.LaikeCompsApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.LaikePluginsApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/wangxian/all-codes/thinkinshop&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -80,7 +75,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.grazie&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -193,29 +188,30 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26094.121" />
-        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-IU-251.26094.121" />
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration" cleanupOnStartRun="true">
-    <configuration>C:\Users\16640\AppData\Roaming\Subversion</configuration>
+    <configuration>$USER_HOME$/.subversion</configuration>
     <supportedVersion>125</supportedVersion>
   </component>
   <component name="SvnFileUrlMappingImpl">
     <option name="myMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\project\lkt" />
-          <option name="myCopyRoot" value="D:\project\lkt" />
+          <option name="myVcsRoot" value="$PROJECT_DIR$" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$" />
         </SvnCopyRootSimple>
       </list>
     </option>
     <option name="myMoreRealMappingRoots">
       <list>
         <SvnCopyRootSimple>
-          <option name="myVcsRoot" value="D:\project\lkt" />
-          <option name="myCopyRoot" value="D:\project\lkt" />
+          <option name="myVcsRoot" value="$PROJECT_DIR$" />
+          <option name="myCopyRoot" value="$PROJECT_DIR$" />
         </SvnCopyRootSimple>
       </list>
     </option>
@@ -256,14 +252,8 @@
       <workItem from="1769735659979" duration="11487000" />
       <workItem from="1769994795183" duration="7660000" />
       <workItem from="1770081481669" duration="11598000" />
-    </task>
-    <task id="LOCAL-00009" summary="修改：pc竞拍-mainVo,加字段判断是否是pc竞拍">
-      <option name="closed" value="true" />
-      <created>1768470886736</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1768470886736</updated>
+      <workItem from="1775618787510" duration="739000" />
+      <workItem from="1775619660126" duration="1001000" />
     </task>
     <task id="LOCAL-00010" summary="修改：sql注入正则校验注释">
       <option name="closed" value="true" />
@@ -649,14 +639,21 @@
       <option name="project" value="LOCAL" />
       <updated>1770108619993</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="修改：门店登录优化">
+      <option name="closed" value="true" />
+      <created>1775697843060</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1775697843060</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="新增:17track物流发货" />
     <MESSAGE value="新增:移动店铺端-门店地址修改" />
     <MESSAGE value="新增:移动端退货退款，换货调整，后台换货调整，通过订单cpc判断发货走快递100还是17track" />
     <MESSAGE value="新增:17track回调修改" />
@@ -681,7 +678,8 @@
     <MESSAGE value="修改：https://cd.houjiemeishi.com/bug-view-5472.html" />
     <MESSAGE value="修改：https://cd.houjiemeishi.com/bug-view-5474.html" />
     <MESSAGE value="修改：https://cd.houjiemeishi.com/bug-view-5477.html" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改：https://cd.houjiemeishi.com/bug-view-5477.html" />
+    <MESSAGE value="修改：门店登录优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改：门店登录优化" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

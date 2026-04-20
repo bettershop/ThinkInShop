@@ -80,7 +80,18 @@ class Product
         $product_class_arr = $ObtainCategoriesAndBrands_list['product_class_arr'];
         $brand_class_arr = $ObtainCategoriesAndBrands_list['brand_class_arr'];
 
-        $condition = "a.store_id = '$store_id' and a.recycle = 0 and a.mch_id != 0 and a.is_presell = 0 and a.commodity_type = '$commodity_type' and a.gongyingshang = 0 ";
+        $condition = "a.store_id = '$store_id' and a.recycle = 0 and a.mch_id != 0 and a.is_presell = 0 and a.gongyingshang = 0 ";
+        
+        if ($commodity_type == 1) {
+            $condition .= " and a.commodity_type in (1, 2, 3) ";
+        } else {
+            $condition .= " and a.commodity_type = '$commodity_type' ";
+        }
+
+        if (empty($array['is_lang_all'])) { // 默认只查主商品
+            $condition .= " and (a.lang_pid is null or a.lang_pid = 0) ";
+        }
+
         if($source == 'mch')
         {
             $condition .= " and a.mch_id = '$mch_id' and a.gongyingshang = 0 ";

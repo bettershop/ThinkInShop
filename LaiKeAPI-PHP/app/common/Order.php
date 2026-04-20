@@ -103,9 +103,13 @@ class Order
             }
 
             $sql_oo_where = array('store_id'=>$store_id,'sNo'=>$sNo);
-            if ($self_lifting == '1' || $self_lifting == '3')
-            { // 自提 或 虚拟订单需要线下核销
+            if ($self_lifting == '1')
+            { // 自提
                 $sql_oo_update = array('z_price'=>Db::raw('offset_balance+'.$z_price),'status'=>2,'pay_time'=>$time,'trade_no'=>$trade_no,'transaction_id'=>$transaction_id,'dividend_status'=>$dividend_status);
+            }
+            else if ($self_lifting == '3')
+            { // 虚拟订单需要线下核销
+                $sql_oo_update = array('z_price'=>Db::raw('offset_balance+'.$z_price),'status'=>8,'pay_time'=>$time,'trade_no'=>$trade_no,'transaction_id'=>$transaction_id,'dividend_status'=>$dividend_status);
             }
             else if ($self_lifting == '4')
             { // 虚拟订单无需线下核销
@@ -137,9 +141,13 @@ class Order
             $score_deduction += $r2[0]['score_deduction']; // 积分支付抵扣
 
             $sql_oo_where = array('store_id'=>$store_id,'sNo'=>$v);
-            if ($self_lifting == '1' || $self_lifting == '3')
-            { // 自提 或 虚拟订单需要线下核销
+            if ($self_lifting == '1')
+            { // 自提
                 $sql_oo_update = array('status'=>2,'pay_time'=>$time,'trade_no'=>$trade_no,'transaction_id'=>$transaction_id,'dividend_status'=>$dividend_status);
+            }
+            else if ($self_lifting == '3')
+            { // 虚拟订单需要线下核销
+                $sql_oo_update = array('status'=>8,'pay_time'=>$time,'trade_no'=>$trade_no,'transaction_id'=>$transaction_id,'dividend_status'=>$dividend_status);
             }
             else if ($self_lifting == '4')
             { // 虚拟订单无需线下核销
@@ -159,9 +167,13 @@ class Order
             }
 
             $sql_od_where = array('store_id'=>$store_id,'r_sNo'=>$v);
-            if ($self_lifting == '1' || $self_lifting == '3')
-            { // 自提 或 虚拟订单需要线下核销
+            if ($self_lifting == '1')
+            { // 自提
                 $sql_od_update = array('r_status'=>2);
+            }
+            else if ($self_lifting == '3')
+            { // 虚拟订单需要线下核销
+                $sql_od_update = array('r_status'=>8);
             }
             else if ($self_lifting == '4')
             { // 虚拟订单无需线下核销

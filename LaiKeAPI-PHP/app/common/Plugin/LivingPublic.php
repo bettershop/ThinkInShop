@@ -686,9 +686,6 @@ class LivingPublic
 
                 $sql_commission = "insert into lkt_living_commission(store_id,user_id,living_id,s_no,commission,status,add_time) value ('$store_id','$anchor_id','$living_id','$sNo','$commission',101,'$add_time')";
                 $r_commission = Db::execute($sql_commission);
-                
-                $sql_anchor = "update lkt_living_anchor set commission = commission + '$commission' where store_id = '$store_id' and user_id = '$anchor_id' and recycle = 0 ";
-                $r_anchor = Db::execute($sql_anchor);
             }
             $grade_rate_amount += $v['grade_rate_amount'];
         }
@@ -1044,9 +1041,6 @@ class LivingPublic
             if($r3)
             {
                 $commission = $r3[0]['commission'];
-
-                $sql4 = "update lkt_living_anchor set commission = commission - '$commission' where store_id = '$store_id' and user_id = '$anchor_id' and recycle = 0 ";
-                $r4 = Db::execute($sql4);
             }
 
             $sql2 = "update lkt_living_commission set recycle = 1 where store_id = '$store_id' and s_no = '$sNo' and recycle = 0 and status = 101 ";

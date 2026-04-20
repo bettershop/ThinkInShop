@@ -193,6 +193,9 @@ abstract class BaseController
             'plugin.living.AppAnchor.queryLivingById', // 直播间
             'plugin.living.AppAnchor.queryCommentByRoomId', // 查询评论
             'plugin.living.AppAnchorProduct.livingPro', // 商品管理-直播页面
+            'plugin.auction.pcAuction.search',
+            'plugin.auction.pcAuction.getHotSpecialList',
+            'plugin.auction.pcAuction.getHotAuctionProList'
         );
 
         if(!in_array($api,$list))

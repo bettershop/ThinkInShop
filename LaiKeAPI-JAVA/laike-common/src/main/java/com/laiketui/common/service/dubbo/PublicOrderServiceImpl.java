@@ -2751,6 +2751,23 @@ public class PublicOrderServiceImpl implements PublicOrderService
                 {
                     throw new LaiKeAPIException(ErrorCode.BizErrorCode.ERROR_CODE_ZFSB, "支付失败", "pay");
                 }
+
+                // 对齐 PHP Order.php:200 更新真实销量
+                OrderDetailsModel orderDetails = new OrderDetailsModel();
+                orderDetails.setStore_id(storeId);
+                orderDetails.setR_sNo(sNo);
+                List<OrderDetailsModel> detailsList = orderDetailsModelMapper.select(orderDetails);
+                for (OrderDetailsModel detail : detailsList) {
+                    ProductListModel product = productListModelMapper.selectByPrimaryKey(detail.getP_id());
+                    if (product != null) {
+                        // 更新当前商品销量 (使用已有的 updateProductListVolume 方法)
+                        productListModelMapper.updateProductListVolume(detail.getNum(), storeId, product.getId());
+                        // 如果是供应商商品，同步更新上级商品销量
+                        if (product.getSupplier_superior() != null && product.getSupplier_superior() > 0) {
+                            productListModelMapper.updateProductListVolume(detail.getNum(), storeId, product.getSupplier_superior());
+                        }
+                    }
+                }
             }
             //无需核销订单记录待提现金额
             if (selfLifting == 4)
@@ -2874,6 +2891,23 @@ public class PublicOrderServiceImpl implements PublicOrderService
                 if (row < 1)
                 {
                     throw new LaiKeAPIException(ErrorCode.BizErrorCode.ERROR_CODE_ZFSB, "支付失败", "pay");
+                }
+
+                // 对齐 PHP Order.php:200 更新真实销量
+                OrderDetailsModel orderDetails = new OrderDetailsModel();
+                orderDetails.setStore_id(storeId);
+                orderDetails.setR_sNo(sNo);
+                List<OrderDetailsModel> detailsList = orderDetailsModelMapper.select(orderDetails);
+                for (OrderDetailsModel detail : detailsList) {
+                    ProductListModel product = productListModelMapper.selectByPrimaryKey(detail.getP_id());
+                    if (product != null) {
+                        // 更新当前商品销量 (使用已有的 updateProductListVolume 方法)
+                        productListModelMapper.updateProductListVolume(detail.getNum(), storeId, product.getId());
+                        // 如果是供应商商品，同步更新上级商品销量
+                        if (product.getSupplier_superior() != null && product.getSupplier_superior() > 0) {
+                            productListModelMapper.updateProductListVolume(detail.getNum(), storeId, product.getSupplier_superior());
+                        }
+                    }
                 }
             }
             //无需核销订单记录待提现金额

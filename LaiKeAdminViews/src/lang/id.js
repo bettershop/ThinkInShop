@@ -1043,6 +1043,7 @@ module.exports = {
       yxsjn1: "（Pengguna tidak dapat masuk sistem selama waktu berlaku）",
       yxsjn2: "（Pengguna akan menerima pemberitahuan pembaruan versi saat masuk sistem selama waktu berlaku）",
       ggcd: "Panjang judul pengumuman tidak boleh melebihi 100 karakter",
+      ggnrcd: "Konten pengumuman melebihi 1000 karakter",
       cg: "Berhasil",
       ptgg: "Pengumuman umum",
       ptggtx: "Hanya用于内容通知，不会影响用户端和服务端的正常操作",

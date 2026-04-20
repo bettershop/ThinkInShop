@@ -59,8 +59,8 @@ class DeliveryHelper
         $operator_source = $array['source']; // 来源
 
         // 线上宝塔也是一样
-//         self::f17track($array);
-//         return;
+        // self::f17track($array);
+        // return;
 
         $time = date('Y-m-d H:i:s');
 
@@ -2748,10 +2748,9 @@ class DeliveryHelper
                 if ($rew['otype'] == 'JP')
                 {
                     $jp_sNo = $rew['sNo'];
-                    $res_jp = AuctionProductModel::where(['store_id'=>$store_id,'trade_no'=>$jp_sNo])
-                                            ->field('title,imgurl,current_price')
-                                            ->select()
-                                            ->toArray();
+                    $sid = $rew['sid'];
+                    $sql_jp = "select b.product_title as title,c.img as imgurl,a.price as current_price from lkt_configure as a left join lkt_product_list as b on a.pid = b.id left join lkt_auction_product as c on a.id = c.attr_id where a.id = '$sid' ";
+                    $res_jp = Db::query($sql_jp);
                     $jp_title = '';
                     $jp_imgurl = '';
                     $jp_price = '';
@@ -2841,6 +2840,12 @@ class DeliveryHelper
                         {
                             $ms_res = SecondsActivityModel::where('id',$p_id)->field('goodsId')->select()->toArray();
                             $p_id = $ms_res[0]['goodsId'];
+                        }
+                        else if ($rew['otype'] == 'JP')
+                        {
+                            $sql_jp = "select b.id from lkt_configure as a left join lkt_product_list as b on a.pid = b.id left join lkt_auction_product as c on a.id = c.attr_id where a.id = '$sid' ";
+                            $res_jp = Db::query($sql_jp);
+                            $p_id = $res_jp[0]['id']; // 产品id
                         }
                         $values['comments_type'] = 0;//不显示
                         // if ($rew['otype'] == 'VI')
@@ -5623,6 +5628,11 @@ class DeliveryHelper
                     $res[$k]['status'] = '已关闭';
                     $res[$k]['statusName'] = '已关闭';
                 }
+                else if($v['status'] == 8)
+                {
+                    $res[$k]['status'] = '待核销';
+                    $res[$k]['statusName'] = '待核销';
+                }
             }
             else
             {
@@ -5646,7 +5656,7 @@ class DeliveryHelper
                 {
                     $res[$k]['statusName'] = '已关闭';
                 }
-                else if($v['status'] == 8)
+                else if($v['status'] == 8 && $v['otype'] != 'pt' && $v['otype'] != 'PT')
                 {
                     $res[$k]['statusName'] = '待核销';
                 }
@@ -5821,9 +5831,12 @@ class DeliveryHelper
                     $data['bgcolor'] = '#ffbd8b';
                     break;
                 case 8 :
-                    $data['status'] = '待核销';
-                    $data['r_status'] = 8;
-                    $data['bgcolor'] = '#ffbd8b';
+                    if($v['otype'] != 'pt' && $v['otype'] != 'PT')
+                    {
+                        $data['status'] = '待核销';
+                        $data['r_status'] = 8;
+                        $data['bgcolor'] = '#ffbd8b';
+                    }
                     break;
             }
         }
@@ -7185,13 +7198,16 @@ class DeliveryHelper
                                 $res1[$k]['status'] = '已关闭';
                                 break;
                             case 8 :
-                                if (isset($source) && $source == 9)
+                                if($v['otype'] != 'pt' && $v['otype'] != 'PT')
                                 {
-                                    $res1[$k]['status'] = '待核销';
-                                }
-                                else
-                                {
-                                    $res1[$k]['status'] = '待收货';
+                                    if (isset($source) && $source == 9)
+                                    {
+                                        $res1[$k]['status'] = '待核销';
+                                    }
+                                    else
+                                    {
+                                        $res1[$k]['status'] = '待收货';
+                                    }
                                 }
                                 break;
                         }

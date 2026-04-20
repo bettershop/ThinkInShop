@@ -1068,6 +1068,7 @@ module.exports = {
       yxsjn2:
         ' (Users will be prompted to upgrade the version when they log in to the system within the valid time) ',
       ggcd: ' Announcement title shall not exceed 100 characters in length ',
+      ggnrcd: ' Announcement content exceeds 1000 characters ',
       cg: ' Success ',
       ptgg: ' General announcement ',
       ptggtx:

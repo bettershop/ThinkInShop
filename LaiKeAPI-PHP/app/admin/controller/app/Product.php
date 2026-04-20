@@ -185,8 +185,8 @@ class Product
             $write_off_settings = $r0[0]['write_off_settings']; // 核销设置 1.线下核销 2.无需核销
             $is_appointment = $r0[0]['is_appointment']; // 预约时间设置 1.无需预约下单 2.需要预约下单
             $write_off_mch_ids = $r0[0]['write_off_mch_ids']; // 核销门店id  0全部门店,  1,2,3使用逗号分割
-            if($commodity_type == 1)
-            { // 虚拟商品
+            if($commodity_type == 1 || $commodity_type == 3)
+            { // 虚拟商品 或 虚拟商品需要核销
                 if($write_off_settings == 1)
                 { // 线下核销
                     $isAddCar = 2; // 2.不能加入购物车

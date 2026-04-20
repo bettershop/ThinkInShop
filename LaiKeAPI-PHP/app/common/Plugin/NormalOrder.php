@@ -347,19 +347,27 @@ class NormalOrder
         $products = PC_Tools::Calculate_the_deduction_data_for_the_detailed_invoice($Calculate_the_deduction_data_for_the_detailed_invoice);
 
         $total = $products_total - $mch_preferential_amount - $preferential_amount + $yunfei; // 商品总价-店铺优惠之和-平台优惠+总运费
-        if(($total == '0.00' && $pay_type == '') || $total == 0 && $pay_type == '')
+        if($total <= 0)
         {
-            $total = '0.01';
+            if ($pay_type != 'wallet_pay') {
+                $total = '0.01';
+            } else {
+                $total = '0.00';
+            }
         }
         $grade_rate_amount = number_format($grade_rate_amount, 2);
 
         $total1 = $products_total - $mch_preferential_amount - $preferential_amount;
+        // 积分抵扣不能抵扣运费，最大抵扣金额 = 商品总价 - 优惠
+        if ($scoreDeductionPrice > $total1) {
+            $scoreDeductionPrice = $total1;
+            // 重新计算扣除积分（这里只是预览，实际下单还会校验）
+        }
+        
         $total = $total - $scoreDeductionPrice; // 支付金额 = 支付金额 - 抵扣金额
         if($total < 0)
         {
-            $message = Lang("nomal_order.7");
-            echo json_encode(array('code' => '00000','message'=>$message));
-            exit;
+            $total = 0;
         }
         $total = round($total, 2);
 
@@ -658,18 +666,25 @@ class NormalOrder
         $products = PC_Tools::Calculate_the_deduction_data_for_the_detailed_invoice($Calculate_the_deduction_data_for_the_detailed_invoice);
 
         $total = $products_total - $mch_preferential_amount - $preferential_amount + $yunfei; // 商品总价-店铺优惠之和-平台优惠+总运费
-        if($total < $scoreDeductionPrice)
-        {
+        
+        $total1 = $products_total - $mch_preferential_amount - $preferential_amount;
+        // 积分抵扣不能抵扣运费，最大抵扣金额 = 商品总价 - 优惠
+        if ($scoreDeductionPrice > $total1) {
             Db::rollback();
-            $message = Lang('operation failed');
+            $message = Lang('nomal_order.7'); // 超过该订单最大抵扣积分
             echo json_encode(array('code' => 109, 'message' => $message));
             exit;
         }
+
         $total = $total - $scoreDeductionPrice; // 支付金额 = 支付金额 - 抵扣金额
 
-        if(($total == '0.00' && $pay_type == '') || $total == 0 && $pay_type == '')
+        if($total <= 0)
         {
-            $total = '0.01';
+            if ($pay_type != 'wallet_pay') {
+                $total = '0.01';
+            } else {
+                $total = '0.00';
+            }
         }
         $total = round($total,2);
         $grade_rate_amount = 0;//会员折扣优惠金额

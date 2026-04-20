@@ -1044,6 +1044,7 @@ module.exports = {
       yxsjn1: '（有效时间内用户无法登录系统）',
       yxsjn2: '（有效时间内用户登录系统会有版本升级提示）',
       ggcd: '公告标题长度不能超过100个字符',
+      ggnrcd: '公告内容超过1000个字符',
       cg: '成功',
       ptgg: '普通公告',
       ptggtx: '仅用于内容通知，不会影响用户端和服务端的正常操作',
@@ -1484,7 +1485,7 @@ module.exports = {
       qsrdxco: '请输入短信模板Code',
       dxcs: '短信测试手机号',
       qsrdxcs: '请输入短信测试手机号',
-      qh:'区号',
+      qh: '区号',
       yzdx: '验证短信是否发送成功',
       fsnr: '发送内容',
       qsrfsnr: '请输入发送内容',
@@ -1658,7 +1659,7 @@ module.exports = {
     yszmrhb: '商城已设置默认货币',
     ts: '提示'
   },
-  systemsSetter:{
+  systemsSetter: {
     scmc: '商城名称',
     ydddz: '移动端地址',
     xxblts: '消息保留天数',
@@ -1666,16 +1667,16 @@ module.exports = {
     bqxx: '版权信息',
     baxx: '备案信息',
     yqlj: '友情链接',
-    yyztgl:'用于主题管理中的页面效果预览&移动端H5页面第三方支付传参',
-    xtjxzd:'系统将自动清除移用户动端到期的消息',
-    dqh:'到期后，用户自动登出账户'
+    yyztgl: '用于主题管理中的页面效果预览&移动端H5页面第三方支付传参',
+    xtjxzd: '系统将自动清除移用户动端到期的消息',
+    dqh: '到期后，用户自动登出账户'
 
   },
   systemManagement: {
-    qsrhddz:'请输入回调地址',
-    qsrdjysbm:'请输入打印机设备码',
-    kd100ydy:'快递100云打印',
-    hddz:'回调地址',
+    qsrhddz: '请输入回调地址',
+    qsrdjysbm: '请输入打印机设备码',
+    kd100ydy: '快递100云打印',
+    hddz: '回调地址',
     AppKey: "AppKey",
     AppId: "AppId",
     MasterECRET: "MasterECRET",
@@ -2499,8 +2500,8 @@ module.exports = {
     sccg2: '删除成功'
   },
   orderLists: {
-    xdrlxdh:'用户电话：',
-    czcg:'操作成功',
+    xdrlxdh: '用户电话：',
+    czcg: '操作成功',
     gbdd: '关闭订单',
     hx: '核销',
     yzm: '验证码：',
@@ -2551,7 +2552,7 @@ module.exports = {
     dfh: '待发货',
     dfk: '待付款',
     dhx: '待核销',
-    qb:'全部',
+    qb: '全部',
     ddwc: '订单完成',
     ddgb: '订单关闭',
     ddlb: '订单列表',
@@ -2596,7 +2597,7 @@ module.exports = {
     kddh: '快递单号',
     yf: '运费',
     ddxq: '订单详情',
-    ddmxid:'订单明细id',
+    ddmxid: '订单明细id',
     bjdd: '编辑订单',
     spfh: '商品发货',
     ckwl: '查看物流',
@@ -3212,9 +3213,9 @@ module.exports = {
     qsrdpmc: '请输入店铺名称',
     qxzdyzt: '请选择打印状态',
     dymd: '打印面单',
-    ggzt:'更改状态',
-    fd:'复打',
-    plfd:'批量复打',
+    ggzt: '更改状态',
+    fd: '复打',
+    plfd: '批量复打',
     xh: '序号',
     kddh: '快递单号',
     kdgs: '快递公司',
@@ -3224,7 +3225,7 @@ module.exports = {
     dyzt: '打印状态',
     yyd: '已打印',
     wdy: '未打印',
-    dysb:'打印失败',
+    dysb: '打印失败',
     shdz: '收货地址',
     shr: '收货人',
     lxdh: '联系电话',
@@ -3254,16 +3255,16 @@ module.exports = {
       qrwdm: '请输入网点名称',
       qrdzmdzcbb: '请输入电子面单承载编号',
       dzmdzckdy: '电子面单承载快递员名',
-      qsrmbid:'请输入模板id',
-      mbidsm:'快递100-管理后台-电子面单与云打印-电子面单模板，对应使用模板的“编码”',
-      dzmdzhsm:'电子面单账户号码，需向快递公司在贵司当地的网点申请',
-      dzmdzhmmsm:'电子面单账户密码，需向快递公司在贵司当地的网点申请，参数说明请看',
-      dzmdmysm:'电子面单密钥，需向快递公司在贵司当地的网点申请，参数说明请看',
-      dzmdkhmcsm:'电子面单客户账户名称，需向快递公司在贵司当地的网点申请',
-      wdmcsm:'网点名称，需向快递公司在贵司当地的网点申请',
-      czbhsm:'承载编号，需向快递公司在贵司当地的网点申请',
-      kdysm:'电子面单承载快递员名，需向快递公司在贵司当地的网点申请',
-      zy:'指引'
+      qsrmbid: '请输入模板id',
+      mbidsm: '快递100-管理后台-电子面单与云打印-电子面单模板，对应使用模板的“编码”',
+      dzmdzhsm: '电子面单账户号码，需向快递公司在贵司当地的网点申请',
+      dzmdzhmmsm: '电子面单账户密码，需向快递公司在贵司当地的网点申请，参数说明请看',
+      dzmdmysm: '电子面单密钥，需向快递公司在贵司当地的网点申请，参数说明请看',
+      dzmdkhmcsm: '电子面单客户账户名称，需向快递公司在贵司当地的网点申请',
+      wdmcsm: '网点名称，需向快递公司在贵司当地的网点申请',
+      czbhsm: '承载编号，需向快递公司在贵司当地的网点申请',
+      kdysm: '电子面单承载快递员名，需向快递公司在贵司当地的网点申请',
+      zy: '指引'
     }
   },
   live: {
@@ -3655,7 +3656,7 @@ module.exports = {
     ywc: '已完成',
     ygb: '已关闭',
     tksh: '退款售后',
-    qb:'全部'
+    qb: '全部'
   },
   integralGoodsList: {
 
@@ -4698,7 +4699,7 @@ module.exports = {
     },
     divTemplate: {
       diymb: '系统主题',
-      ydt:'引导图',
+      ydt: '引导图',
       dqyy: '当前应用：',
       mbxz: '模板选择',
       xjmb: '创建主题',

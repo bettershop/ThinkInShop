@@ -624,6 +624,7 @@ class User extends BaseController
         $user_zhanghao = $r[0]['zhanghao']; //用户账号
         $user_mobile = $r[0]['mobile']; //用户手机号
         $password_db = $r[0]['password']; //数据库中的密码
+        $user_mobile1 = $this->maskMobile($user_mobile);
 
         if ($password != '')
         {
@@ -663,6 +664,11 @@ class User extends BaseController
         {
             $message = Lang("user.59");
             return output(ERROR_CODE_SJHGSBZQ,$message);
+        }
+
+        if($user_mobile1 == $mobile)
+        {
+            $mobile = $user_mobile;
         }
 
         // 根据商城ID、区号、国家代码、手机号，查询用户信息

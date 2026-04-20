@@ -490,7 +490,20 @@ class RefundUtils
                         else
                         {
                             $price = Tools::get_order_pro_price($store_id,$o_d_id); // 获取该订单详情商品支付金额
+                            // 加上运费，对齐 Java PublicRefundServiceImpl.java:413
+                            if ($freight > 0) {
+                                $price = round($price + $freight, 2);
+                            }
                         }
+                    }
+
+                    // 最大退款金额上限校验
+                    $max_refund_amount = Tools::get_order_pro_price($store_id,$o_d_id) + $freight;
+                    if ($price > $max_refund_amount) {
+                        Db::rollback();
+                        $message = Lang('return.10'); // 输入金额超出最大退款限额
+                        echo json_encode(array('code' => 109, 'message' => $message));
+                        exit;
                     }
 
                     // 组合支付
