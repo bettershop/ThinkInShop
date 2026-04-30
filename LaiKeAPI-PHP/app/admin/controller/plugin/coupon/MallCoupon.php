@@ -18,14 +18,14 @@ class MallCoupon
     // 获取优惠券活动
     public function index()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
         $type = addslashes(Request::param('type')); // 类型 1.平台优惠券 2.店铺优惠券
         $mcnName = addslashes(Request::param('mcnName')); // 店铺名称
-        $page = addslashes(trim(Request::param('page'))); // 加载次数
+        $page = addslashes(safe_trim(Request::param('page'))); // 加载次数
         $user_id = '';
         if ($access_id != '')
         {
@@ -80,11 +80,11 @@ class MallCoupon
     // 我的优惠券
     public function myCoupon()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
-        $type = addslashes(trim(Request::param('type'))); // 0：未使用 1：已使用 2：已过期
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
+        $type = addslashes(safe_trim(Request::param('type'))); // 0：未使用 1：已使用 2：已过期
 
         if (empty($access_id))
         {
@@ -127,11 +127,11 @@ class MallCoupon
     // 商品详情获取商品可用优惠券活动
     public function proCoupon()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
-        $pro_id = addslashes(trim(Request::param('goodsId'))); // 商品ID
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
+        $pro_id = addslashes(safe_trim(Request::param('goodsId'))); // 商品ID
         $user_id = '';
 
         if ($access_id != '')
@@ -159,12 +159,12 @@ class MallCoupon
     // 店铺获取商品可用优惠券活动
     public function mchCoupon()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
         
-        $shop_id = addslashes(trim(Request::param('mchId'))); // 店铺ID
+        $shop_id = addslashes(safe_trim(Request::param('mchId'))); // 店铺ID
         $user_id = '';
         if ($access_id != '')
         {

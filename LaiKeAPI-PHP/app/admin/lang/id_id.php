@@ -51,6 +51,7 @@ return [
         '22'=> 'Alamat email sudah ada',
         '23'=> 'Email sudah terdaftar',
         '24'=> 'Email sama dengan email yang terikat saat ini',
+        '25'=> 'Kode verifikasi sudah dikirim, silakan coba lagi nanti!',
     ],
     'favorites' =>[
         '0' => 'Sudah disimpan!',
@@ -328,6 +329,7 @@ return [
         '100' => 'Jumlah verifikasi atribut tidak boleh kosong',
         '101' => 'Judul produk tidak boleh lebih dari 20 karakter',
         '102' => 'Terdapat pesanan yang belum selesai, tidak dapat dihapus',
+        '103' => 'Panjang judul pengenalan produk harus 1-60 karakter!',
     ],
     'coupon' => [
         '0' => 'Aktivitas ini sudah berakhir!',
@@ -906,6 +908,8 @@ return [
         '8' => 'Gagal menghapus catatan!',
         '9' => 'Kegiatan sudah berakhir!',
         '10'=> 'Jumlah pembelian Anda melebihi batas pembelian maksimum!',
+        '11'=> 'Panjang judul seckill harus 1-30 karakter!',
+        'title' => 'Flash Sale',
     ],
     'image' => [
         '0' => 'Silakan isi nama ruang penyimpanan!',

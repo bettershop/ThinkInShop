@@ -123,7 +123,7 @@
     </div>
     <div class="jump-list">
       <el-button
-        v-has-permi="'/goods/goodslist/physicalgoods'"
+        v-has-permi="'/goods/goodslist/physicalgoods/index'"
         class="bgColor laiketui laiketui-add"
         type="primary"
         @click="releaseGoods"
@@ -370,7 +370,7 @@
             <div class="OP-button">
               <div class="OP-button-top">
                 <el-button
-                  v-has-permi="'/goods/goodslist/editorphysical'"
+                  v-has-permi="['/goods/goodslist/editorphysical/index','/goods/goodslist/physicalgoods/index']"
                   icon="el-icon-edit-outline"
                   @click="Edit(scope.row)"
                   >{{ $t('physicalgoods.bianji') }}</el-button

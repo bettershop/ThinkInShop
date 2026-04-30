@@ -60,6 +60,7 @@ use app\admin\model\SupplierAccountLogModel;
  * 功能：用户订单类
  * 修改人：PJY
  */
+#[\AllowDynamicProperties]
 class Order extends BaseController
 {   
     /**
@@ -72,23 +73,32 @@ class Order extends BaseController
     public function settlement()
     {
         //1.列出基础数据
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         $this->store_id = $store_id;
         $this->store_type = $store_type;
+        $safeAddslashes = function ($value) {
+            if ($value === null) {
+                return '';
+            }
+            if (!is_string($value)) {
+                $value = (string)$value;
+            }
+            return addslashes($value);
+        };
         
-        $language = trim($this->request->post('language')); // 语言
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $language = safe_trim($this->request->post('language')); // 语言
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
         $this->language = $language;
         $this->access_id = $access_id;
         
-        $product1 = addslashes($this->request->post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim($this->request->post('cart_id')));  //购物车id-- 12,13,123,
-        $vipSource = addslashes($this->request->post('vipSource')); // 1.会员
+        $product1 = $safeAddslashes($this->request->post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = $safeAddslashes(safe_trim($this->request->post('cart_id')));  //购物车id-- 12,13,123,
+        $vipSource = $safeAddslashes($this->request->post('vipSource')); // 1.会员
         // $coupon_id = addslashes($this->request->post('coupon_id')); // 优惠券ID
-        $type = addslashes($this->request->post('type'));// PS.预售
-        $product_type = addslashes($this->request->post('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
-        $order_type = addslashes($this->request->post('order_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
+        $type = $safeAddslashes($this->request->post('type'));// PS.预售
+        $product_type = $safeAddslashes($this->request->post('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
+        $order_type = $safeAddslashes($this->request->post('order_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
 
         $pluginName = 'NormalOrder';
         if($type == 'PS')
@@ -153,24 +163,33 @@ class Order extends BaseController
     // 生成订单
     public function payment()
     {   
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         $this->store_id = $store_id;
         $this->store_type = $store_type;
-        $language = trim($this->request->post('language')); // 语言
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $safeAddslashes = function ($value) {
+            if ($value === null) {
+                return '';
+            }
+            if (!is_string($value)) {
+                $value = (string)$value;
+            }
+            return addslashes($value);
+        };
+        $language = safe_trim($this->request->post('language')); // 语言
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
         $this->language = $language;
         $this->access_id = $access_id;
 
-        $vipSource = addslashes($this->request->post('vipSource')); // 1.会员
-        $payTarget = addslashes($this->request->post('payTarget')); // 1.定金 2.尾款 3.全款
+        $vipSource = $safeAddslashes($this->request->post('vipSource')); // 1.会员
+        $payTarget = $safeAddslashes($this->request->post('payTarget')); // 1.定金 2.尾款 3.全款
         
         $user_id = $this->user_list['user_id'];
         $this->user = $this->user_list;
         LaiKeLogUtils::log(self::$ORDER_PAYMENT_LOG_PATH, '下单开始');
         
-        $type = trim($this->request->post('type')) ? $this->request->post('type') : 'GM'; // 订单类型
-        $order_type = addslashes($this->request->post('order_type'));//产品类型，JP-竞拍商品
+        $type = safe_trim($this->request->post('type')) ? $this->request->post('type') : 'GM'; // 订单类型
+        $order_type = $safeAddslashes($this->request->post('order_type'));//产品类型，JP-竞拍商品
         if($order_type == 'JP')
         {
             $type = 'JP';
@@ -181,10 +200,10 @@ class Order extends BaseController
 
     public function miaosha_ok()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
         // 商城ID
-        $sNo = trim($this->request->post('sNo'));
+        $sNo = safe_trim($this->request->post('sNo'));
         $user_id = $this->user_list['user_id'];
 
         $r0 = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo,'user_id'=>$user_id,'status'=>1])->select()->toArray();
@@ -209,9 +228,9 @@ class Order extends BaseController
      */
     public function mini_msg($openid, $status, $p_name, $order)
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $language = trim($this->request->post('language')); // 语言
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $language = safe_trim($this->request->post('language')); // 语言
 
 
         $log = new LaiKeLogUtils();
@@ -273,16 +292,16 @@ class Order extends BaseController
     // 查询订单-优化后
     public function index0()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
 
-        $keyword = trim($this->request->param('ordervalue'))?trim($this->request->param('ordervalue')):(trim($this->request->param('keyword'))?trim($this->request->param('keyword')):trim($this->request->param('condition'))); // 商品名称/订单号
+        $keyword = safe_trim($this->request->param('ordervalue'))?safe_trim($this->request->param('ordervalue')):(safe_trim($this->request->param('keyword'))?safe_trim($this->request->param('keyword')):safe_trim($this->request->param('condition'))); // 商品名称/订单号
         $order_type = $this->request->param('queryOrderType'); // 类型 payment：待付款 send：待发货 receipt：待收货 evaluete：待评价
-        $type = trim($this->request->param('order_type')); // 订单类型
+        $type = safe_trim($this->request->param('order_type')); // 订单类型
 
-        $page = trim($this->request->param('page')); // 页数
-        $pagesize = trim($this->request->param('pageSize')); // 每页多少条数据
+        $page = safe_trim($this->request->param('page')); // 页数
+        $pagesize = safe_trim($this->request->param('pageSize')); // 每页多少条数据
         $type = $type ? $type : 'GM';
         $pagesize = $pagesize ? $pagesize : '10';
 
@@ -303,11 +322,11 @@ class Order extends BaseController
     // 查询订单
     public function index()
     {
-        $store_id = trim($this->request->param('store_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
 
         $this->store_id = $store_id;
-        $access_id = trim($this->request->param('access_id')); // 授权id
-        $keyword = trim($this->request->param('ordervalue'))?trim($this->request->param('ordervalue')):(trim($this->request->param('keyword'))?trim($this->request->param('keyword')):trim($this->request->param('condition'))); // 商品名称/订单号
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
+        $keyword = safe_trim($this->request->param('ordervalue'))?safe_trim($this->request->param('ordervalue')):(safe_trim($this->request->param('keyword'))?safe_trim($this->request->param('keyword')):safe_trim($this->request->param('condition'))); // 商品名称/订单号
 
         // if($keyword != '')
         // {
@@ -315,22 +334,22 @@ class Order extends BaseController
         // }
         // else
         // {
-        //     $type = trim($this->request->param('order_type')); // 订单类型
-        //     if(trim($this->request->param('type')) != '')
+        //     $type = safe_trim($this->request->param('order_type')); // 订单类型
+        //     if(safe_trim($this->request->param('type')) != '')
         //     {
-        //         $type = trim($this->request->param('type'));
+        //         $type = safe_trim($this->request->param('type'));
         //     }
         // }
-        $type = trim($this->request->param('order_type')); // 订单类型
-        if(trim($this->request->param('type')) != '')
+        $type = safe_trim($this->request->param('order_type')); // 订单类型
+        if(safe_trim($this->request->param('type')) != '')
         {
-            $type = trim($this->request->param('type'));
+            $type = safe_trim($this->request->param('type'));
         }
 
         $this->keyword = $keyword;
         $this->type = $type?$type:'GM';
 
-        $page = trim($this->request->param('page'))?$this->request->param('page'):$this->request->param('pageNo'); // 页数
+        $page = safe_trim($this->request->param('page'))?$this->request->param('page'):$this->request->param('pageNo'); // 页数
         $this->page = $page;
         $lktlog = new LaiKeLogUtils();
         $this->lktlog = $lktlog;
@@ -413,15 +432,15 @@ class Order extends BaseController
     // 查看物流
     public function logistics()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $store_id = trim($this->request->param('store_id'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
 
         // 获取信息
-        $id = trim($this->request->post('id'));// 订单号
+        $id = safe_trim($this->request->post('id'));// 订单号
         $details = $this->request->post('details'); // 订单详情id
-        $o_source = trim($this->request->post('o_source'));// 来源 1订单 2售后
+        $o_source = safe_trim($this->request->post('o_source'));// 来源 1订单 2售后
 
         // 根据微信id,查询用户id
         $access = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])
@@ -460,14 +479,14 @@ class Order extends BaseController
     // 取消订单
     public function removeOrder()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         //事务开启
         Db::startTrans();
 
         // 获取信息
-        $access_id = trim($this->request->post('access_id')); // 授权id
-        $id = trim($this->request->post('order_id'));// 订单id
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
+        $id = safe_trim($this->request->post('order_id'));// 订单id
         $lktlog = new LaiKeLogUtils();
         // 根据微信id,查询用户id
         $access = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('money')->select()->toArray();
@@ -617,7 +636,7 @@ class Order extends BaseController
                     }
                     else
                     {
-                        $sql_1 = "select d.*,p.id as Goods_id from lkt_order_details as d left join lkt_configure as c on d.sid = c.id left join lkt_product_list as p on c.pid = p.id where d.store_id = '$store_id' and d.r_sNo = '$sNo'";
+                        $sql_1 = "select d.*,p.id as Goods_id,p.gongyingshang as supplier_id from lkt_order_details as d left join lkt_configure as c on d.sid = c.id left join lkt_product_list as p on c.pid = p.id where d.store_id = '$store_id' and d.r_sNo = '$sNo'";
                         $r_1 = Db::query($sql_1);
                         foreach ($r_1 as $k => $v)
                         {
@@ -749,11 +768,11 @@ class Order extends BaseController
     // 订单详情-优化后
     public function order_details0()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $access_id = trim($this->request->post('access_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $access_id = safe_trim($this->request->post('access_id'));
         // 获取信息
-        $id = trim($this->request->post('order_id')); // 订单id
+        $id = safe_trim($this->request->post('order_id')); // 订单id
 
         $array = array('store_id'=>$store_id,'access_id'=>$access_id,'id'=>$id);
         $data = DeliveryHelper::app_order_details0($array);
@@ -763,12 +782,12 @@ class Order extends BaseController
     // 订单详情
     public function order_details()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $access_id = trim($this->request->post('access_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $access_id = safe_trim($this->request->post('access_id'));
         // 获取信息
-        $id = trim($this->request->post('order_id')); // 订单id
-        $type = trim($this->request->post('type')); // 订单类型
+        $id = safe_trim($this->request->post('order_id')); // 订单id
+        $type = safe_trim($this->request->post('type')); // 订单类型
         $lktlog = new LaiKeLogUtils();
 
         $this->lktlog = $lktlog;
@@ -787,11 +806,11 @@ class Order extends BaseController
      */
     function Returndetail()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $id = trim($this->request->post('id')); // 售后订单id 
-        $pid = trim($this->request->post('pid'));
-        $details_id = trim($this->request->post('orderDetailId'));//订单详情id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $id = safe_trim($this->request->post('id')); // 售后订单id 
+        $pid = safe_trim($this->request->post('pid'));
+        $details_id = safe_trim($this->request->post('orderDetailId'));//订单详情id
         $goodsInfo = array(); // 商品信息
         $AddPurchase = array();
         if($id)
@@ -1011,9 +1030,9 @@ class Order extends BaseController
     // 撤销审核
     public function Cancellation_of_application()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $id = trim($this->request->post('id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $id = safe_trim($this->request->post('id'));
 
         $userid = $this->user_list['user_id'];
         $sqlcc = ReturnOrderModel::where(['store_id'=>$store_id,'user_id'=>$userid,'id'=>$id])->find();
@@ -1061,14 +1080,14 @@ class Order extends BaseController
     // 退货信息
     public function ReturnDataList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
-        $keyword = trim($this->request->post('keyword'));
-        $order_type = trim($this->request->post('order_type'));
-        $type = trim($this->request->post('type'));
-        $pages = trim($this->request->post('page'));
-        $pagesize = trim($this->request->post('pagesize'));
+        $keyword = safe_trim($this->request->post('keyword'));
+        $order_type = safe_trim($this->request->post('order_type'));
+        $type = safe_trim($this->request->post('type'));
+        $pages = safe_trim($this->request->post('page'));
+        $pagesize = safe_trim($this->request->post('pagesize'));
         $pagesize = $pagesize ? $pagesize : '10';
         if ($pages)
         {
@@ -1302,19 +1321,19 @@ class Order extends BaseController
     // 储存快递回寄信息
     public function back_send()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 语言
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 语言
 
 
         // 获取信息
-        $kdcode = trim($this->request->post('kdcode')); // 快递单号
-        $kdname = trim($this->request->post('kdname')); // 快递名称
-        $lxdh = trim($this->request->post('lxdh')); // 寄件人电话
-        $lxr = trim($this->request->post('lxr')); // 寄件人
-        $id = trim($this->request->post('id')); // 售后订单id
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $kdcode = safe_trim($this->request->post('kdcode')); // 快递单号
+        $kdname = safe_trim($this->request->post('kdname')); // 快递名称
+        $lxdh = safe_trim($this->request->post('lxdh')); // 寄件人电话
+        $lxr = safe_trim($this->request->post('lxr')); // 寄件人
+        $id = safe_trim($this->request->post('id')); // 售后订单id
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
         $lktlog = new LaiKeLogUtils();
 
         $userid = $this->user_list['user_id'];
@@ -1391,13 +1410,13 @@ class Order extends BaseController
     // 返回快递信息
     public function see_send()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 语言
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 语言
 
-        $access_id = trim($this->request->post('access_id')); // 授权id
-        $pid = trim($this->request->post('pid'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
+        $pid = safe_trim($this->request->post('pid'));
 
         // 根据商品id，查询商品信息
         $r0 = ProductListModel::where(['store_id'=>$store_id,'id'=>$pid])->field('mch_id,gongyingshang')->select()->toArray();
@@ -1481,9 +1500,9 @@ class Order extends BaseController
     // 删除订单
     public function del_order()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
-        $id = trim($this->request->post('order_id'));// 订单id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
+        $id = safe_trim($this->request->post('order_id'));// 订单id
         $lktlog = new LaiKeLogUtils();
 
         $user_id = $this->user_list['user_id'];
@@ -1524,9 +1543,9 @@ class Order extends BaseController
     // 再次购买
     public function buy_again()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $id = trim($this->request->post('id'));// 订单id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $id = safe_trim($this->request->post('id'));// 订单id
 
         $r = OrderModel::where(['store_id'=>$store_id,'id'=>$id])->select()->toArray();
         if ($r)
@@ -1611,8 +1630,8 @@ class Order extends BaseController
     // 点击退货后，进入的页面
     public function return_method()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
         $order_details_id = $this->request->post('order_details_id');// 订单详情id
 
         $user_id = $this->user_list['user_id'];
@@ -1827,17 +1846,17 @@ class Order extends BaseController
     // 退货申请
     public function ReturnData()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         // 获取信息
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
         $order_details_id = $this->request->post('order_details_id'); // 订单详情id
         $refund_amount = $this->request->post('refund_amount'); // 退货金额
         $content = urldecode($this->request->post('explain')); // 退货原因
         $re_apply_money = $this->request->post('refund_apply_money'); // 用户申请退款金额
         $type = $this->request->post('type'); // 退货类型
-        $upload_z_num = trim($this->request->post('upload_z_num')); // 循环总次数
-        $upload_num = trim($this->request->post('upload_num')); // 上传次数
+        $upload_z_num = safe_trim($this->request->post('upload_z_num')); // 循环总次数
+        $upload_num = safe_trim($this->request->post('upload_num')); // 上传次数
         $lktlog = new LaiKeLogUtils();
         $re_photo = '';// 照片凭证
         $time = date('Y-m-d H:i:s');
@@ -1942,22 +1961,31 @@ class Order extends BaseController
     // 提醒发货
     public function delivery_delivery()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->post('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->post('store_type'));
 
-        $access_id = trim($this->request->post('access_id')); // 授权id
-        $order_id = trim($this->request->post('order_id')); // 订单id
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
+        $order_id = safe_trim($this->request->post('order_id')); // 订单id
         $user_id = $this->user_list['user_id'];
         $lktlog = new LaiKeLogUtils();
 
-        $order = OrderModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'id'=>$order_id,'delivery_status'=>0])->field('otype,delivery_status,mch_id,sNo,is_lssued,supplier_id')->select()->toArray();
+        $order = OrderModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'id'=>$order_id,'delivery_status'=>0])->field('otype,delivery_status,mch_id,sNo,is_lssued')->select()->toArray();
         if ($order)
         {   
             $remind0 = 0;
             $remind = 0;
             $otype = $order[0]['otype'];
             $is_lssued = $order[0]['is_lssued'];
-            $supplier_id = $order[0]['supplier_id'];
+            $sNo = $order[0]['sNo'];
+
+            $supplier_id = 0;
+            $sql_d = "select gongyingshang from lkt_order_details as a left join lkt_configure as c on a.sid = c.id left join lkt_product_list as b on c.pid = b.id where r_sNo = '$sNo' ";
+            $r_d = Db::query($sql_d);
+            if($r_d)
+            {
+                $supplier_id = $r_d[0]['gongyingshang'];
+            }
+
             if($otype == 'GM' || $otype == 'FX' || $otype == 'JP' || $otype == 'FS' || $otype == 'ZB' || $otype == 'PT')
             {
                 $r_config = OrderConfigModel::where(['store_id'=>$store_id])->field('remind')->select()->toArray();
@@ -2624,9 +2652,9 @@ class Order extends BaseController
     // 查看提货码
     public function see_extraction_code()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $id = trim($this->request->post('order_id'));// 订单id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $id = safe_trim($this->request->post('order_id'));// 订单id
 
         $user_id = $this->user_list['user_id'];
         $sql1 = "select a.z_price,a.sNo,a.status,a.mch_id,a.extraction_code,a.extraction_code_img,b.p_id,b.p_price,b.num,b.size,b.sid,a.otype from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo where a.store_id = '$store_id' and a.id = '$id' and a.user_id = '$user_id'";
@@ -2746,11 +2774,11 @@ class Order extends BaseController
     // 支付方法
     public function get_config()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         // 接收参数
-        $url = addslashes(trim($this->request->param('url'))); // 链接
-        $type = addslashes(trim($this->request->param('type'))); // 支付类名称
+        $url = addslashes(safe_trim($this->request->param('url'))); // 链接
+        $type = addslashes(safe_trim($this->request->param('type'))); // 支付类名称
 
         // 返回参数
         $res = array(
@@ -2773,10 +2801,10 @@ class Order extends BaseController
     // 查看是否超出范围
     public function isOutOfRange()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $address_id = trim($this->request->post('address_id'));// 地址id
-        $productsInfo = trim($this->request->post('productsInfo'));// 商品数据
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $address_id = safe_trim($this->request->post('address_id'));// 地址id
+        $productsInfo = safe_trim($this->request->post('productsInfo'));// 商品数据
         
         $productsInfo1 = htmlspecialchars_decode($productsInfo);
         $productsInfo2 = json_decode(stripslashes(html_entity_decode($productsInfo1)),true); // 字符串打散为数组
@@ -2831,9 +2859,9 @@ class Order extends BaseController
     // 获取支付方式
     public function getPayment()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $address_id = trim($this->request->post('address_id'));// 地址id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $address_id = safe_trim($this->request->post('address_id'));// 地址id
         
         // 支付状态
         $payment = Tools::getPayment($store_id);
@@ -2845,9 +2873,9 @@ class Order extends BaseController
     // 核销记录
     public function get_write_record()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $id = trim($this->request->param('id')); // 订单详情ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $id = safe_trim($this->request->param('id')); // 订单详情ID
         
         $total = 0;
         $list1 = array();
@@ -2900,11 +2928,11 @@ class Order extends BaseController
     // 上传凭证
     public function upload_credentials()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
-        $sNo = trim($this->request->param('sNo')); // 订单号
-        $voucher = trim($this->request->param('voucher')); // 凭证
+        $sNo = safe_trim($this->request->param('sNo')); // 订单号
+        $voucher = safe_trim($this->request->param('voucher')); // 凭证
 
         $sql0 = "select id from lkt_order where sNo = '$sNo' ";
         $r0 = Db::query($sql0);

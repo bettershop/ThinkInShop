@@ -20,10 +20,10 @@ class Commproduct
     //礼包列表
     public function getstart()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::post('access_id'));
-        $product_title = trim(Request::post('product_title'));// 商品名
-        $distributor_id = trim(Request::post('distributor_id'));// 查询分销等级ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::post('access_id'));
+        $product_title = safe_trim(Request::post('product_title'));// 商品名
+        $distributor_id = safe_trim(Request::post('distributor_id'));// 查询分销等级ID
         $pagesize = Request::post('pagesize'); // 每页显示多少条数据
         $page = Request::post('page'); // 页码
         $pagesize = $pagesize ? $pagesize : 10;
@@ -133,13 +133,13 @@ class Commproduct
     //分销商品
     public function listdetail()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::post('access_id'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::post('access_id'));
 
-        $product_title = trim(Request::post('product_title'));// 商品名
-        $sort_key =  trim(Request::post('sort_key'));//排序字段
-        $queue = trim(Request::post('queue'));//1降序2升序
-        $c_id = trim(Request::post('cid'));//分类ID
+        $product_title = safe_trim(Request::post('product_title'));// 商品名
+        $sort_key =  safe_trim(Request::post('sort_key'));//排序字段
+        $queue = safe_trim(Request::post('queue'));//1降序2升序
+        $c_id = safe_trim(Request::post('cid'));//分类ID
         $pagesize = Request::post('pagesize'); // 每页显示多少条数据
         $page = Request::post('start'); // 页码
         $pagesize = $pagesize ? $pagesize : 10;
@@ -279,9 +279,9 @@ class Commproduct
     //获取分类
     public function getclass()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::post('access_id'));
-        $language = trim(Request::post('language'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::post('access_id'));
+        $language = safe_trim(Request::post('language'));
 
 
         $APP_INDEX_KEY = LAIKE_REDIS_PRE_KEY.__CLASS__.'_'.__METHOD__;

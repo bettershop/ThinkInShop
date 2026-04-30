@@ -15,12 +15,12 @@ class Notice extends BaseController
     // 消息列表
     public function NoticeList()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $storeType = addslashes(trim($this->request->param('store_type')));
-        $accessId = addslashes(trim($this->request->param('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $storeType = addslashes(safe_trim($this->request->param('store_type')));
+        $accessId = addslashes(safe_trim($this->request->param('access_id')));
 
-        $page = addslashes(trim($this->request->post('page'))); // 页码
-        $pagesize = addslashes(trim($this->request->post('pageSize'))); // 每页多少条数据
+        $page = addslashes(safe_trim($this->request->post('page'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->post('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = $this->user_list['user_id'];
@@ -122,11 +122,11 @@ class Notice extends BaseController
     // 消息详情
     public function NoticeDetails()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $storeType = addslashes(trim($this->request->param('store_type')));
-        $accessId = addslashes(trim($this->request->param('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $storeType = addslashes(safe_trim($this->request->param('store_type')));
+        $accessId = addslashes(safe_trim($this->request->param('access_id')));
 
-        $id = addslashes(trim($this->request->post('id'))); // 消息ID
+        $id = addslashes(safe_trim($this->request->post('id'))); // 消息ID
 
         $user_id = $this->user_list['user_id'];
 
@@ -211,9 +211,9 @@ class Notice extends BaseController
     // 一键已读
     public function AllMessage()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $storeType = addslashes(trim($this->request->param('store_type')));
-        $accessId = addslashes(trim($this->request->param('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $storeType = addslashes(safe_trim($this->request->param('store_type')));
+        $accessId = addslashes(safe_trim($this->request->param('access_id')));
 
         $user_id = $this->user_list['user_id'];
 
@@ -245,11 +245,11 @@ class Notice extends BaseController
     // 删除消息
     public function DelMessage()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $storeType = addslashes(trim($this->request->param('store_type')));
-        $accessId = addslashes(trim($this->request->param('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $storeType = addslashes(safe_trim($this->request->param('store_type')));
+        $accessId = addslashes(safe_trim($this->request->param('access_id')));
 
-        $ids = addslashes(trim($this->request->param('ids')));
+        $ids = addslashes(safe_trim($this->request->param('ids')));
 
         $user_id = $this->user_list['user_id'];
 

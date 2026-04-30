@@ -17,10 +17,10 @@ class Express extends BaseController
     // 物流列表
     public function logistics_list()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $name = addslashes(trim($this->request->param('name'))); // 物流公司名称、编码
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $name = addslashes(safe_trim($this->request->param('name'))); // 物流公司名称、编码
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
 
         $user_id = $this->user_list['user_id'];
         $r_mch = MchModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'recovery'=>0])->field('id')->select()->toArray();
@@ -38,10 +38,10 @@ class Express extends BaseController
     // 获取物流主表数据
     public function get_logistics()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $access_id = safe_trim($this->request->param('accessId'));
         
-        $id = trim($this->request->param('id')); // id
+        $id = safe_trim($this->request->param('id')); // id
 
         $user_id = $this->user_list['user_id'];
         $r_mch = MchModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'recovery'=>0])->field('id')->select()->toArray();
@@ -59,16 +59,16 @@ class Express extends BaseController
     // 添加/编辑快递公司子表
     public function add_logistics()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $id = addslashes(trim($this->request->param('id'))); // ID
-        $express_id = addslashes(trim($this->request->param('express_id'))); // 主表ID
-        $partnerId = addslashes(trim($this->request->param('partnerId'))); // 电子面单客户账户或月结账号
-        $partnerKey = addslashes(trim($this->request->param('partnerKey'))); // 电子面单密码
-        $partnerSecret = addslashes(trim($this->request->param('partnerSecret'))); // 电子面单密钥
-        $partnerName = addslashes(trim($this->request->param('partnerName'))); // 电子面单客户账户名称
-        $net = addslashes(trim($this->request->param('net'))); // 收件网点名称
-        $code = addslashes(trim($this->request->param('code'))); // 电子面单承载编号
-        $checkMan = addslashes(trim($this->request->param('checkMan'))); // 电子面单承载快递员名
+        $store_id = safe_trim($this->request->param('storeId'));
+        $id = addslashes(safe_trim($this->request->param('id'))); // ID
+        $express_id = addslashes(safe_trim($this->request->param('express_id'))); // 主表ID
+        $partnerId = addslashes(safe_trim($this->request->param('partnerId'))); // 电子面单客户账户或月结账号
+        $partnerKey = addslashes(safe_trim($this->request->param('partnerKey'))); // 电子面单密码
+        $partnerSecret = addslashes(safe_trim($this->request->param('partnerSecret'))); // 电子面单密钥
+        $partnerName = addslashes(safe_trim($this->request->param('partnerName'))); // 电子面单客户账户名称
+        $net = addslashes(safe_trim($this->request->param('net'))); // 收件网点名称
+        $code = addslashes(safe_trim($this->request->param('code'))); // 电子面单承载编号
+        $checkMan = addslashes(safe_trim($this->request->param('checkMan'))); // 电子面单承载快递员名
 
         $admin_name = $this->user_list['name'];
         $user_id = $this->user_list['user_id'];
@@ -97,8 +97,8 @@ class Express extends BaseController
     // 编辑快递公司子表页面
     public function edit_logistics_page()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $id = addslashes(trim($this->request->param('id'))); // ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $id = addslashes(safe_trim($this->request->param('id'))); // ID
 
         $user_id = $this->user_list['user_id'];
         $r_mch = MchModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'recovery'=>0])->field('id')->select()->toArray();
@@ -116,8 +116,8 @@ class Express extends BaseController
     // 删除快递公司子表
     public function del_logistics()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $id = addslashes(trim($this->request->param('id'))); // ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $id = addslashes(safe_trim($this->request->param('id'))); // ID
         $admin_name = $this->user_list['name'];
         $user_id = $this->user_list['user_id'];
         $r_mch = MchModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'recovery'=>0])->field('id')->select()->toArray();

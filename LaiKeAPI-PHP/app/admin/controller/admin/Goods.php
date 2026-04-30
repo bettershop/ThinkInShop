@@ -39,17 +39,17 @@ class Goods extends BaseController
     // 分类列表
     public function getClassInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
-        $language = addslashes(trim($this->request->param('language')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $language = addslashes(safe_trim($this->request->param('language')));
 
-        $type = addslashes(trim($this->request->param('type'))); // 类型 1=查询下级,2=查询上级,3=根据id查询 默认查询一级
-        $classId = addslashes(trim($this->request->param('classId'))); // 分类ID
-        $className = addslashes(trim($this->request->param('className'))); // 分类名称
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $type = addslashes(safe_trim($this->request->param('type'))); // 类型 1=查询下级,2=查询上级,3=根据id查询 默认查询一级
+        $classId = addslashes(safe_trim($this->request->param('classId'))); // 分类ID
+        $className = addslashes(safe_trim($this->request->param('className'))); // 分类名称
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         if($lang_code == '')
         {
@@ -65,18 +65,18 @@ class Goods extends BaseController
     // 商品分类添加/编辑
     public function addClass()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $cid = addslashes(trim($this->request->param('classId'))); // 分类ID
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语言
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 国家代码
-        $pname = trim($this->request->param('className')); // 分类名称
-        $english_name = trim($this->request->param('ename')); // 分类英文名称
-        $level = addslashes(trim($this->request->param('level'))); // 级别
-        $sid = addslashes(trim($this->request->param('fatherId'))); // 上级ID
-        $img = addslashes(trim($this->request->param('img'))); // 图片
+        $cid = addslashes(safe_trim($this->request->param('classId'))); // 分类ID
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语言
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 国家代码
+        $pname = safe_trim($this->request->param('className')); // 分类名称
+        $english_name = safe_trim($this->request->param('ename')); // 分类英文名称
+        $level = addslashes(safe_trim($this->request->param('level'))); // 级别
+        $sid = addslashes(safe_trim($this->request->param('fatherId'))); // 上级ID
+        $img = addslashes(safe_trim($this->request->param('img'))); // 图片
 
         $time = date("Y-m-d H:i:s");
 
@@ -96,11 +96,11 @@ class Goods extends BaseController
     // 编辑商品分类页面（一级分类除外）
     public function getClassLevelTopAllInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $cid = addslashes(trim($this->request->param('classId'))); // 分类ID
+        $cid = addslashes(safe_trim($this->request->param('classId'))); // 分类ID
 
         $data = array('store_id'=>$store_id,'cid'=>$cid,'source'=>1);
         $product_class = new ProductClass();
@@ -112,11 +112,11 @@ class Goods extends BaseController
     // 分类置顶
     public function classSortTop()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $cid = addslashes(trim($this->request->param('classId')));
+        $cid = addslashes(safe_trim($this->request->param('classId')));
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -133,11 +133,11 @@ class Goods extends BaseController
     // 分类删除
     public function delClass()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $cid = addslashes(trim($this->request->param('classId')));
+        $cid = addslashes(safe_trim($this->request->param('classId')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -154,14 +154,14 @@ class Goods extends BaseController
     // 品牌列表
     public function getBrandInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $brand_name = addslashes(trim($this->request->param('brandName'))); // 品牌名称
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $brand_name = addslashes(safe_trim($this->request->param('brandName'))); // 品牌名称
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         $data = array('store_id'=>$store_id,'mch_id'=>0,'supplier_id'=>0,'lang_code'=>$lang_code,'brand_name'=>$brand_name,'page'=>$page,'pagesize'=>$pagesize,'source'=>1);
         $product_brand = new ProductBrand();
@@ -183,17 +183,17 @@ class Goods extends BaseController
     // 品牌添加/编辑
     public function addBrand()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $brand_id = addslashes(trim($this->request->param('brandId'))); // 品牌ID
-        $brand_name = addslashes(trim($this->request->param('brandName'))); // 品牌名称
-        $image = addslashes(trim($this->request->param('brandLogo'))); // 品牌图片
-        $categories = addslashes(trim($this->request->param('brandClass'))); // 所属分类
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 产地
-        $remarks = addslashes(trim($this->request->param('remarks'))); // 备注
+        $brand_id = addslashes(safe_trim($this->request->param('brandId'))); // 品牌ID
+        $brand_name = addslashes(safe_trim($this->request->param('brandName'))); // 品牌名称
+        $image = addslashes(safe_trim($this->request->param('brandLogo'))); // 品牌图片
+        $categories = addslashes(safe_trim($this->request->param('brandClass'))); // 所属分类
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 产地
+        $remarks = addslashes(safe_trim($this->request->param('remarks'))); // 备注
 
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
@@ -210,11 +210,11 @@ class Goods extends BaseController
     // 品牌置顶
     public function brandByTop()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $brand_id = addslashes(trim($this->request->param('brandId'))); // 品牌id
+        $brand_id = addslashes(safe_trim($this->request->param('brandId'))); // 品牌id
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -231,11 +231,11 @@ class Goods extends BaseController
     // 品牌删除
     public function delBrand()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $brand_id = addslashes(trim($this->request->param('brandId'))); // 品牌id
+        $brand_id = addslashes(safe_trim($this->request->param('brandId'))); // 品牌id
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -252,9 +252,9 @@ class Goods extends BaseController
     // 设为默认运费
     public function freightSetDefault()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = intval($this->request->param('id'));
 
@@ -274,18 +274,18 @@ class Goods extends BaseController
     // 删除运费
     public function delFreight()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         // 接收信息
-        $id = addslashes(trim($this->request->param('idList'))); // 单运费id
+        $id = addslashes(safe_trim($this->request->param('idList'))); // 单运费id
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
 
         if($id == '' || $id == 0)
         {
-            $id = addslashes(trim($this->request->param('freightIds'))); // 多运费id
+            $id = addslashes(safe_trim($this->request->param('freightIds'))); // 多运费id
         }
 
         $admin_name = $this->user_list['name'];
@@ -302,9 +302,9 @@ class Goods extends BaseController
     // 获取活动类型
     public function getGoodsActive()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $Plugin = new Plugin();
         $data = $Plugin->pro_Plugin($store_id);
@@ -316,16 +316,16 @@ class Goods extends BaseController
     // 获取分类和品牌
     public function choiceClass()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $class_str = addslashes(trim($this->request->param('classId')));
-        $brand_id = addslashes(trim($this->request->param('brandId')));
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
+        $class_str = addslashes(safe_trim($this->request->param('classId')));
+        $brand_id = addslashes(safe_trim($this->request->param('brandId')));
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
         if(!$lang_code)
         {
-           $lang_code =  addslashes(trim($this->request->param('language'))); // 语种
+           $lang_code =  addslashes(safe_trim($this->request->param('language'))); // 语种
         }
         $product = new Product();
         $data = $product->get_classified_brands($store_id,$class_str,$brand_id,$lang_code);
@@ -337,12 +337,12 @@ class Goods extends BaseController
     // 获取地区
     public function getRegion()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $sid = addslashes(trim($this->request->param('sid')));
-        $level = addslashes(trim($this->request->param('level')));
+        $sid = addslashes(safe_trim($this->request->param('sid')));
+        $level = addslashes(safe_trim($this->request->param('level')));
 
         $list = array();
         $str = "id,district_name as districtName,district_pid as districtPid,district_show_order as districtShowOrder,district_level as districtLevel,district_childcount as district_ChildCount,district_delete as districtDelete,district_num as districtNum,district_country_num as districtCountryNum";
@@ -369,9 +369,9 @@ class Goods extends BaseController
     // 添加店铺
     public function addMch()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$logo = addslashes($this->request->param('logo')); // logo
     	$head_img = addslashes($this->request->param('headImg')); // logo
@@ -502,7 +502,7 @@ class Goods extends BaseController
             {
                 $business_license .= preg_replace('/.*\//', '', $v) . ',';
             }
-            $business_license = trim($business_license,',');
+            $business_license = safe_trim($business_license,',');
         }
         
         $r0 = AdminModel::where(['store_id'=>$store_id,'type'=>1])->field('name')->select()->toArray();
@@ -620,17 +620,17 @@ class Goods extends BaseController
     public function getFreightInfo()
     {
         
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $mch_id = addslashes(trim($this->request->param('mchId')));
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $pageSize = addslashes(trim($this->request->param('pageSize')));
+        $mch_id = addslashes(safe_trim($this->request->param('mchId')));
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $pageSize = addslashes(safe_trim($this->request->param('pageSize')));
         
         if(!$lang_code)
         {
-            $lang_code = trim($this->request->param('language'));  
+            $lang_code = safe_trim($this->request->param('language'));  
         }
         
         // $lang_code = 'zh_CN';
@@ -660,20 +660,20 @@ class Goods extends BaseController
     // 添加/编辑商品
     public function addGoods()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
-        $mch_id = addslashes(trim($this->request->param('mch_id'))); // 店铺ID
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $mch_id = addslashes(safe_trim($this->request->param('mch_id'))); // 店铺ID
         
-    	$id = addslashes(trim($this->request->param('pId'))); // 商品ID
-    	$commodity_type = addslashes(trim($this->request->param('commodityType'))); // 商品类型 0.实物商品 1.虚拟商品
-    	$product_title = addslashes(trim($this->request->param('productTitle'))); // 商品标题        
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-    	$country_num = addslashes(trim($this->request->param('country_num'))); // 所属国家
-    	$subtitle = addslashes(trim($this->request->param('subtitle'))); // 副标题
-    	$keyword = addslashes(trim($this->request->param('keyword'))); // 关键词
-    	$product_class = addslashes(trim($this->request->param('productClassId'))); // 商品分类ID
-    	$brand_id = addslashes(trim($this->request->param('brandId'))); // 品牌ID
+    	$id = addslashes(safe_trim($this->request->param('pId'))); // 商品ID
+    	$commodity_type = addslashes(safe_trim($this->request->param('commodityType'))); // 商品类型 0.实物商品 1.虚拟商品
+    	$product_title = addslashes(safe_trim($this->request->param('productTitle'))); // 商品标题        
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+    	$country_num = addslashes(safe_trim($this->request->param('country_num'))); // 所属国家
+    	$subtitle = addslashes(safe_trim($this->request->param('subtitle'))); // 副标题
+    	$keyword = addslashes(safe_trim($this->request->param('keyword'))); // 关键词
+    	$product_class = addslashes(safe_trim($this->request->param('productClassId'))); // 商品分类ID
+    	$brand_id = addslashes(safe_trim($this->request->param('brandId'))); // 品牌ID
     	$weight = addslashes($this->request->param('weight')); // 重量
         $weight_unit = 'kg';
     	$cover_map = $this->request->param('coverMap'); // 商品封面图
@@ -683,9 +683,9 @@ class Goods extends BaseController
     	$initial = $this->request->param('initial'); // 初始值
     	$attr = $this->request->param('attrArr'); // 属性
 
-    	$min_inventory = addslashes(trim($this->request->param('stockWarn'))); // 库存预警
+    	$min_inventory = addslashes(safe_trim($this->request->param('stockWarn'))); // 库存预警
     	$freight = $this->request->param('freightId'); // 运费ID
-    	$s_type = trim($this->request->param('sType')); // 显示标签
+    	$s_type = safe_trim($this->request->param('sType')); // 显示标签
     	$active = $this->request->param('active'); // 支持活动
     	$show_adr = $this->request->param('displayPosition'); // 展示位置
     	$volume = $this->request->param('volume'); // 销量
@@ -693,13 +693,13 @@ class Goods extends BaseController
     	
     	$pro_video = $this->request->param('proVideo'); // 商品视频
     	$content = $this->request->param('content'); // 产品内容
-    	$unit = addslashes(trim($this->request->param('unit'))); // 单位
+    	$unit = addslashes(safe_trim($this->request->param('unit'))); // 单位
 
-    	$write_off_settings = addslashes(trim($this->request->param('writeOffSettings'))); // 核销设置 1.线下核销 2.无需核销
-    	$write_off_mch_ids = addslashes(trim($this->request->param('writeOffMchIds'))); // 核销门店id  0.全部门店,  1,2,3使用逗号分割
-    	$is_appointment = addslashes(trim($this->request->param('isAppointment'))); // 预约时间设置 1.无需预约下单 2.需要预约下单
+    	$write_off_settings = addslashes(safe_trim($this->request->param('writeOffSettings'))); // 核销设置 1.线下核销 2.无需核销
+    	$write_off_mch_ids = addslashes(safe_trim($this->request->param('writeOffMchIds'))); // 核销门店id  0.全部门店,  1,2,3使用逗号分割
+    	$is_appointment = addslashes(safe_trim($this->request->param('isAppointment'))); // 预约时间设置 1.无需预约下单 2.需要预约下单
 
-    	$draftsId = addslashes(trim($this->request->param('draftsId'))); // 草稿箱ID
+    	$draftsId = addslashes(safe_trim($this->request->param('draftsId'))); // 草稿箱ID
 
         $imgurls = explode(',',$imgurls);
         $attr = json_decode($attr, true); // 属性
@@ -745,9 +745,9 @@ class Goods extends BaseController
     // 编辑商品页面
     public function getGoodsInfoById()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
     	$id = intval($this->request->param('goodsId')); // 商品ID
 
@@ -768,9 +768,9 @@ class Goods extends BaseController
     // 上架/下架
     public function upperAndLowerShelves()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsIds'); // 商品ID
     	$status = intval($this->request->param('status')); // 商品ID
@@ -787,9 +787,9 @@ class Goods extends BaseController
     // 批量上下架
     public function BatchLoadingAndUnloading()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsIds'); // 商品ID
     	$status = intval($this->request->param('status')); // 2.上架 3.下架
@@ -805,9 +805,9 @@ class Goods extends BaseController
     // 批量选择位置
     public function BatchSelectionOfLocations()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsIds'); // 商品ID
     	$status = intval($this->request->param('status')); // 
@@ -823,9 +823,9 @@ class Goods extends BaseController
     // 批量获取运费
     public function BatchObtainShippingFees()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsIds'); // 商品ID
 
@@ -840,9 +840,9 @@ class Goods extends BaseController
     // 批量设置运费
     public function BatchSetShippingFees()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsIds'); // 商品ID
     	$fid = intval($this->request->param('fid')); // 运费ID
@@ -858,9 +858,9 @@ class Goods extends BaseController
     // 批量预警
     public function BatchWarning()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsIds'); // 商品ID
     	$min_inventory = intval($this->request->param('min_inventory')); // 库存预警
@@ -876,9 +876,9 @@ class Goods extends BaseController
     // 是否显示已下架商品
     public function isOpen()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -913,9 +913,9 @@ class Goods extends BaseController
     // 是否显示已售罄商品
     public function displaySellOut()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -950,9 +950,9 @@ class Goods extends BaseController
     // 商品列表
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
         $parameter = addslashes($this->request->param('parameter')); // 商品ID
@@ -963,7 +963,7 @@ class Goods extends BaseController
         $brand_id = addslashes($this->request->param('brandId')); // 品牌ID
         $active = addslashes($this->request->param('active')); // 商品类型
         $status = addslashes($this->request->param('status')); // 上下架
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
         $show_adr = addslashes($this->request->param('showAdr')); // 显示位置
         $label_id = addslashes($this->request->param('goodsTga')); // 分类标签ID
         $product_title = addslashes($this->request->param('productTitle')); // 标题
@@ -1044,9 +1044,9 @@ class Goods extends BaseController
     // 修改排序
     public function editSort()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = intval($this->request->param('id')); // 商品ID
     	$sort = intval($this->request->param('sort')); // 排序
@@ -1077,9 +1077,9 @@ class Goods extends BaseController
     // 删除商品
     public function delGoodsById()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
     	$id = $this->request->param('goodsId'); // 商品ID
 
@@ -1103,16 +1103,16 @@ class Goods extends BaseController
     // 库存列表
     public function getStockInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $mch_name = addslashes(trim($this->request->param('mchName')));
-        $product_title = addslashes(trim($this->request->param('productTitle')));
-        $page = addslashes(trim($this->request->param('pageNo')));
-        $pagesize = addslashes(trim($this->request->param('pageSize')));
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $mch_name = addslashes(safe_trim($this->request->param('mchName')));
+        $product_title = addslashes(safe_trim($this->request->param('productTitle')));
+        $page = addslashes(safe_trim($this->request->param('pageNo')));
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize')));
 
         $array = array('store_id'=>$store_id,'mch_id'=>0,'lang_code'=>$lang_code,'mch_name'=>$mch_name,'product_title'=>$product_title,'page'=>$page,'pagesize'=>$pagesize,'operator_source'=>1);
         $ProductInventory = new ProductInventory();
@@ -1165,9 +1165,9 @@ class Goods extends BaseController
     // 入库详情/出货详情/库存预警/预警记录
     public function getStockDetailInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
         $type = addslashes($this->request->param('type')); // 0.入库详情 1.出货详情 2.库存预警
@@ -1212,19 +1212,19 @@ class Goods extends BaseController
     // 入库详情
     public function Enter_list()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
         
         if(!$lang_code)
         {
-            $lang_code = addslashes(trim($this->request->param('language')));
+            $lang_code = addslashes(safe_trim($this->request->param('language')));
         }
         
-        $mch_name = addslashes(trim($this->request->param('mchName')));
+        $mch_name = addslashes(safe_trim($this->request->param('mchName')));
         $product_title = addslashes($this->request->param('productTitle'));
         $startdate = addslashes($this->request->param('startDate'));
         $enddate = addslashes($this->request->param('endDate'));
@@ -1283,13 +1283,13 @@ class Goods extends BaseController
     // 出货详情
     public function Shipment_list()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $mch_name = addslashes(trim($this->request->param('mchName')));
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $mch_name = addslashes(safe_trim($this->request->param('mchName')));
         $product_title = addslashes($this->request->param('productTitle'));
         $startdate = addslashes($this->request->param('startDate'));
         $enddate = addslashes($this->request->param('endDate'));
@@ -1348,14 +1348,14 @@ class Goods extends BaseController
     // 库存预警
     public function Warning_list()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $parameter = addslashes(trim($this->request->param('parameter')));
-        $mch_name = addslashes(trim($this->request->param('mchName')));
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $parameter = addslashes(safe_trim($this->request->param('parameter')));
+        $mch_name = addslashes(safe_trim($this->request->param('mchName')));
         $product_title = addslashes($this->request->param('productTitle'));
         $startdate = addslashes($this->request->param('startDate'));
         $enddate = addslashes($this->request->param('endDate'));
@@ -1417,11 +1417,11 @@ class Goods extends BaseController
     // 库存详情
     public function Details_list()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $pid = addslashes(trim($this->request->param('pid'))); // 商品ID
+        $pid = addslashes(safe_trim($this->request->param('pid'))); // 商品ID
         $id = addslashes($this->request->param('attrId')); // 属性ID
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
@@ -1439,11 +1439,11 @@ class Goods extends BaseController
     // 预警记录
     public function Seewarning_list()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $pid = addslashes(trim($this->request->param('pid'))); // 商品ID
+        $pid = addslashes(safe_trim($this->request->param('pid'))); // 商品ID
         $id = addslashes($this->request->param('attrId')); // 属性ID
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
@@ -1461,9 +1461,9 @@ class Goods extends BaseController
     // 增加库存
     public function addStock()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $pid = addslashes($this->request->param('pid')); // 商品ID
         $id = addslashes($this->request->param('id')); // 属性ID
@@ -1482,9 +1482,9 @@ class Goods extends BaseController
     // 批量增加库存
     public function BatchAddStock()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $ids = addslashes($this->request->param('ids')); // 属性ID
         $add_num = addslashes($this->request->param('addNum')); // 增加库存
@@ -1503,13 +1503,13 @@ class Goods extends BaseController
     //获取代客下单商品列表
     public function getGoodsConfigureList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
         $token = $this->request->param('accessId');
         $r_admin = AdminModel::where(['store_id'=> $store_id,'recycle'=>0,'type'=>1])->field('shop_id')->select()->toArray();
         $mch_id = $r_admin[0]['shop_id']; // 店铺id
 
-        $lang_code = addslashes(trim($this->request->param('language'))); // 语种
+        $lang_code = addslashes(safe_trim($this->request->param('language'))); // 语种
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
@@ -1577,9 +1577,9 @@ class Goods extends BaseController
     // 批量上传
     public function uploadAddGoods()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $product_class = addslashes($this->request->param('productClassId')); // 分类ID
         $brand_id = addslashes($this->request->param('brandId')); // 品牌ID
@@ -1647,47 +1647,47 @@ class Goods extends BaseController
             $p_data[$k]['product_title'] = '';
             if(isset($v['A']))
             {
-                $p_data[$k]['product_title'] = addslashes(trim($v['A']));
+                $p_data[$k]['product_title'] = addslashes(safe_trim($v['A']));
             }
             $p_data[$k]['subtitle'] = '';
             if(isset($v['B']))
             {
-                $p_data[$k]['subtitle'] = addslashes(trim($v['B']));
+                $p_data[$k]['subtitle'] = addslashes(safe_trim($v['B']));
             }
             $p_data[$k]['keyword'] = '';
             if(isset($v['C']))
             {
-                $p_data[$k]['keyword'] = addslashes(trim($v['C']));
+                $p_data[$k]['keyword'] = addslashes(safe_trim($v['C']));
             }
             $attr = "";
             if(isset($v['D']))
             {
-                $attr = trim($v['D'],';');
+                $attr = safe_trim($v['D'],';');
             }
             $cbj = "0.00";
             if(isset($v['E']))
             {
-                $cbj = trim($v['E']);
+                $cbj = safe_trim($v['E']);
             }
             $yj = "0.00";
             if(isset($v['F']))
             {
-                $yj = trim($v['F']);
+                $yj = safe_trim($v['F']);
             }
             $sj = "0.00";
             if(isset($v['G']))
             {
-                $sj = trim($v['G']);
+                $sj = safe_trim($v['G']);
             }
             $kucun = "0";
             if(isset($v['H']))
             {
-                $kucun = trim($v['H']);
+                $kucun = safe_trim($v['H']);
             }
             $unit = "";
             if(isset($v['I']))
             {
-                $unit = trim($v['I']);
+                $unit = safe_trim($v['I']);
             }
             if($unit == '')
             {
@@ -1712,8 +1712,8 @@ class Goods extends BaseController
             $scan = '';
             if(isset($v['K']))
             {
-                $p_data[$k]['scan'] = trim($v['K']);
-                $scan = trim($v['K']);
+                $p_data[$k]['scan'] = safe_trim($v['K']);
+                $scan = safe_trim($v['K']);
             }
             $p_data[$k]['weight'] = "0";
             if(isset($v['L']))
@@ -2180,9 +2180,9 @@ class Goods extends BaseController
     // 批量上传记录
     public function uploadRecordList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $key = addslashes($this->request->param('key')); // 文件名称
         $status = addslashes($this->request->param('status')); // 文件状态 1=成功 0=失败
@@ -2249,9 +2249,9 @@ class Goods extends BaseController
     // 删除批量上传记录
     public function delUploadRecord()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 上传记录ID
         
@@ -2269,12 +2269,12 @@ class Goods extends BaseController
     // 获取语言
     public function getLangs()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
-        $language = addslashes(trim($this->request->param('language'))); // 语言
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $language = addslashes(safe_trim($this->request->param('language'))); // 语言
 
-        $id = addslashes($this->request->param('id')); // 上传记录ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 上传记录ID
 
         $store_langs = "";
         $sql0 = "select store_langs from lkt_customer where id = '$store_id' ";

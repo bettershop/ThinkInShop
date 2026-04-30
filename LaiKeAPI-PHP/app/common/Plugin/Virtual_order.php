@@ -53,17 +53,17 @@ class Virtual_order
         $store_id = $action->store_id;
         $store_type = $action->store_type;
 
-        $pay_type = addslashes(trim(Request::post('pay_type'))); // 支付方式
-        $product1 = addslashes(Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::post('cart_id')));  //购物车id-- 12,13,123,
+        $pay_type = addslashes(safe_trim(Request::post('pay_type'))); // 支付方式
+        $product1 = addslashes((string)Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::post('cart_id')));  //购物车id-- 12,13,123,
         $address_id = Request::post('address_id'); //  地址id
         $vipSource = Request::post('vipSource')?Request::post('vipSource'):0;
         $shop_address_id = Request::post('shop_address_id'); //  门店地址id
-        $product_type = addslashes(Request::post('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
-        $buy_type = addslashes(Request::post('buy_type')) ? addslashes(Request::post('buy_type')) : 0;//提交状态 1是再次购买 空是正常提交
-        $canshu = addslashes(Request::post('canshu'));//参数
-        $coupon_id = trim(Request::post('coupon_id')); // 优惠券id
-        $scoreDeduction = trim(Request::post('scoreDeduction')) ? trim(Request::post('scoreDeduction')) : 0; // 抵扣积分
+        $product_type = addslashes((string)Request::post('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
+        $buy_type = addslashes((string)Request::post('buy_type')) ? addslashes((string)Request::post('buy_type')) : 0;//提交状态 1是再次购买 空是正常提交
+        $canshu = addslashes((string)Request::post('canshu'));//参数
+        $coupon_id = safe_trim(Request::post('coupon_id')); // 优惠券id
+        $scoreDeduction = safe_trim(Request::post('scoreDeduction')) ? safe_trim(Request::post('scoreDeduction')) : 0; // 抵扣积分
         
         if($vipSource == 1)
         {
@@ -369,26 +369,26 @@ class Virtual_order
         $store_type = $action->store_type;
         $access_id = $action->access_id;
 
-        $product1 = addslashes(Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::post('cart_id')));  // 购物车id-- 12,13,123,
-        $type = trim(Request::post('type')) ? Request::post('type') : 'VI'; // 订单类型
+        $product1 = addslashes((string)Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::post('cart_id')));  // 购物车id-- 12,13,123,
+        $type = safe_trim(Request::post('type')) ? Request::post('type') : 'VI'; // 订单类型
         $address_id = Request::post('address_id'); //  地址id
-        $coupon_id = trim(Request::post('coupon_id')); // 优惠券id
-        $pay_type = addslashes(trim(Request::post('pay_type'))); // 支付方式
+        $coupon_id = safe_trim(Request::post('coupon_id')); // 优惠券id
+        $pay_type = addslashes(safe_trim(Request::post('pay_type'))); // 支付方式
         $vipSource = Request::post('vipSource')?Request::post('vipSource'):0;
-        $buy_type = addslashes(Request::post('buy_type')) ? addslashes(Request::post('buy_type')) : 0; // 提交状态 1是再次购买 空是正常提交
+        $buy_type = addslashes((string)Request::post('buy_type')) ? addslashes((string)Request::post('buy_type')) : 0; // 提交状态 1是再次购买 空是正常提交
         $shop_address_id = Request::post('shop_address_id',0)?Request::post('shop_address_id',0):0; //  门店地址id
-        $remarks = trim(Request::post('remarks')); //  订单备注
-        $fullName = trim(Request::post('fullName')); //  收货人
-        $fullcpc = trim(Request::post('fullcpc')); //  收货人电话区号
-        $fullPhone = trim(Request::post('fullPhone')); //  收货人电话
-        $write_time_id = trim(Request::post('mchStoreWrite')); // 门店核销时间段ID
-        $store_write_time = trim(Request::post('mchStoreWriteTime')); //  时间段
-        $scoreDeduction = trim(Request::post('scoreDeduction')) ? trim(Request::post('scoreDeduction')) : 0; // 抵扣积分
-        $scoreRatio = trim(Request::post('scoreRatio')) ? trim(Request::post('scoreRatio')) : ''; // 抵扣比例
-        $currency_code_0 = trim(Request::param('currency_code')); // ISO货币代码(如USD)
-        $currency_symbol_0 = trim(Request::param('currency_symbol')); // 货币符号($)
-        $exchange_rate_0 = trim(Request::param('exchange_rate')); // 汇率
+        $remarks = safe_trim(Request::post('remarks')); //  订单备注
+        $fullName = safe_trim(Request::post('fullName')); //  收货人
+        $fullcpc = safe_trim(Request::post('fullcpc')); //  收货人电话区号
+        $fullPhone = safe_trim(Request::post('fullPhone')); //  收货人电话
+        $write_time_id = safe_trim(Request::post('mchStoreWrite')); // 门店核销时间段ID
+        $store_write_time = safe_trim(Request::post('mchStoreWriteTime')); //  时间段
+        $scoreDeduction = safe_trim(Request::post('scoreDeduction')) ? safe_trim(Request::post('scoreDeduction')) : 0; // 抵扣积分
+        $scoreRatio = safe_trim(Request::post('scoreRatio')) ? safe_trim(Request::post('scoreRatio')) : ''; // 抵扣比例
+        $currency_code_0 = safe_trim(Request::param('currency_code')); // ISO货币代码(如USD)
+        $currency_symbol_0 = safe_trim(Request::param('currency_symbol')); // 货币符号($)
+        $exchange_rate_0 = safe_trim(Request::param('exchange_rate')); // 汇率
         
         $remarks = htmlspecialchars_decode($remarks); // 将特殊的 HTML 实体转换回普通字符
         $remarks = json_decode($remarks, true);
@@ -693,6 +693,16 @@ class Virtual_order
                 $platform_coupon_price = $value['membership_price'] * $num - $value['amount_after_discount'] - $store_coupon_price; // 会员价 * 数量 - 优惠后金额 - 该商品使用店铺优惠金额 = 该商品使用了多少平台优惠金额
 
                 $sql_insert = array('store_id'=>$store_id,'user_id'=>$user_id,'p_id'=>$pid,'p_name'=>$product_title,'p_price'=>$value['price'],'num'=>$num,'unit'=>$value['unit'],'r_sNo'=>$sNo,'add_time'=>date("Y-m-d H:i:s"),'r_status'=>$order_status,'size'=>$value['size'],'sid'=>$cid,'freight'=>$freight_price,'coupon_id'=>$value['coupon_id'],'after_discount'=>$value['amount_after_discount'],'supplier_settlement'=>$value['supplier_settlement'],'supplier_id'=>$value['gongyingshang'],'write_off_num'=>$write_off_num,'after_write_off_num'=>0,'mch_store_write_id'=>$shop_address_id,'write_time'=>$write_time,'write_time_id'=>$write_time_id,'store_coupon_price'=>$store_coupon_price,'platform_coupon_price'=>$platform_coupon_price,'mch_id'=>$mch_id1,'actual_total'=>$value['scoreDeductionPrice'],'score_deduction'=>$value['scoreDeductionpoints']);
+                static $orderDetailsHasSupplierId = null;
+                if($orderDetailsHasSupplierId === null)
+                {
+                    $cols = Db::query("SHOW COLUMNS FROM `lkt_order_details` LIKE 'supplier_id'");
+                    $orderDetailsHasSupplierId = !empty($cols);
+                }
+                if(!$orderDetailsHasSupplierId)
+                {
+                    unset($sql_insert['supplier_id']);
+                }
                 $beres = Db::name('order_details')->insertGetId($sql_insert);
                 if ($beres < 1)
                 { // 添加失败
@@ -777,8 +787,8 @@ class Virtual_order
                 if($r_g[0]['birthday_open'] == 1 && $grade == 1 && $is_out == 0 && $vipSource == 1)
                 {
                     $time = date("m-d");
-                    $riqi = date("m-d", strtotime($birthday));
-                    if ($riqi == $time)
+                    $birthday_ts = ($birthday === null || $birthday === '' || $birthday === '0000-00-00 00:00:00' || $birthday === '0000-00-00') ? false : strtotime((string)$birthday);
+                    if ($birthday_ts !== false && date("m-d", $birthday_ts) == $time)
                     {
                         $grade_score = floor($total * $r_g[0]['points_multiple']);
                     }
@@ -800,7 +810,7 @@ class Virtual_order
                 $min_inventory_2 = $r_o2[0]['min_inventory'];
 
                 // 根据商品ID，修改商品库存
-                $r_o0 = Db::name('product_list')->where('id',$pid_2)->update(['num' =>  Db::raw('num - 1')]);
+                $r_o0 = Db::name('product_list')->where('id',$pid_2)->where('num','>',0)->update(['num' =>  Db::raw('num - 1')]);
                 // 库存-1
                 if ($r_o0 <= 0)
                 {
@@ -813,7 +823,7 @@ class Virtual_order
                 }
                 
                 // 根据属性ID，修改属性库存
-                $r_o1 = Db::name('configure')->where('id',$give_id)->update(['num' =>  Db::raw('num - 1')]);
+                $r_o1 = Db::name('configure')->where('id',$give_id)->where('num','>',0)->update(['num' =>  Db::raw('num - 1')]);
                 if ($r_o1 <= 0)
                 {
                     $this->Log(__METHOD__ . ":" . __LINE__ . "生成订单时,修改赠品商品库存信息失败！sql:" . $sql_o1);

@@ -91,12 +91,16 @@
 				<!-- 插件/活动/优惠 内容区 -->
 				<view class="content">
                     
+					<!-- clip:living:start --> 
                     <!-- #ifdef H5 --> 
                         <!-- 直播 -->
                     <!-- #endif -->
-                    
+					<!-- clip:living:end --> 
+					 
+					<!-- clip:member:start --> 
 					<!-- 会员VIP商品 -->
-
+					<!-- clip:member:end --> 
+					 
 					<!-- 自定义活动 -->
 					<template v-if="Marketing_list_zdy && Marketing_list_zdy.length">
 						<template v-for="(item, index) in Marketing_list_zdy">
@@ -104,9 +108,11 @@
 						</template>
 					</template>
 
+					<!-- clip:seckill:start --> 
 					<!-- 限时秒杀 -->
-                    <!-- 积分商城 新品 好物 -->
-                     
+					<!-- clip:seckill:end --> 
+					 
+                    <!-- 积分商城 新品 好物 --> 
                     <template
                         v-if="
                             Marketing_list_jf || newImgList || recommendImgList
@@ -123,9 +129,12 @@
                         </publicModeJF> -->
                     </template>
  
+					<!-- clip:distribution:start --> 
 					<!-- 分销商品 -->
 					</template> 
-                    
+					<!-- clip:distribution:end --> 
+					 
+					
 					<!-- 推荐商家 -->
 					<template v-if="shaco_plugin.mch"  >
 						<publicModeMCH :opensetting="opensetting"  
@@ -186,9 +195,10 @@
 				</view>
 			</view>
   
+			<!-- clip:member:end --> 
 			<!-- 提示：vip续费  -->
 			</view>
-
+			<!-- clip:member:end --> 
 			<!-- 提示：待付款订单弹窗 -->
 			<template v-if="isShow_dialog_Pre && load">
 				<showToast :is_showToast="is_showToast" :is_showToast_obj="is_showToast_obj" :load="true"

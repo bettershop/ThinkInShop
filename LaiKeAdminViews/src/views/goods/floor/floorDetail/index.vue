@@ -48,6 +48,21 @@
             clearable
           >
           </el-cascader> 
+          <el-select
+            class="select-input"
+            v-model="inputInfo.langCode"
+            :placeholder="$t('qxzyz')"
+            style="margin-right: 10px"
+            clearable
+          >
+            <el-option
+              v-for="item in languages"
+              :key="item.lang_code"
+              :label="item.lang_name"
+              :value="item.lang_code"
+            >
+            </el-option>
+          </el-select>
           <el-date-picker
             v-model="inputInfo.date"
             type="datetimerange"
@@ -212,7 +227,7 @@
       :title="$t('floorDetail.tjsp')"
       :visible.sync="dialogVisible2"
       :before-close="handleClose"
-      width="920px"
+      width="1120px"
     >
       <div class="">
         <div class="Search">
@@ -253,6 +268,21 @@
             @change="changSource2"
             clearable
           ></el-cascader> 
+          <el-select
+            class="four-input"
+            v-model="inputInfo2.langCode"
+            :placeholder="$t('qxzyz')"
+            style="margin-right: 10px"
+            clearable
+          >
+            <el-option
+              v-for="item in languages"
+              :key="item.lang_code"
+              :label="item.lang_name"
+              :value="item.lang_code"
+            >
+            </el-option>
+          </el-select>
           <el-input
             class="three-input"
             v-model="inputInfo2.productTitle"
@@ -382,6 +412,7 @@
 <script>
 import ErrorImg from '@/assets/images/default_picture.png'
 import { choiceClass } from '@/api/goods/goodsList'
+import { getLangs } from '@/api/goods/brandManagement'
 import {
   getGoodList,
   addGood,
@@ -402,6 +433,7 @@ export default {
       tableData: [],
       brandList: [],
       brandList2: [],
+      languages: [],
       loading: true,
       loading2: true,
       inputInfo: {
@@ -409,13 +441,15 @@ export default {
         cid: '',
         bid: '',
         date: '',
-        type: ''
+        type: '',
+        langCode: ''
       },
       inputInfo2: {
         cid: '',
         brandId: '',
         type:'',
         productTitle: '',
+        langCode: ''
       },
       inputInfo3: {
         goodsShow: ''
@@ -477,6 +511,7 @@ export default {
     }
     // this.getprolist()
     this.getTypeList()
+    this.getLangsList()
     this.getGoodLists()
     // this.getButtons()
     this.choiceClasss()
@@ -502,6 +537,24 @@ export default {
     }
   },
   methods: {
+    getLangsList () {
+      getLangs({
+        api: 'admin.goods.getLangs'
+      }).then(res => {
+        if (res.data.code == 200) {
+          this.languages = res.data.data || []
+          const defaultLang = this.LaiKeCommon.getUserLangVal
+            ? this.LaiKeCommon.getUserLangVal()
+            : ''
+          if (!this.inputInfo.langCode) {
+            this.inputInfo.langCode = defaultLang
+          }
+          if (!this.inputInfo2.langCode) {
+            this.inputInfo2.langCode = defaultLang
+          }
+        }
+      })
+    },
     handleErrorImg (e) {
       console.log('图片报错了', e.target.src)
       e.target.src = ErrorImg
@@ -782,7 +835,8 @@ export default {
       let data = {
         api: 'admin.block.addOrDeleteGoodsWithBlock',
         goodsId: mylist.toString(),
-        id: this.$route.query.id
+        id: this.$route.query.id,
+        langCode: this.inputInfo2.langCode
       }
 
       let formData = new FormData()
@@ -841,6 +895,7 @@ export default {
           sourceType:this.sourceType2,
           sourceId:this.sourceId2,
           brandId: this.inputInfo2.brandId,
+          langCode: this.inputInfo2.langCode,
           cid: this.inputInfo2.cid[this.inputInfo2.cid.length - 1],
           blockId: this.$route.query.id
         }
@@ -917,6 +972,7 @@ export default {
         sourceType:this.sourceType ,
 
         sourceId:this.sourceId,
+        langCode: this.inputInfo.langCode,
         startTime: this.inputInfo.date[0],
         endTime: this.inputInfo.date[1],
         cid: this.inputInfo.cid[this.inputInfo.cid.length - 1]
@@ -935,6 +991,7 @@ export default {
       this.inputInfo2.cid = ''
       this.inputInfo2.brandId = ''
       this.inputInfo2.productTitle = ''
+      this.inputInfo2.langCode = this.inputInfo.langCode
       this.brandList2 = []
       this.$refs.multipleTable.clearSelection()
       this.dialogVisible2 = false
@@ -947,6 +1004,7 @@ export default {
       this.inputInfo.cid = ''
       this.inputInfo.date = ''
       this.inputInfo.type = ''
+      this.inputInfo.langCode = ''
       this.sourceId = ''
       this.sourceType = ''
       this.brandList = []
@@ -957,6 +1015,7 @@ export default {
       this.inputInfo2.brandId = ''
       this.inputInfo2.productTitle = ''
       this.inputInfo2.type = ''
+      this.inputInfo2.langCode = ''
       this.sourceId2 = ''
       this.sourceType2 = ''
       this.brandList2 = []

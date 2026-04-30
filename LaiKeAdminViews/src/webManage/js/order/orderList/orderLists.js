@@ -11,6 +11,7 @@ export default {
     return {
       laikeCurrencySymbol: '￥',
       routerList: JSON.parse(sessionStorage.getItem('tabRouter')),
+      fixedUserId: '',
       radio1: '',
       stateList: [
         {
@@ -175,6 +176,7 @@ export default {
 
   created() {
     this.laikeCurrencySymbol = this.LaiKeCommon.getDefaultCurrencySymbol();
+    this.fixedUserId = this.$route.query.user_id || ''
     if (this.$route.params.pageSize) {
       this.pagination.page = this.$route.params.dictionaryNum
       this.dictionaryNum = this.$route.params.dictionaryNum
@@ -333,7 +335,7 @@ export default {
         this.goodsListType = 0
         this.$router.currentRoute.matched[2].meta.title = ''
       }
-      this.inputInfo.orderInfo = null
+      this.inputInfo.orderInfo = this.fixedUserId ? this.fixedUserId : null
       this.inputInfo.store = null
       /* this.inputInfo.state = '' */
       this.inputInfo.type = null
@@ -534,7 +536,7 @@ export default {
 
     // 重置
     reset() {
-      ; (this.inputInfo.orderInfo = null),
+      ; (this.inputInfo.orderInfo = this.fixedUserId ? this.fixedUserId : null),
         (this.inputInfo.store = null),
         (this.inputInfo.state = null),
         (this.inputInfo.type = null),

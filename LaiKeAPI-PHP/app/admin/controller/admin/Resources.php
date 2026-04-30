@@ -28,17 +28,17 @@ class Resources extends BaseController
     // 图片管理
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $type = addslashes(trim($this->request->param('type'))); // 资源类型，1图片，2视频
+        $type = addslashes(safe_trim($this->request->param('type'))); // 资源类型，1图片，2视频
         $group_id = addslashes($this->request->param('groupId'))?addslashes($this->request->param('groupId')):'-1'; // 分组ID
-        $search = addslashes(trim($this->request->param('imageName'))); // 标题
-        $startTime = addslashes(trim($this->request->param('startTime'))); // 标题
-        $endTime = addslashes(trim($this->request->param('endTime'))); // 标题
-        $pageNo = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $search = addslashes(safe_trim($this->request->param('imageName'))); // 标题
+        $startTime = addslashes(safe_trim($this->request->param('startTime'))); // 标题
+        $endTime = addslashes(safe_trim($this->request->param('endTime'))); // 标题
+        $pageNo = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
         $start = 0;
         if ($pageNo)
@@ -102,11 +102,11 @@ class Resources extends BaseController
     // 获取图片分组
     public function groupList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $type = addslashes(trim($this->request->param('type'))); // 资源类型，1图片，2视频
+        $type = addslashes(safe_trim($this->request->param('type'))); // 资源类型，1图片，2视频
         
         $list = array();
 
@@ -136,11 +136,11 @@ class Resources extends BaseController
     // 添加图片分组
     public function addGroup()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $type = addslashes(trim($this->request->param('type'))); // 资源类型，1图片，2视频
+        $type = addslashes(safe_trim($this->request->param('type'))); // 资源类型，1图片，2视频
         $id = addslashes($this->request->param('id')); // 分类名称
     	$name = addslashes($this->request->param('catalogueName')); // 分类名称
         
@@ -212,7 +212,7 @@ class Resources extends BaseController
     	$store_type = addslashes($this->request->param('storeType'));
     	$accessId = addslashes($this->request->param('accessId'));
 
-        $type = addslashes(trim($this->request->param('type'))); // 资源类型，1图片，2视频
+        $type = addslashes(safe_trim($this->request->param('type'))); // 资源类型，1图片，2视频
     	$id = addslashes($this->request->param('id')); // 分类名称
         
         $shop_id = 0;
@@ -418,7 +418,7 @@ class Resources extends BaseController
     	$store_type = addslashes($this->request->param('storeType'));
     	$accessId = addslashes($this->request->param('accessId'));
 
-        $catalogueId = addslashes(trim($this->request->param('catalogueId'))); // 图片分组ID
+        $catalogueId = addslashes(safe_trim($this->request->param('catalogueId'))); // 图片分组ID
     	$imageIds = addslashes($this->request->param('imageIds')); // 图片ID
         
         $sql1 = "update lkt_files_record set `group` = '$catalogueId' where store_id = '$store_id' and id = '$imageIds' ";
@@ -435,7 +435,7 @@ class Resources extends BaseController
     	$store_type = addslashes($this->request->param('storeType'));
     	$accessId = addslashes($this->request->param('accessId'));
 
-        $exportType = addslashes(trim($this->request->param('exportType'))); // 
+        $exportType = addslashes(safe_trim($this->request->param('exportType'))); // 
     	$imageIds = addslashes($this->request->param('imgIds')); // 图片ID
         
         // 根据商城ID、图片ID，查询图片数据
@@ -497,11 +497,11 @@ class Resources extends BaseController
     // 批量删除
     public function del()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $ids = addslashes(trim($this->request->param('imgIds'))); // ID字符串
+        $ids = addslashes(safe_trim($this->request->param('imgIds'))); // ID字符串
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');

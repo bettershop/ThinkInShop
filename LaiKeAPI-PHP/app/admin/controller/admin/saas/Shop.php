@@ -19,8 +19,8 @@ class Shop extends BaseController
     // 获取商城信息
     public function getShopInfo()
     {	
-        $page = addslashes(trim($this->request->post('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->post('pageSize'))); // 每页显示多少条数据
+        $page = addslashes(safe_trim($this->request->post('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->post('pageSize'))); // 每页显示多少条数据
 
         $list = array();
         $total = 0;

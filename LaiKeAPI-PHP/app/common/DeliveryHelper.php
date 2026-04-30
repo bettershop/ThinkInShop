@@ -1179,34 +1179,36 @@ class DeliveryHelper
             $order_headr_type1 = 'GM';
         }
 
-        $con_supplier = "";
+        $con_supplier_0 = "";
+        $con_supplier_1 = "";
         if($is_supplier == 1)
         { // 移动店铺端供应商
-            $con_supplier = " and a.supplier_id != 0 ";
-            $con_supplier1 = " and o.supplier_id != 0 ";
+            $con_supplier_0 = " and d.gongyingshang != 0 ";
+            $con_supplier_1 = " and b.gongyingshang != 0 ";
         }
         else
         { // 移动店铺端
-            $con_supplier = " and a.supplier_id = 0 ";
-            $con_supplier1 = " and o.supplier_id = 0 ";
+            $con_supplier_0 = " and d.gongyingshang = 0 ";
+            $con_supplier_1 = " and b.gongyingshang = 0 ";
         }
         
         if(empty($keyword))
         {
-            $sql_1 = "select count(id) as payment_num from lkt_order as a where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and a.status = 0 and a.otype = '$order_headr_type1' $con_supplier ";
+            $sql_1 = "select count(tt.id) as payment_num from (select a.id,row_number () over (partition by a.sNo) as top from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id  where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and a.status = 0 and a.otype = '$order_headr_type1' $con_supplier_0 ) as tt where tt.top < 2 ";
 
-            $sql_2 = "select count(id) as send_num  from lkt_order as a where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and ((a.status = 1 and a.self_lifting = '0') or (a.status = 2 and a.self_lifting = '1')) and a.otype = '$order_headr_type1' $con_supplier ";
+            $sql_2 = "select count(tt.id) as send_num from (select a.id,row_number () over (partition by a.sNo) as top from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id  where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and ((a.status = 1 and a.self_lifting = '0') or (a.status = 2 and a.self_lifting = '1')) and a.otype = '$order_headr_type1' $con_supplier_0 ) as tt where tt.top < 2 ";
 
-            $sql_3 = "select count(d.id) as return_num from lkt_return_order as d left join lkt_order_details as a on d.p_id = a.id left join lkt_product_list as b on a.p_id = b.id left join lkt_configure as c on a.sid = c.id where a.store_id = '$store_id' and b.mch_id = '$shop_id' and d.r_type in (0,1,3) and a.r_sNo like '$order_headr_type1%' $con_supplier ";
+            $sql_3 = "select count(d.id) as return_num from lkt_return_order as d left join lkt_order_details as a on d.p_id = a.id left join lkt_product_list as b on a.p_id = b.id left join lkt_configure as c on a.sid = c.id where a.store_id = '$store_id' and b.mch_id = '$shop_id' and d.r_type in (0,1,3) and a.r_sNo like '$order_headr_type1%' $con_supplier_1 ";
         }
         else
         {
             $keyword_0 = Tools::FuzzyQueryConcatenation($keyword);
-            $sql_1 = "select count(id) as payment_num from lkt_order as a where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and a.status = 0 and a.sNo like $keyword_0 and a.otype = '$order_headr_type1' $con_supplier ";
 
-            $sql_2 = "select count(id) as send_num from lkt_order as a where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and a.sNo like $keyword_0 and ((a.status = 1 and a.self_lifting = '0') or (a.status = 2 and a.self_lifting = '1')) and a.otype = '$order_headr_type1' $con_supplier ";
+            $sql_1 = "select count(tt.id) as payment_num from (select a.id,row_number () over (partition by a.sNo) as top from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id  where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and a.status = 0 and a.sNo like $keyword_0 and a.otype = '$order_headr_type1' $con_supplier_0 ) as tt where tt.top < 2 ";
 
-            $sql_3 = "select count(d.id) as return_num from lkt_return_order as d left join lkt_order_details as a on d.p_id = a.id left join lkt_product_list as b on a.p_id = b.id left join lkt_configure as c on a.sid = c.id where a.store_id = '$store_id' and b.mch_id = '$shop_id' and a.r_sNo like $keyword_0 and d.r_type in (0,1,3) and a.r_sNo like '$order_headr_type1%' $con_supplier ";
+            $sql_1 = "select count(tt.id) as payment_num from (select a.id,row_number () over (partition by a.sNo) as top from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id  where a.store_id = '$store_id' and a.mch_id like '%,$shop_id,%' and a.sNo like $keyword_0 and ((a.status = 1 and a.self_lifting = '0') or (a.status = 2 and a.self_lifting = '1')) and a.otype = '$order_headr_type1' $con_supplier_0 ) as tt where tt.top < 2 ";
+
+            $sql_3 = "select count(d.id) as return_num from lkt_return_order as d left join lkt_order_details as a on d.p_id = a.id left join lkt_product_list as b on a.p_id = b.id left join lkt_configure as c on a.sid = c.id where a.store_id = '$store_id' and b.mch_id = '$shop_id' and a.r_sNo like $keyword_0 and d.r_type in (0,1,3) and a.r_sNo like '$order_headr_type1%' $con_supplier_1 ";
         }
         $r_1 = Db::query($sql_1);
         $payment_num = $r_1[0]['payment_num']; // 待支付订单数量
@@ -1219,7 +1221,7 @@ class DeliveryHelper
 
         if ($order_type != 'return')
         {
-            $res = " a.store_id = '$store_id' and a.status <> 13 and a.mch_id like '%,$shop_id,%' and a.recycle in (0,2) and a.otype = '$order_headr_type1' $con_supplier ";
+            $res = " a.store_id = '$store_id' and a.status <> 13 and a.mch_id like '%,$shop_id,%' and a.recycle in (0,2) and a.otype = '$order_headr_type1' $con_supplier_0 ";
             
             if(!empty($platform_activities_id))
             {
@@ -1242,9 +1244,10 @@ class DeliveryHelper
                 $res .= " and a.sNo like $keyword_0 ";
             }
             
-            $str1 = "a.id,a.store_id,a.user_id,a.name,a.mobile,a.num,a.old_total,a.z_price,a.sNo,a.sheng,a.shi,a.xian,a.address,a.remark,a.pay,a.add_time,a.pay_time,a.status,a.coupon_id,a.subtraction_id,a.consumer_money,a.coupon_activity_name,a.drawid,a.otype,a.ptcode,a.refundsNo,a.trade_no,a.is_anonymous,a.spz_price,a.reduce_price,a.coupon_price,a.red_packet,a.allow,a.source,a.delivery_status,a.readd,a.remind,a.offset_balance,a.mch_id,a.zhekou,a.grade_rate,a.grade_fan,a.p_sNo,a.bargain_id,a.comm_discount,a.real_sno,a.remarks,a.self_lifting,a.extraction_code,a.extraction_code_img,a.is_put,a.z_freight,a.manual_offer,a.preferential_amount,a.recycle,a.single_store,a.pick_up_store,a.commission_type,a.settlement_status,a.operation_type,a.VerifiedBy,a.VerifiedBy_type,a.mch_recycle,a.store_recycle,a.user_recycle,a.old_freight,a.order_failure_time,a.store_write_time,a.transaction_id,a.is_lssued,a.supplier_id,a.currency_symbol,a.exchange_rate,a.currency_code";
+            $str1 = "a.id,a.store_id,a.user_id,a.name,a.mobile,a.num,a.old_total,a.z_price,a.sNo,a.sheng,a.shi,a.xian,a.address,a.remark,a.pay,a.add_time,a.pay_time,a.status,a.coupon_id,a.subtraction_id,a.consumer_money,a.coupon_activity_name,a.drawid,a.otype,a.ptcode,a.refundsNo,a.trade_no,a.is_anonymous,a.spz_price,a.reduce_price,a.coupon_price,a.red_packet,a.allow,a.source,a.delivery_status,a.readd,a.remind,a.offset_balance,a.mch_id,a.zhekou,a.grade_rate,a.grade_fan,a.p_sNo,a.bargain_id,a.comm_discount,a.real_sno,a.remarks,a.self_lifting,a.extraction_code,a.extraction_code_img,a.is_put,a.z_freight,a.manual_offer,a.preferential_amount,a.recycle,a.single_store,a.pick_up_store,a.commission_type,a.settlement_status,a.operation_type,a.VerifiedBy,a.VerifiedBy_type,a.mch_recycle,a.store_recycle,a.user_recycle,a.old_freight,a.order_failure_time,a.store_write_time,a.transaction_id,a.is_lssued,d.gongyingshang as supplier_id,a.currency_symbol,a.exchange_rate,a.currency_code";
             // 根据用户id和前台参数,查询订单表 (id、订单号、订单价格、添加时间、订单状态、优惠券id)
-            $sql1 = "select $str1 from lkt_order as a where " . $res . " order by a.add_time desc LIMIT $start,$end";
+
+            $sql1 = "select tt.* from (select a.*,row_number () over (partition by a.sNo) as top from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id  where " . $res . " order by a.add_time desc LIMIT $start,$end ) as tt where tt.top < 2";
             $r1 = Db::query($sql1);
             if ($r1)
             {
@@ -1490,7 +1493,7 @@ class DeliveryHelper
         }
         else
         {
-            $res = " a.store_id = '$store_id' and b.mch_id = '$shop_id' and o.otype = '$order_headr_type1' $con_supplier1 ";
+            $res = " a.store_id = '$store_id' and b.mch_id = '$shop_id' and o.otype = '$order_headr_type1' $con_supplier_1 ";
             
             if (!empty($keyword))
             {
@@ -1498,6 +1501,7 @@ class DeliveryHelper
             }
 
             $str1 = "d.id,d.user_id,d.sNo,d.re_type,d.re_apply_money,d.re_money,d.real_money,d.re_time,d.re_photo,d.r_type,d.sid,d.pid,a.p_name,a.p_price,a.num,a.unit,a.size,b.imgurl,b.is_distribution,c.img,a.after_discount,a.after_write_off_num,d.r_write_off_num,b.write_off_settings,c.write_off_num,o.currency_symbol,o.exchange_rate,o.currency_code ";
+
             $sql1 = "select $str1 from lkt_return_order as d left join lkt_order_details as a on d.p_id = a.id left join lkt_product_list as b on a.p_id = b.id left join lkt_configure as c on a.sid = c.id left join lkt_order as o on a.r_sNo = o.sNo where $res order by d.re_time desc,d.r_type asc limit $start,$end ";
             $r1 = Db::query($sql1);
             if ($r1)
@@ -1567,18 +1571,18 @@ class DeliveryHelper
                     if ($r2)
                     {
                         $v['otype'] = $r2[0]['otype'];
-                        $r2[0]['comm_discount'] = round($r2[0]['comm_discount'],2);
-                        $r2[0]['coupon_price'] = round($r2[0]['coupon_price'],2);
-                        $r2[0]['grade_rate'] = round($r2[0]['grade_rate'],2);
-                        $r2[0]['manual_offer'] = round($r2[0]['manual_offer'],2);
-                        $r2[0]['offset_balance'] = round($r2[0]['offset_balance'],2);
-                        $r2[0]['old_total'] = round($r2[0]['old_total'],2);
-                        $r2[0]['preferential_amount'] = round($r2[0]['preferential_amount'],2);
-                        $r2[0]['reduce_price'] = round($r2[0]['reduce_price'],2);
-                        $r2[0]['spz_price'] = round($r2[0]['spz_price'],2);
-                        $r2[0]['z_freight'] = round($r2[0]['z_freight'],2);
-                        $r2[0]['z_price'] = round($r2[0]['z_price'],2);
-                        $r2[0]['zhekou'] = round($r2[0]['zhekou'],2);
+                        $r2[0]['comm_discount'] = round((float)($r2[0]['comm_discount'] ?? 0),2);
+                        $r2[0]['coupon_price'] = round((float)($r2[0]['coupon_price'] ?? 0),2);
+                        $r2[0]['grade_rate'] = round((float)($r2[0]['grade_rate'] ?? 0),2);
+                        $r2[0]['manual_offer'] = round((float)($r2[0]['manual_offer'] ?? 0),2);
+                        $r2[0]['offset_balance'] = round((float)($r2[0]['offset_balance'] ?? 0),2);
+                        $r2[0]['old_total'] = round((float)($r2[0]['old_total'] ?? 0),2);
+                        $r2[0]['preferential_amount'] = round((float)($r2[0]['preferential_amount'] ?? 0),2);
+                        $r2[0]['reduce_price'] = round((float)($r2[0]['reduce_price'] ?? 0),2);
+                        $r2[0]['spz_price'] = round((float)($r2[0]['spz_price'] ?? 0),2);
+                        $r2[0]['z_freight'] = round((float)($r2[0]['z_freight'] ?? 0),2);
+                        $r2[0]['z_price'] = round((float)($r2[0]['z_price'] ?? 0),2);
+                        $r2[0]['zhekou'] = round((float)($r2[0]['zhekou'] ?? 0),2);
                         if ($v['is_distribution'] == 1)
                         {
                             $v['otype'] = "FX"; //订单类型
@@ -1630,7 +1634,7 @@ class DeliveryHelper
         $storeSelfInfo = array();
         $supplierInfo = array();
 
-        $field1 = "id,store_id,user_id,name,mobile,num,old_total,z_price,sNo,cpc,sheng,shi,xian,address,remark,pay,add_time,pay_time,status,coupon_id,subtraction_id,consumer_money,coupon_activity_name,drawid,otype,ptcode,refundsNo,trade_no,is_anonymous,spz_price,reduce_price,coupon_price,red_packet,allow,source,delivery_status,readd,remind,offset_balance,mch_id,zhekou,grade_rate,grade_fan,p_sNo,bargain_id,comm_discount,real_sno,remarks,self_lifting,extraction_code,extraction_code_img,is_put,z_freight,manual_offer,preferential_amount,recycle,single_store,pick_up_store,commission_type,settlement_status,operation_type,VerifiedBy,VerifiedBy_type,mch_recycle,store_recycle,user_recycle,order_failure_time,store_write_time,transaction_id,otype,cancel_method,supplier_id,is_lssued,currency_symbol,exchange_rate,currency_code";
+        $field1 = "id,store_id,user_id,name,mobile,num,old_total,z_price,sNo,cpc,sheng,shi,xian,address,remark,pay,add_time,pay_time,status,coupon_id,subtraction_id,consumer_money,coupon_activity_name,drawid,otype,ptcode,refundsNo,trade_no,is_anonymous,spz_price,reduce_price,coupon_price,red_packet,allow,source,delivery_status,readd,remind,offset_balance,mch_id,zhekou,grade_rate,grade_fan,p_sNo,bargain_id,comm_discount,real_sno,remarks,self_lifting,extraction_code,extraction_code_img,is_put,z_freight,manual_offer,preferential_amount,recycle,single_store,pick_up_store,commission_type,settlement_status,operation_type,VerifiedBy,VerifiedBy_type,mch_recycle,store_recycle,user_recycle,order_failure_time,store_write_time,transaction_id,otype,cancel_method,is_lssued,currency_symbol,exchange_rate,currency_code";
         $r1 = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->whereLike('mch_id', '%,'.$shop_id.',%')->field($field1)->select()->toArray();
         if ($r1)
         {
@@ -1769,8 +1773,9 @@ class DeliveryHelper
             $yunfei = 0; // 总运费
             $spz_price = 0; // 商品总价
             $grade_rate_amount = 0; // 会员优惠金额
-            
-            $str_4 = "a.id,a.p_id as goodsId,a.p_name,a.p_price,a.num,a.unit,a.r_status,a.re_type,a.r_type,a.freight,a.size,a.sid,b.id as commodityId,b.product_title,b.imgurl as goodsUrl,b.is_distribution,c.img,a.after_write_off_num,b.is_appointment,a.mch_store_write_id,a.platform_coupon_price,a.store_coupon_price,b.write_off_mch_ids,b.write_off_settings,a.write_off_num,a.write_time,a.write_time_id,a.arrive_time,a.anchor_id,a.living_room_id,a.after_discount";
+
+            $gongyingshang = 0;
+            $str_4 = "a.id,a.p_id as goodsId,a.p_name,a.p_price,a.num,a.unit,a.r_status,a.re_type,a.r_type,a.freight,a.size,a.sid,b.id as commodityId,b.product_title,b.imgurl as goodsUrl,b.is_distribution,c.img,a.after_write_off_num,b.is_appointment,a.mch_store_write_id,a.platform_coupon_price,a.store_coupon_price,b.write_off_mch_ids,b.write_off_settings,a.write_off_num,a.write_time,a.write_time_id,a.arrive_time,a.anchor_id,a.living_room_id,a.after_discount,b.gongyingshang";
             $sql4 = "select $str_4 from lkt_order_details as a left join lkt_configure as c on a.sid = c.id left join lkt_product_list as b on c.pid = b.id  where a.r_sNo = '$sNo' and b.mch_id = '$shop_id'";
             $r4 = Db::query($sql4);
             if ($r4)
@@ -1788,6 +1793,7 @@ class DeliveryHelper
                 $arr['write_off_num'] = $r4[0]['write_off_num'];
                 $arr['write_time'] = $r4[0]['write_time'];
                 $arr['arrive_time'] = $r4[0]['arrive_time'];
+                $gongyingshang = $r4[0]['gongyingshang'];
                 if($r4[0]['write_off_mch_ids'] == 0)
                 {
                     $r0_0 = MchStoreModel::where(['store_id'=>$store_id,'mch_id'=>$shop_id])->select()->toArray();
@@ -1887,13 +1893,13 @@ class DeliveryHelper
             $arr['remarks'] = $remarks;
             $arr['sale_type'] = $sale_type;
 
-            if($r1[0]['supplier_id'] == 0)
+            if($gongyingshang == 0)
             {
                 $data = array('list' => $arr,'show_write_store'=>$show_write_store,'write_store_num'=>$write_store_num);
             }
             else
             {
-                $sql_supplier = "select supplier_name,contact_phone,province,city,area,address from lkt_supplier where id = " . $r1[0]['supplier_id'];
+                $sql_supplier = "select supplier_name,contact_phone,province,city,area,address from lkt_supplier where id = '$gongyingshang' ";
                 $r_supplier = Db::query($sql_supplier);
                 if($r_supplier)
                 {
@@ -2626,7 +2632,7 @@ class DeliveryHelper
                 $rew['pay_type'] = $v['pay']; // 支付方式
                 $rew['delivery_status'] = $v['delivery_status']; // 提醒状态
                 $rew['id'] = $v['id']; // 订单id
-                $rew['offset_balance'] = round($v['offset_balance'],2); //余额抵扣
+                $rew['offset_balance'] = round((float)($v['offset_balance'] ?? 0),2); //余额抵扣
                 $rew['otype'] = $v['otype']; //订单类型
                 $rew['z_price'] = (float)$v['z_price']; // 订单价格
                 $rew['old_total'] = (float)$v['old_total']; // 订单价格
@@ -2684,7 +2690,15 @@ class DeliveryHelper
                 else
                 {
                     $arrive_time = $v['arrive_time'];
-                    $arrive_time_end = date("Y-m-d H:i:s",strtotime("+20 day",strtotime($arrive_time)));
+                    $arrive_ts = strtotime((string)($arrive_time ?? ''));
+                    if ($arrive_ts !== false)
+                    {
+                        $arrive_time_end = date("Y-m-d H:i:s", strtotime("+20 day", $arrive_ts));
+                    }
+                    else
+                    {
+                        $arrive_time_end = '';
+                    }
                     if($arrive_time_end <= $time)
                     { // 允许开发票 <= 当前时间
                         $rew['invoiceTimeout'] = true;
@@ -4293,7 +4307,7 @@ class DeliveryHelper
         $page = $action->page;
 
 
-        $condition = " and o.supplier_id = 0";
+        $condition = " and p.gongyingshang = 0";
         if($store_type == 7)
         {
             $condition .= " and o.recycle not in (1,3) ";
@@ -4518,7 +4532,27 @@ class DeliveryHelper
         { // 配送
             $sort_order = " tt.createDate desc,FIELD(status,'0','2','5','7') ";
         }
-        $sql1 = "select tt.* from (select o.real_sno as mchOrderNo,o.id,o.num,o.sNo,o.name as userName,o.sheng,o.shi,o.xian,o.address,o.shop_cpc,o.code,o.add_time as createDate,o.mobile,o.old_total,o.z_price as orderPrice,o.status,o.allow,o.drawid,o.otype,o.ptstatus,o.pay,lu.user_name,o.user_id as userId,o.mch_id,o.currency_symbol,o.exchange_rate,m.id as shop_id,o.self_lifting,o.arrive_time,o.operation_type,o.p_sNo,d.after_discount,p.is_appointment,p.write_off_settings,d.store_self_delivery,o.voucher,o.review_status,o.reason_for_rejection,row_number () over (PARTITION BY o.sNo) AS top  
+        static $orderColumnsChecked = null;
+        static $orderHasShopCpc = null;
+        static $orderHasCode = null;
+        static $orderHasVoucher = null;
+        static $orderHasReviewStatus = null;
+        static $orderHasReasonForRejection = null;
+        if ($orderColumnsChecked === null) {
+            $orderHasShopCpc = !empty(Db::query("SHOW COLUMNS FROM lkt_order LIKE 'shop_cpc'"));
+            $orderHasCode = !empty(Db::query("SHOW COLUMNS FROM lkt_order LIKE 'code'"));
+            $orderHasVoucher = !empty(Db::query("SHOW COLUMNS FROM lkt_order LIKE 'voucher'"));
+            $orderHasReviewStatus = !empty(Db::query("SHOW COLUMNS FROM lkt_order LIKE 'review_status'"));
+            $orderHasReasonForRejection = !empty(Db::query("SHOW COLUMNS FROM lkt_order LIKE 'reason_for_rejection'"));
+            $orderColumnsChecked = true;
+        }
+        $shopCpcField = $orderHasShopCpc ? "o.shop_cpc as shop_cpc" : "'' as shop_cpc";
+        $codeField = $orderHasCode ? "o.code as code" : "'' as code";
+        $voucherField = $orderHasVoucher ? "o.voucher as voucher" : "'' as voucher";
+        $reviewStatusField = $orderHasReviewStatus ? "o.review_status as review_status" : "0 as review_status";
+        $reasonForRejectionField = $orderHasReasonForRejection ? "o.reason_for_rejection as reason_for_rejection" : "'' as reason_for_rejection";
+
+        $sql1 = "select tt.* from (select o.real_sno as mchOrderNo,o.id,o.num,o.sNo,o.name as userName,o.sheng,o.shi,o.xian,o.address,$shopCpcField,$codeField,o.add_time as createDate,o.mobile,o.old_total,o.z_price as orderPrice,o.status,o.allow,o.drawid,o.otype,o.ptstatus,o.pay,lu.user_name,o.user_id as userId,o.mch_id,o.currency_symbol,o.exchange_rate,m.id as shop_id,o.self_lifting,o.arrive_time,o.operation_type,o.p_sNo,d.after_discount,p.is_appointment,p.write_off_settings,d.store_self_delivery,$voucherField,$reviewStatusField,$reasonForRejectionField,row_number () over (PARTITION BY o.sNo) AS top  
             from lkt_order as o 
             left join lkt_user as lu on o.user_id = lu.user_id 
             right join lkt_order_details as d on o.sNo = d.r_sNo
@@ -4643,7 +4677,15 @@ class DeliveryHelper
                 }
 
                 $user_id = $v['userId'];
-                $sqldt = "select lpl.imgurl,lpl.product_title,lpl.product_number,lod.p_price,lod.unit,lod.num,lod.size,lod.p_id,lod.courier_num,lod.express_id,lod.freight,lpl.brand_id ,lm.name as mchname,lod.r_status,lod.id,attr.img,lod.write_off_num,lod.score_deduction,lod.p_integral
+                static $orderDetailsColumnsChecked = null;
+                static $orderDetailsHasPIntegral = null;
+                if ($orderDetailsColumnsChecked === null) {
+                    $orderDetailsHasPIntegral = !empty(Db::query("SHOW COLUMNS FROM lkt_order_details LIKE 'p_integral'"));
+                    $orderDetailsColumnsChecked = true;
+                }
+                $pIntegralField = $orderDetailsHasPIntegral ? "lod.p_integral as p_integral" : "0 as p_integral";
+
+                $sqldt = "select lpl.imgurl,lpl.product_title,lpl.product_number,lod.p_price,lod.unit,lod.num,lod.size,lod.p_id,lod.courier_num,lod.express_id,lod.freight,lpl.brand_id ,lm.name as mchname,lod.r_status,lod.id,attr.img,lod.write_off_num,lod.score_deduction,$pIntegralField
                         from lkt_order_details as lod 
                         left JOIN lkt_configure attr ON attr.id=lod.sid
                         left join lkt_product_list as lpl on lpl.id=attr.pid 
@@ -5274,12 +5316,17 @@ class DeliveryHelper
             $payments_type[$valuep['class_name']] = $valuep['name'];
         }
 
-        $sql = "select l.p_sNo,d.id,l.source,l.remarks,l.pay,l.pay_time,l.id as oid,l.spz_price,l.comm_discount,l.z_freight,l.old_freight,u.user_name,l.sNo,l.name,l.mobile,l.cpc,l.sheng,l.shi,l.old_total,l.z_price,l.xian,l.status,l.address,l.shop_cpc,l.code,l.pay,l.trade_no,l.coupon_id,l.reduce_price,l.coupon_price,l.allow,l.drawid,l.otype,l.grade_rate,l.preferential_amount,l.mch_id,d.user_id,d.p_id,d.p_name,d.p_price,d.num,d.unit,d.add_time,d.deliver_time,d.arrive_time,d.r_status,d.content,d.express_id,d.courier_num,d.sid,d.size,d.freight,e.kuaidi_name,c.total_num,c.price,c.yprice as supplier_settlement ,l.subtraction_id,d.after_discount,d.r_type,d.re_type,d.r_sNo,l.supplier_id,l.self_lifting,l.single_store,d.after_write_off_num,d.platform_coupon_price,d.store_coupon_price,d.write_off_num,d.anchor_id,d.commission,d.supplier_settlement,d.score_deduction,d.p_integral
+        $pIntegralField = "d.p_integral as p_integral";
+        $shopCpcField = "l.cpc as shop_cpc";
+        $codeField = "'' as code";
+
+        $sql = "select l.p_sNo,d.id,l.source,l.remarks,l.pay,l.pay_time,l.id as oid,l.spz_price,l.comm_discount,l.z_freight,l.old_freight,u.user_name,l.sNo,l.name,l.mobile,l.cpc,l.sheng,l.shi,l.old_total,l.z_price,l.xian,l.status,l.address,$shopCpcField,$codeField,l.pay,l.trade_no,l.coupon_id,l.reduce_price,l.coupon_price,l.allow,l.drawid,l.otype,l.grade_rate,l.preferential_amount,l.mch_id,d.user_id,d.p_id,d.p_name,d.p_price,d.num,d.unit,d.add_time,d.deliver_time,d.arrive_time,d.r_status,d.content,d.express_id,d.courier_num,d.sid,d.size,d.freight,e.kuaidi_name,c.total_num,c.price,c.yprice as supplier_settlement ,l.subtraction_id,d.after_discount,d.r_type,d.re_type,d.r_sNo,p.gongyingshang as supplier_id,l.self_lifting,l.single_store,d.after_write_off_num,d.platform_coupon_price,d.store_coupon_price,d.write_off_num,d.anchor_id,d.commission,d.supplier_settlement,d.score_deduction,$pIntegralField
                 from lkt_order_details as d 
                 left join lkt_order as l on l.sNo=d.r_sNo 
                 left join lkt_user as u on u.user_id=l.user_id and u.store_id='$store_id' 
                 left join lkt_express as e on d.express_id=e.id 
                 left join lkt_configure as c on c.id = d.sid
+                left join lkt_product_list as p on c.pid = p.id
                 where l.store_id = '$store_id' and l.sNo='$id'";
         $res = Db::query($sql);
         // var_dump($res[0]['cpc']);die;
@@ -5378,7 +5425,7 @@ class DeliveryHelper
             $res[$k]['spz_price'] = round($v['spz_price'],2);
             $res[$k]['z_freight'] = round($v['z_freight'],2);
             $res[$k]['z_price'] = number_format($v['z_price'],2);
-            $res[$k]['supplier_settlement'] = round($v['supplier_settlement'],2);
+            $res[$k]['supplier_settlement'] = round($v['supplier_settlement'] ?? 0,2);
             $res[$k]['p_price'] = round(($res[$k]['p_price'] * $exchange_rate),2);
             $p_price = $v['p_price']; // 商品售价
             $p_num = $v['num']; // 商品数量
@@ -5514,11 +5561,6 @@ class DeliveryHelper
                     break;
             }
 
-            if($v['supplier_id'] != 0)
-            {
-                $data['orderTypeName'] = '供应商';
-            }
-
             $data['content'] = $v['content']; // 退货原因
             $data['express_id'] = $v['express_id']; // 快递公司id
             if( $v['express_id'])
@@ -5591,10 +5633,16 @@ class DeliveryHelper
                 $res[$k]['stockNum'] = $img[0]['num'];
                 $res[$k]['pic'] = ServerPath::getimgpath($img[0]['img'], $store_id);
 
-                $sql_p = "SELECT c.supplier_name,c.contact_phone,c.province,c.city,c.area,c.address FROM lkt_product_list as p LEFT JOIN lkt_supplier as c on p.gongyingshang=c.id where p.store_id = '$store_id' and p.id = '$pid' ";
+                $sql_p = "SELECT p.gongyingshang as supplier_id,c.supplier_name,c.contact_phone,c.province,c.city,c.area,c.address FROM lkt_product_list as p LEFT JOIN lkt_supplier as c on p.gongyingshang=c.id where p.store_id = '$store_id' and p.id = '$pid' ";
                 $r_p = Db::query($sql_p);
                 if($r_p)
                 {
+                    $res[$k]['supplier_id'] = (int)$r_p[0]['supplier_id'];
+                    if($res[$k]['supplier_id'] != 0)
+                    {
+                        $data['orderTypeName'] = '供应商';
+                        $supplier_id = $res[$k]['supplier_id'];
+                    }
                     $data['supplierName'] = $r_p[0]['supplier_name'];
                     $data['supplierPhone'] = $r_p[0]['contact_phone'];
                     $data['supplierAddress'] = $r_p[0]['province'].$r_p[0]['city'].$r_p[0]['area'].$r_p[0]['address'];
@@ -6003,7 +6051,7 @@ class DeliveryHelper
         $page = $action->page;
 
 
-        $condition = " and o.recycle !=3 and o.supplier_id = 0";
+        $condition = " and o.recycle !=3 and p.gongyingshang = 0";
         if (isset($brand) && $brand)
         {
             $prostr .= " and lpl.brand_id = '$brand'";
@@ -6843,7 +6891,7 @@ class DeliveryHelper
         // 每页显示多少条数据
         $page = $action->page;
 
-        $condition = " and o.recycle !=3 and o.supplier_id = 0";
+        $condition = " and o.recycle !=3 and p.gongyingshang = 0";
         if (isset($brand) && $brand)
         {
             $prostr .= " and lpl.brand_id = '$brand'";
@@ -9286,7 +9334,7 @@ class DeliveryHelper
 
             $suppliers = array();
             // 根据订单号，查询订单商品ID
-            $sql1 = "select a.id,d.id as p_id,b.num,a.offset_balance,b.supplier_id from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id where a.store_id = $store_id and b.r_sNo = '$sNo'";
+            $sql1 = "select a.id,d.id as p_id,b.num,a.offset_balance,d.gongyingshang as supplier_id from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id where a.store_id = $store_id and b.r_sNo = '$sNo'";
             $r1 = Db::query($sql1);
             if ($r1)
             {   
@@ -9325,12 +9373,11 @@ class DeliveryHelper
                         $data['mch_id'] = $v;
                         $data['sNo'] = $sNo1;
                         $data['p_sNo'] = $sNo;
-                        $data['supplier_id'] = $value;
                         //查询单个商品的价格，运费，数量
                         $sql1 = "select a.id,a.p_id,a.p_price,a.num,a.freight,a.r_sNo,a.manual_offer,a.actual_total,a.score_deduction,a.after_discount
                                 from lkt_order_details as a
                                 left join lkt_product_list as b on a.p_id = b.id
-                                where a.store_id = '$store_id' and a.r_sNo = '$sNo' and b.mch_id = '$v' and a.supplier_id = '$value'";
+                                where a.store_id = '$store_id' and a.r_sNo = '$sNo' and b.mch_id = '$v' ";
                         $r1 = Db::query($sql1);
                         //如果查询到数据
                         $order_num_ = 0;
@@ -9479,10 +9526,6 @@ class DeliveryHelper
             {   
                 if($suppliers && $suppliers[0] > 0)
                 {
-                    $supplier_id = $suppliers[0];
-
-                    Db::name('order')->where(['store_id'=>$store_id,'sNo'=>$sNo])->update(['supplier_id'=>$supplier_id]);
-
                     $total_fright = Db::name('supplier_order_fright')->where(['store_id'=>$store_id,'sNo'=>$sNo])->sum('freight');
                     //更新供应商运费表
                     $r3 = Db::name('supplier_order_fright')->where(['store_id'=>$store_id,'sNo'=>$sNo])->update(['total_fright' => $total_fright]);

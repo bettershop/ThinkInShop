@@ -47,7 +47,14 @@
             </el-form-item>
           </div>
       </el-form>
-
+      <div class="footerBox">
+            <el-button
+              type="primary"
+              class="footer-save bgColor mgleft"
+              @click="submitForm('ruleForm')"
+              >{{ $t("DemoPage.tableFromPage.save") }}</el-button
+            >
+          </div>
     </div>
 </div>
 </template>
@@ -277,7 +284,7 @@ export default {
             })
           return
         }
-        this.$validateAndScroll('ruleForm1').then((value) => {
+        this.$validateAndScroll('ruleForm').then((value) => {
           console.log('value',value)
                 if(typeof value =='boolean' &&  value){
                     try {
@@ -592,6 +599,20 @@ export default {
 }
 .btn-nav{
   margin-bottom:20px
+}
+
+.footerBox  {
+    position: fixed;
+    right: 0;
+    bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.9375rem 1.25rem;
+    border-top: 0.0625rem solid #E9ECEF;
+    background: #FFFFFF;
+    width: 300%;
+    z-index: 10;
 }
 </style>
 

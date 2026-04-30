@@ -27,15 +27,14 @@ class Shop extends BaseController
     /**
      * 获取落地页默认币种和语言
      *
-     * @param Request $request
      * @return array
      * @throws HttpException
      */
-    public function getLandingCurrency(Request $request)
+    public function getLandingCurrency()
     {
         try
         {
-            $storeId = addslashes($this->request->param('storeId'));
+            $storeId = addslashes(safe_trim($this->request->param('storeId')));
 
             $defaultCurrencyRes = Common_Tools::get_store_currency(array("store_id" => $storeId,"type" => 1,"id" => 0));
             $defaultCurrencyId = '';
@@ -68,16 +67,16 @@ class Shop extends BaseController
     // 商户列表
     public function getShopInfo()
     {   
-        $storeId = addslashes($this->request->param('storeId'));
-        $storeType = addslashes($this->request->param('storeType'));
-        $accessId = addslashes($this->request->param('accessId'));
+        $storeId = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
         
-        $exportType = addslashes($this->request->param('exportType'));//是否导出
-        $name = addslashes($this->request->param('storeName')); // 姓名
-        $startdate = addslashes($this->request->param('startDate')); // 开始时间
-        $enddate = addslashes($this->request->param('endDate')); // 结束日期
-        $page = addslashes($this->request->param('pageNo')); // 页码
-        $pagesize = addslashes($this->request->param('pageSize')); // 每页多少条数据
+        $exportType = addslashes(safe_trim($this->request->param('exportType')));//是否导出
+        $name = addslashes(safe_trim($this->request->param('storeName'))); // 姓名
+        $startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+        $enddate = addslashes(safe_trim($this->request->param('endDate'))); // 结束日期
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize:'10';
 
         $start = 0;
@@ -108,7 +107,7 @@ class Shop extends BaseController
 
         $condition = " recycle = 0 ";
 
-        $query_name = addslashes($name);
+        $query_name = addslashes((string)$name);
         if($query_name != '' && $query_name != 'undefined')
         {
             $query_name = Tools::FuzzyQueryConcatenation($query_name);
@@ -609,29 +608,53 @@ class Shop extends BaseController
                                 $c_name = $Lang_code[$r_l[0]['lang_code']];
                                 $categories = "";
 
-                                //添加商品默认分类
-                                $sql_class = array('store_id'=>$rr,'sid'=>0,'pname'=>$c_name,'level'=>0,'is_default'=>1,'lang_code'=>$r_l[0]['lang_code'],'examine'=>1,'notset'=>1);
-                                $r_class = Db::name('product_class')->insertGetId($sql_class);
-                                if($r_class < 1)
+                                $lang_code_name = $r_l[0]['lang_code'];
+                                $r_class0 = Db::query("select cid,pname from lkt_product_class where store_id = '$rr' and lang_code = '$lang_code_name' and notset = 1 limit 1");
+                                if(!empty($r_class0))
                                 {
-                                    $Log_content = __METHOD__ . '->' . __LINE__ . ' 添加商品默认分类失败';
-                                    $this->Log($Log_content);
-                                    Db::rollback();
-                                    $message = Lang('shop.21');
-                                    return output(109, $message);
+                                    $r_class = $r_class0[0]['cid'];
+                                    $categories = ',' . $r_class . ',';
+                                    if($r_class0[0]['pname'] != $c_name)
+                                    {
+                                        Db::name('product_class')->where(['cid'=>$r_class])->update(['pname'=>$c_name]);
+                                    }
                                 }
-                                $categories = ',' . $r_class . ',';
-
-                                //添加商品默认分类
-                                $sql_brand_class = array('store_id'=>$rr,'brand_name'=>$c_name,'brand_pic'=>'','remarks'=>'','brand_time'=>$time,'sort'=>0,'categories'=>$categories,'lang_code'=>$r_l[0]['lang_code'],'examine'=>1,'notset'=>1);
-                                $r_brand_class = Db::name('brand_class')->insert($sql_brand_class);
-                                if($r_brand_class < 1)
+                                else
                                 {
-                                    $Log_content = __METHOD__ . '->' . __LINE__ . ' 添加商品默认品牌失败';
-                                    $this->Log($Log_content);
-                                    Db::rollback();
-                                    $message = Lang('shop.21');
-                                    return output(109, $message);
+                                    $sql_class = array('store_id'=>$rr,'sid'=>0,'pname'=>$c_name,'level'=>0,'is_default'=>1,'lang_code'=>$lang_code_name,'examine'=>1,'notset'=>1);
+                                    $r_class = Db::name('product_class')->insertGetId($sql_class);
+                                    if($r_class < 1)
+                                    {
+                                        $Log_content = __METHOD__ . '->' . __LINE__ . ' 添加商品默认分类失败';
+                                        $this->Log($Log_content);
+                                        Db::rollback();
+                                        $message = Lang('shop.21');
+                                        return output(109, $message);
+                                    }
+                                    $categories = ',' . $r_class . ',';
+                                }
+
+                                $r_brand_class0 = Db::query("select brand_id,brand_name from lkt_brand_class where store_id = '$rr' and lang_code = '$lang_code_name' and notset = 1 limit 1");
+                                if(!empty($r_brand_class0))
+                                {
+                                    $brand_id = $r_brand_class0[0]['brand_id'];
+                                    if($r_brand_class0[0]['brand_name'] != $c_name)
+                                    {
+                                        Db::name('brand_class')->where(['brand_id'=>$brand_id])->update(['brand_name'=>$c_name,'categories'=>$categories]);
+                                    }
+                                }
+                                else
+                                {
+                                    $sql_brand_class = array('store_id'=>$rr,'brand_name'=>$c_name,'brand_pic'=>'','remarks'=>'','brand_time'=>$time,'sort'=>0,'categories'=>$categories,'lang_code'=>$lang_code_name,'examine'=>1,'notset'=>1);
+                                    $r_brand_class = Db::name('brand_class')->insert($sql_brand_class);
+                                    if($r_brand_class < 1)
+                                    {
+                                        $Log_content = __METHOD__ . '->' . __LINE__ . ' 添加商品默认品牌失败';
+                                        $this->Log($Log_content);
+                                        Db::rollback();
+                                        $message = Lang('shop.21');
+                                        return output(109, $message);
+                                    }
                                 }
                             }
                         }
@@ -806,12 +829,18 @@ class Shop extends BaseController
                                 $lang_code_name = $r_l[0]['lang_code'];
                                 $c_name = $Lang_code[$lang_code_name];
                                 $categories = "";
-                                $sql_class0 = "select cid from lkt_product_class where store_id = '$store_id' and pname = '$c_name' and lang_code = '$lang_code_name' ";
-                                $r_class0 = Db::query($sql_class0);
-                                if(empty($r_class0))
+                                $r_class0 = Db::query("select cid,pname from lkt_product_class where store_id = '$store_id' and lang_code = '$lang_code_name' and notset = 1 limit 1");
+                                if(!empty($r_class0))
                                 {
-
-                                    //添加商品默认分类
+                                    $r_class = $r_class0[0]['cid'];
+                                    $categories = ',' . $r_class . ',';
+                                    if($r_class0[0]['pname'] != $c_name)
+                                    {
+                                        Db::name('product_class')->where(['cid'=>$r_class])->update(['pname'=>$c_name]);
+                                    }
+                                }
+                                else
+                                {
                                     $sql_class = array('store_id'=>$store_id,'sid'=>0,'pname'=>$c_name,'level'=>0,'is_default'=>1,'lang_code'=>$lang_code_name,'examine'=>1,'notset'=>1);
                                     $r_class = Db::name('product_class')->insertGetId($sql_class);
                                     if($r_class < 1)
@@ -825,11 +854,17 @@ class Shop extends BaseController
                                     $categories = ',' . $r_class . ',';
                                 }
 
-                                $sql_brand_class0 = "select brand_id from lkt_brand_class where store_id = '$store_id' and brand_name = '$c_name' and lang_code = '$lang_code_name' ";
-                                $r_brand_class0 = Db::query($sql_brand_class0);
-                                if(empty($r_brand_class0))
+                                $r_brand_class0 = Db::query("select brand_id,brand_name from lkt_brand_class where store_id = '$store_id' and lang_code = '$lang_code_name' and notset = 1 limit 1");
+                                if(!empty($r_brand_class0))
                                 {
-                                    //添加商品默认分类
+                                    $brand_id = $r_brand_class0[0]['brand_id'];
+                                    if($r_brand_class0[0]['brand_name'] != $c_name)
+                                    {
+                                        Db::name('brand_class')->where(['brand_id'=>$brand_id])->update(['brand_name'=>$c_name,'categories'=>$categories]);
+                                    }
+                                }
+                                else
+                                {
                                     $sql_brand_class = array('store_id'=>$store_id,'brand_name'=>$c_name,'brand_pic'=>'','remarks'=>'','brand_time'=>$time,'sort'=>0,'categories'=>$categories,'lang_code'=>$lang_code_name,'examine'=>1,'notset'=>1);
                                     $r_brand_class = Db::name('brand_class')->insert($sql_brand_class);
                                     if($r_brand_class < 1)
@@ -1068,7 +1103,7 @@ class Shop extends BaseController
                 $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
                 $pos = array_search('unknown',$arr);
                 if(false !== $pos) unset($arr[$pos]);
-                $ip = trim($arr[0]);
+                $ip = safe_trim($arr[0]);
             }
             elseif (isset($_SERVER['HTTP_CLIENT_IP']))
             {

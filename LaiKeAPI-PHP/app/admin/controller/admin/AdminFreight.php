@@ -18,18 +18,18 @@ class AdminFreight extends BaseController
     // 运费列表
     public function AdminGetFreightInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $fid = addslashes(trim($this->request->param('fid'))); // 店铺ID
-        $mch_id = addslashes(trim($this->request->param('mchId'))); // 店铺ID
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $status = addslashes(trim($this->request->param('status'))); // 是否使用 1.使用 0.未使用
-        $type = addslashes(trim($this->request->param('type'))); // 类型 0:件 1:重量
-        $name = addslashes(trim($this->request->param('name'))); // 模板名称
-        $pageNo = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pageSize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $fid = addslashes(safe_trim($this->request->param('fid'))); // 店铺ID
+        $mch_id = addslashes(safe_trim($this->request->param('mchId'))); // 店铺ID
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $status = addslashes(safe_trim($this->request->param('status'))); // 是否使用 1.使用 0.未使用
+        $type = addslashes(safe_trim($this->request->param('type'))); // 类型 0:件 1:重量
+        $name = addslashes(safe_trim($this->request->param('name'))); // 模板名称
+        $pageNo = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pageSize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         if($fid != 0 && $fid != '')
         {
@@ -51,15 +51,15 @@ class AdminFreight extends BaseController
     // 添加/编辑运费
     public function addAdminFreight()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $fid = addslashes(trim($this->request->post('fid'))); // 运费ID
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 所属国家
-        $name = addslashes(trim($this->request->post('name'))); // 模板名称
-        $type = addslashes(trim($this->request->post('type'))); // 类型 0:件 1:重量
+        $fid = addslashes(safe_trim($this->request->post('fid'))); // 运费ID
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 所属国家
+        $name = addslashes(safe_trim($this->request->post('name'))); // 模板名称
+        $type = addslashes(safe_trim($this->request->post('type'))); // 类型 0:件 1:重量
         $default_freight = $this->request->post('defaultFreight'); // 默认运费
         $hidden_freight = $this->request->post('hiddenFreight'); // 指定运费
         $no_delivery = $this->request->post('noDelivery'); // 不配送地区
@@ -82,9 +82,9 @@ class AdminFreight extends BaseController
     // 获取城市信息
     public function cityInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
  
         $freight = new FreightPublicMethod();
         $freight_list = $freight->cityInfo();

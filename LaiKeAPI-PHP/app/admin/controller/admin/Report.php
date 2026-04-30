@@ -19,9 +19,9 @@ class Report extends BaseController
     //商城首页
     public function storeIndex()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         //状态查询
         $mon = date("Y-m");//当前月份
@@ -508,9 +508,9 @@ class Report extends BaseController
     //用户报表
     public function userIndex()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         //状态查询
         $mon = date("Y-m");//当前月份
         //得到系统的年月
@@ -835,9 +835,9 @@ class Report extends BaseController
     //订单报表
     public function orderIndex()
     {
-            $store_id = addslashes(trim($this->request->param('storeId')));
-            $store_type = addslashes(trim($this->request->param('storeType')));
-            $access_id = addslashes(trim($this->request->param('accessId')));
+            $store_id = addslashes(safe_trim($this->request->param('storeId')));
+            $store_type = addslashes(safe_trim($this->request->param('storeType')));
+            $access_id = addslashes(safe_trim($this->request->param('accessId')));
             //状态查询
             $mon = date("Y-m");//当前月份
             //得到系统的年月
@@ -1703,9 +1703,9 @@ class Report extends BaseController
     //商品报表
     public function goodsIndex()
     {
-            $store_id = addslashes(trim($this->request->param('storeId')));
-            $store_type = addslashes(trim($this->request->param('storeType')));
-            $access_id = addslashes(trim($this->request->param('accessId')));
+            $store_id = addslashes(safe_trim($this->request->param('storeId')));
+            $store_type = addslashes(safe_trim($this->request->param('storeType')));
+            $access_id = addslashes(safe_trim($this->request->param('accessId')));
             $mch_id = cache($access_id.'_'.$store_type);
             //状态查询
             $mon = date("Y-m");//当前月份
@@ -2302,14 +2302,14 @@ class Report extends BaseController
     //库存
     public function stockRecord()
     {
-            $store_id = addslashes(trim($this->request->param('storeId')));
-            $store_type = addslashes(trim($this->request->param('storeType')));
-            $access_id = addslashes(trim($this->request->param('accessId')));
+            $store_id = addslashes(safe_trim($this->request->param('storeId')));
+            $store_type = addslashes(safe_trim($this->request->param('storeType')));
+            $access_id = addslashes(safe_trim($this->request->param('accessId')));
             $mch_id = cache($access_id.'_'.$store_type);
 
-            $type = addslashes(trim($this->request->param('type')));//week 周 month 月 year 年
-            $page = addslashes(trim($this->request->param('pageNo')));
-            $pagesize = addslashes(trim($this->request->param('pageSize')));
+            $type = addslashes(safe_trim($this->request->param('type')));//week 周 month 月 year 年
+            $page = addslashes(safe_trim($this->request->param('pageNo')));
+            $pagesize = addslashes(safe_trim($this->request->param('pageSize')));
             if ($page)
             {
                 $page = $page;

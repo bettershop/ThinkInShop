@@ -35,19 +35,19 @@ class Register
     // 验证码登录
     public function login()
     {
-        $store_id = trim(Request::param('store_id'));
-        $language = trim(Request::post('language')); // 语言
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::post('access_id')); // 授权ID
-        $clientid = trim(Request::post('clientid')); // 推送客户ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $language = safe_trim(Request::post('language')); // 语言
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::post('access_id')); // 授权ID
+        $clientid = safe_trim(Request::post('clientid')); // 推送客户ID
 
         $type = Request::param('type'); // 类型 1.手机号 2.邮箱
         $cpc = Request::param('cpc'); // 区号
         $country_num = Request::param('country_num'); // 国家代码
         $tel = Request::post('phone'); // 手机号码
-        $keyCode = trim(Request::post('keyCode')); // 验证码
+        $keyCode = safe_trim(Request::post('keyCode')); // 验证码
 
-        $pid = trim(Request::post('pid')); // 推荐人id
+        $pid = safe_trim(Request::post('pid')); // 推荐人id
 
         if($type == 1)
         {

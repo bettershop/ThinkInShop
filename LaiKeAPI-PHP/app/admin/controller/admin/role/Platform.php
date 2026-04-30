@@ -28,9 +28,9 @@ class Platform extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $lang_code = trim($this->request->param('lang_code'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $lang_code = safe_trim($this->request->param('lang_code'));
 
         $id = $this->request->param('id');
         if($id)

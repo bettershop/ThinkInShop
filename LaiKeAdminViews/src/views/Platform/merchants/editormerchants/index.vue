@@ -404,49 +404,13 @@ export default {
     };
   },
 
-  created() {
-    this.getShopInfos();
+  async created() {
+    await this.getShopInfos();
     this.getRoleListInfos();
     this.getUserRoleInfos();
 
-    this.getAllCurrencys().then(() => {
-      this.ruleForm.store_currencys = this.currencys.filter(item => {
-        let curs = this.$route.params.store_currencys.split(",");
-        // includes 区分数据类型 数字和字符串 比较返回 false ..
-        if(curs.includes(item.id+"")) {
-          return item.id
-        }
-      }).map(item => {
-        return item.id
-      })
-      this.ruleForm.default_currency = this.$route.params.default_currency;
-      this.default_currency = this.ruleForm.default_currency;
-      this.store_currencys  = this.ruleForm.store_currencys;
-      console.log(this.ruleForm.store_currencys)
-    });
-
-    this.getAllLanguages().then(() => {
-      this.ruleForm.store_langs = this.languages.filter(item => {
-        let langs = this.$route.params.store_langs.split(",");
-        // includes 区分数据类型 数字和字符串 比较返回 false ..
-        if(langs.includes(item.id+"")) {
-          return item.id
-        }
-      }).map(item => {
-        return item.id
-      })
-
-      const langCode = this.$route.params.default_lang_code;
-      const langItem = this.languages.find(item => item.lang_code === langCode);
-      this.ruleForm.default_lang = langItem ? langItem.id : null;
-
-      this.default_lang = this.ruleForm.default_lang;
-      console.log(langCode)
-      console.log(this.ruleForm.default_lang)
-      // this.ruleForm.default_lang = this.$route.params.default_lang_code;
-      this.store_langs  = this.ruleForm.store_langs;
-      console.log(this.ruleForm.store_langs)
-    })
+    await Promise.all([this.getAllCurrencys(), this.getAllLanguages()]);
+    this.applyStoreLangAndCurrency();
     // this.ruleForm.storeName = this.$route.params.name
     // this.ruleForm.storeNo = this.$route.params.customer_number
     // this.ruleForm.company = this.$route.params.company
@@ -489,12 +453,46 @@ export default {
   },
 
   methods: {
+    parseIdList(value) {
+      const str = (value ?? '').toString().trim();
+      if (!str) return [];
+      return str
+        .split(',')
+        .map((v) => v.trim())
+        .filter((v) => v !== '')
+        .map((v) => {
+          const n = Number(v);
+          return Number.isFinite(n) ? n : v;
+        });
+    },
+    applyStoreLangAndCurrency() {
+      const storeLangsRaw = this.ruleForm.store_langs_raw ?? this.$route.params.store_langs;
+      const storeCurrencysRaw = this.ruleForm.store_currencys_raw ?? this.$route.params.store_currencys;
+      const storeLangIds = this.parseIdList(storeLangsRaw);
+      const storeCurrencyIds = this.parseIdList(storeCurrencysRaw);
+
+      this.ruleForm.store_langs = storeLangIds;
+      this.ruleForm.store_currencys = storeCurrencyIds;
+      this.store_langs = storeLangIds;
+      this.store_currencys = storeCurrencyIds;
+
+      const langCode = this.ruleForm.default_lang_code ?? this.$route.params.default_lang_code;
+      const langItem = this.languages.find((item) => item.lang_code === langCode);
+      this.ruleForm.default_lang = langItem ? langItem.id : null;
+      this.default_lang = this.ruleForm.default_lang;
+
+      const defaultCurrencyId =
+        this.ruleForm.default_currency_id ??
+        (this.$route.params.default_currency ? Number(this.$route.params.default_currency) : null);
+      this.ruleForm.default_currency = defaultCurrencyId;
+      this.default_currency = defaultCurrencyId;
+    },
     getLangName(id) {
-      const item = this.languages.find(i => i.id === id);
+      const item = this.languages.find(i => String(i.id) === String(id));
       return item ? item.lang_name : id;
     },
     getCurrencyName(id) {
-      const item = this.currencys.find(i => i.id === id);
+      const item = this.currencys.find(i => String(i.id) === String(id));
       return item ? item.currency_name : id;
     },
     // 异步查询建议列表的方法
@@ -543,7 +541,7 @@ export default {
         pageNo: 1,
         pageSize: 300
       })
-      this.currencys = res.data.data.list
+      this.currencys = (res && res.data && res.data.data && res.data.data.list) ? res.data.data.list : []
     },
 
     async getAllLanguages(){
@@ -552,7 +550,7 @@ export default {
         pageNo: 1,
         pageSize: 300
       })
-      this.languages = res.data.data.list
+      this.languages = (res && res.data && res.data.data && res.data.data.list) ? res.data.data.list : []
     },
     // 获取商城列表
     async getShopInfos() {
@@ -582,6 +580,11 @@ export default {
       this.ruleForm.adminDefaultPortrait= info.portrait,
       this.ruleForm.adminPwd = info.adminPwd || '· · · · · ·';
       this.cpc = info.cpc;
+      this.ruleForm.store_langs_raw = info.store_langs;
+      this.ruleForm.store_currencys_raw = info.store_currencys;
+      this.ruleForm.default_lang_code = info.default_lang_code;
+      this.ruleForm.default_currency_id =
+        (info.storeDefaultCurrencyInfo && info.storeDefaultCurrencyInfo.id) ? info.storeDefaultCurrencyInfo.id : null;
     },
 
     // 获取角色列表

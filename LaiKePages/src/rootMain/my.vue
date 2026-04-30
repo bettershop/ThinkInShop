@@ -88,21 +88,9 @@
 					<!-- 已登录 用户名称/会员小钻石图标 -->
 					<view class="card_username">
 						{{user.user_name}}
-						<img v-if="grade&&plugin.member==1" style="width: 32rpx;height: 32rpx;margin-left: 20rpx;"
-							:src="grade ? viplogo : ''" alt="" />
+						
 					</view>
-					<!-- 已登录 会员信息显示 -->
-					<template>
-						<!-- 未开通会员 显示 立即解锁会员图片 -->
-						<view v-if="grade == 0 &&plugin.member==1" style="display: flex;">
-							<image @click="vipClick" :src="lang_text=='en'?wktvip_en:wktvip"
-								style="width: 242rpx;height: 64rpx;margin-top: 10rpx;"></image>
-						</view>
-						<!-- 已开通会员 显示 会员到期时间 -->
-						<view v-else-if="grade == 1&&plugin.member==1">
-							<view class="viptitle">{{gradeEndTime && gradeEndTime.substring(0,10)}}{{language.my.dq}}</view>
-						</view>
-					</template>
+					
 				</view>
 			</template>
 			<!-- 小程序端，我的消息 -->
@@ -128,8 +116,8 @@
                     <text>{{language.my.couponNum}}</text>
                 </view>
             </template>
-            </template>
-			
+			 
+
             <template v-if="plugin.wallet == 1">
                 <view @tap="_navigateTo1('/pagesB/myWallet/myWallet')"
                     v-if="!pageConfig || iconConfig.checkList.includes('ye')">
@@ -153,8 +141,7 @@
 		</view>
  
 		<view class="relativell" v-if="!Object.keys(diyObj || {}).length">
-			<image class="relative-imgll" @click="vipClick()" v-if="plugin.member==1"
-				:src="lang_text=='en'?gerenzhongx_en:gerenzhongx"></image>
+			
 			<view class="relative-box">
 				<view class="relative-box-box" v-if="plugin.mch == 1 " @tap="_navigateTo1('/pagesA/myStore/myStore')">
 					<view class="relative-box-title">
@@ -192,7 +179,95 @@
 			</view>
 		</view>
 
-                            
+		<view class="content" >
+            <!-- 订单模块 --> 
+			<view class="order"  v-if='!Object.keys(orderCondfig ||{}).length || orderCondfig.isShow'>
+				<view class="order_top">
+					{{orderCondfig.orderTitle || language.my.myOrder}}
+					<view @tap="_order('')">
+						{{language.my.seeOrder}}
+						<image :src="jiantou"></image>
+					</view>
+				</view>
+                
+                <!-- diy 场景 订单模块 -->
+				<view class="order_bottom">
+					<view @tap="_order(1)">
+						<view>
+							<image :src="grdfk" mode="widthFix"></image>
+							<view class="order_bottom_icon_s">
+								<view v-if="access_id1&&orderNum.dfk_num>0" class="order_bottom_icon">
+									{{orderNum.dfk_num}}
+								</view>
+							</view>
+						</view>
+						<text>{{language.my.dfk_order}}</text>
+					</view>
+					<view @tap="_order(2)">
+						<view>
+							<image :src="grdfh" mode="widthFix"></image>
+							<view class="order_bottom_icon_s">
+								<view v-if="access_id1&&orderNum.dfh_num>0" class="order_bottom_icon">
+									{{orderNum.dfh_num}}
+								</view>
+							</view>
+						</view>
+						<text>{{language.my.dfh_order}}</text>
+					</view>
+					<view @tap="_order(3)">
+						<view>
+							<image :src="grdsh" mode="widthFix"></image>
+							<view class="order_bottom_icon_s">
+								<view v-if="access_id1&&orderNum.dsh_num>0" class="order_bottom_icon">
+									{{orderNum.dsh_num}}
+								</view>
+							</view>
+						</view>
+						<text>{{language.my.dsh_order}}</text>
+					</view>
+					<view @tap="_order(4)">
+						<view>
+							<image :src="my_dpj" mode="widthFix"></image>
+							<view class="order_bottom_icon_s">
+								<view v-if="access_id1&&orderNum.dpj_num>0" class="order_bottom_icon">
+									{{orderNum.dpj_num}}
+								</view>
+							</view>
+						</view>
+						<text>{{language.my.dpj_order}}</text>
+					</view>
+					<view @tap="_navigateTo1('/pagesC/afterSale/afterSale')">
+						<view>
+							<image :src="tksh" mode="widthFix"></image>
+							<view class="order_bottom_icon_s">
+								<view v-if="access_id1&&orderNum.th_num>0" class="order_bottom_icon">{{orderNum.th_num}}
+								</view>
+							</view>
+						</view>
+						<text>{{language.my.th_order}}</text>
+					</view>
+				</view>
+				 
+			</view>
+            
+            <!-- 系统默认功能中心逻辑 -->
+            <template  >
+                <template v-if=" (functionConfig.option== 1) || (!Object.keys(functionConfig).length &&  gn_num>5)" >
+                    <view class="listBox" >
+                        <view class="listBox-title" style="font-size: 32rpx; margin-left:24rpx;margin-top: 24rpx;">
+                            {{ functionConfig.titleName || language.my.gnzx}}
+                        </view> 
+                        <view class="Functioncenter" 
+                            :class="{'Functioncenter-button':class_pro.length == 0}"
+                            > 
+							
+                            <!-- 我的秒杀 -->
+							
+                            <!-- 我的竞拍 -->
+							
+                            <!-- 我的兑换 -->
+							 
+
                             <!-- 发票管理 -->
                             <view class="Functioncenter-box" @tap="_navigateTo('/pagesB/invoice/invoiceManagement')">
                                 <view class="Functioncenter-img">
@@ -202,41 +277,18 @@
                             </view> 
                             
                             <!-- 分销中心 -->
-                            <template v-if="user.isDistribution">
-                                <!-- <template v-if="true"> -->
-                                <view class="Functioncenter-box" v-if="plugin.distribution  == 1"
-                                    @tap="_navigateTo('/pagesA/distribution/distribution_center')">
-                                    <view class="Functioncenter-img">
-                                        <image :src="fenxiao" class="Functioncenter-img-img"></image>
-                                    </view>
-                                    <view class="Functioncenter-title">{{language.my.my_distribution}}</view>
-                                </view>
-                            </template>
-                            </template> 
-                            
+							 
+
                             <!-- 我的预售 -->
-                                @tap="_navigateTo('/pagesC/preSale/order/myOrder')">
-                                <view class="Functioncenter-img">
-                                    <image :src="yusho" class="Functioncenter-img-img"></image>
-                                </view>
-                                <view class="Functioncenter-title">{{language.my.wdys}}</view>
-                            </view> 
+							 
                             <!-- 直播Start -->
-                            <!-- #ifdef H5 -->
-                                    <view class="Functioncenter-title">{{language.my.my_zbzx}}</view>
-                                </view>
-                                    <view class="Functioncenter-title">{{language.my.my_zbdd}}</view>
-                                </view>
-                                    <view class="Functioncenter-title">{{language.my.my_zzdzb}}</view>
-                                </view> 
-                            <!-- #endif -->
-                            <!-- 直播END -->
-                            
-                                <view class="Functioncenter-title">{{language.my.zc}}</view>
-                            </view>
-                            <!-- 限时折扣 flashsale-->
-                                <view class="Functioncenter-title">{{ language.discount.discount_list.xszk }}</view>
-                            </view>
+							 
+							
+							<!-- 我的帖子 -->
+								
+							
+							 
+							
                             <!-- 我的客服 -->
                             <view class="Functioncenter-box" style="position: relative;"
                                 @tap="_navigateTo1('/pagesB/message/buyers_service/Regular_customer?mch_id=' + mch_id)">
@@ -280,26 +332,15 @@
                     </view>
                 </template>
                
+                <template v-else> 
+                    <view class="new_function">
+						 
+                        <!-- 秒杀 -->
+						 
                         <!-- 竞拍 -->
-                            @tap="_navigateTo('/pagesA/myStore/MyBidding/MyBidding')">
-                            <view>
-                                <image :src="grwdjp"></image>
-                                <span>{{language.my.my_bidding}}</span>
-                            </view>
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
+						 
                         <!-- 兑换 -->
-                            @tap="_navigateTo('/pagesB/integral/exchange')">
-                            <view>
-                                <image :src="grwddh"></image>
-                                <span>{{language.my.my_exchange}}</span>
-                            </view>
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
+						 
                         <!-- 发票管理 -->
                         <view class="new_function_box" @tap="_navigateTo('/pagesB/invoice/invoiceManagement')">
                             <view>
@@ -311,69 +352,16 @@
                             </view>
                         </view>
                         <!-- 分销中心 -->
-                            <template v-else>
-                                <view class="new_function_box" style="position: relative"
-                                    @tap="_navigateTo('/pagesB/order/myOrder?status=0&type=FX')">
-                                    <view>
-                                        <image :src="fenxiao"></image>
-                                        <span>{{language.my.my_distribution}}</span>
-                                        <view class="order_bottom_icon_s" style="right: 80rpx;top: auto;">
-                                            <view v-if="fxNum && fxNum>0" class="order_bottom_icon">{{fxNum}}</view>
-                                        </view>
-                                    </view>
-                                    <view>
-                                        <image :src="jiantou"></image>
-                                    </view>
-                                </view>
-                            </template>
-                        </view>
+						 
                         <!-- 我的预售 -->
-                            @tap="_navigateTo('/pagesC/preSale/order/myOrder')">
-                            <view>
-                                <image :src="yusho"></image>
-                                <span>{{language.my.wdys}}</span>
-                            </view>
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
-                        <!-- #ifdef H5 -->
-                            @tap="_navigateTo('/pagesD/liveStreaming/anchorCenter')">
-                            <view>
-                                <image :src="zbzx_icon"></image>
-                                <span>{{language.my.my_zbzx}}</span>
-                            </view>
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
-                        <!-- 直播订单 -->
-                            @tap="_navigateTo('/pagesD/liveStreaming/liveStreamingOrder')">
-                            <view>
-                                <image :src="zbdd_icon"></image>
-                                <span>{{language.my.my_zbdd}}</span>
-                            </view>
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
-                        <!-- 赞过的直播 -->
-                            @tap="_navigateTo('/pagesD/liveStreaming/likeTheLiveBroadcast')">
-                            <view>
-                                <image :src="zgdzb_icon"></image>
-                                <span>{{language.my.my_zzdzb}}</span>
-                            </view>
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
-                        <!-- #endif -->
-                        <!-- 限时折扣 -->
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
-                        
+
+						 
+						 
+						 
+
+						 
+						 
+						  
                         <template v-if="Object.keys(functionConfig || {}).length">
                             <!-- 银行卡 -->
                              <view class="new_function_box" @tap="_navigateTo1('/pagesB/myWallet/bankCard')" >
@@ -408,11 +396,9 @@
                                 <image :src="jiantou"></image>
                             </view>
                         </view>
-                        <!-- 种草 -->
-                            <view>
-                                <image :src="jiantou"></image>
-                            </view>
-                        </view>
+						 
+						 
+						  
                         <!-- #ifdef MP -->
                         <!-- 我的设置 -->
                         <view class="new_function_box" @tap="_navigateTo1('/pagesB/setUp/setUp')">
@@ -444,6 +430,7 @@
 
 		</view>
 
+		 
 
 		<!-- 设置密码弹窗 -->
 		<showToast :is_showToast="is_showToast" :is_showToast_obj="is_showToast_obj" :isOneBtn="false"

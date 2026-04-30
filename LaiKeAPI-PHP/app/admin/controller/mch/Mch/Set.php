@@ -32,9 +32,9 @@ class Set extends BaseController
     // 店铺信息
     public function Index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $res = cache($access_id);
         $user_id = $res['user_id'];
@@ -98,9 +98,9 @@ class Set extends BaseController
     // 获取店铺分类
     public function MchClassList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $res = cache($access_id);
         $user_id = $res['user_id'];
@@ -134,9 +134,9 @@ class Set extends BaseController
     // 编辑店铺信息
     public function Edit()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 店铺ID
         $logo = addslashes($this->request->param('logo')); // 店铺Logo
@@ -268,12 +268,12 @@ class Set extends BaseController
     // 修改密码
     public function SetPassword()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$j_password = addslashes(trim($this->request->param('pwdOld'))); // 旧密码
-    	$x_password = addslashes(trim($this->request->param('pwd'))); // 新密码
+    	$j_password = addslashes(safe_trim($this->request->param('pwdOld'))); // 旧密码
+    	$x_password = addslashes(safe_trim($this->request->param('pwd'))); // 新密码
 
         $Jurisdiction = new Jurisdiction();
         $res = cache($access_id);
@@ -346,9 +346,9 @@ class Set extends BaseController
     // 店铺轮播图
     public function BannerList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $type = addslashes($this->request->param('type')); // 类型 1:移动端 4.PC商城
     	$page = addslashes($this->request->param('pageNo')); // 页码
@@ -406,9 +406,9 @@ class Set extends BaseController
     // 获取轮播图数据
     public function BannerPathList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $open_type = addslashes($this->request->param('type')); // 跳转类型 1.分类 2.商品 3.店铺
 
@@ -502,9 +502,9 @@ class Set extends BaseController
     // 添加/编辑店铺轮播图
     public function AddBannerInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 轮播图ID
         $type = addslashes($this->request->param('type')); // 跳转类型 1.分类 2.商品 3.店铺
@@ -593,9 +593,9 @@ class Set extends BaseController
     // 店铺轮播图排序
     public function SetBannerSort()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 轮播图ID
         $sort = addslashes($this->request->param('sort')); // 排序
@@ -644,9 +644,9 @@ class Set extends BaseController
     // 删除店铺轮播图
     public function DelBannerById()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 轮播图ID
 
@@ -692,11 +692,11 @@ class Set extends BaseController
     // 注销店铺
     public function DelMchInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-    	$id = addslashes(trim($this->request->param('id'))); // 店铺ID
+    	$id = addslashes(safe_trim($this->request->param('id'))); // 店铺ID
 
         $res = cache($access_id);
         $user_id = $res['user_id'];
@@ -711,9 +711,9 @@ class Set extends BaseController
     // 打印配置页面
     public function GetMchPrintSetup()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $mch_id = $this->user_list['id'];
         
@@ -733,19 +733,19 @@ class Set extends BaseController
     // 打印配置
     public function SetMchPrintSetup()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        // $mch_id = addslashes(trim($this->request->param('mchId')));
-        $id = addslashes(trim($this->request->param('id')));
-        $print_name = addslashes(trim($this->request->param('printName'))); // 打印名称
-        $print_url = addslashes(trim($this->request->param('printUrl'))); // 打印网址
-        $sheng = addslashes(trim($this->request->param('sheng'))); // 省
-        $shi = addslashes(trim($this->request->param('shi'))); // 市
-        $xian = addslashes(trim($this->request->param('xian'))); // 县
-        $address = addslashes(trim($this->request->param('address'))); // 地址
-        $phone = addslashes(trim($this->request->param('phone'))); // 联系电话
+        // $mch_id = addslashes(safe_trim($this->request->param('mchId')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $print_name = addslashes(safe_trim($this->request->param('printName'))); // 打印名称
+        $print_url = addslashes(safe_trim($this->request->param('printUrl'))); // 打印网址
+        $sheng = addslashes(safe_trim($this->request->param('sheng'))); // 省
+        $shi = addslashes(safe_trim($this->request->param('shi'))); // 市
+        $xian = addslashes(safe_trim($this->request->param('xian'))); // 县
+        $address = addslashes(safe_trim($this->request->param('address'))); // 地址
+        $phone = addslashes(safe_trim($this->request->param('phone'))); // 联系电话
 
         $Jurisdiction = new Jurisdiction();
         $res = cache($access_id);
@@ -832,9 +832,9 @@ class Set extends BaseController
     // 获取商城币种
     public function getCurrencys()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $storeCurrency = Tools::get_store_currency(array('store_id'=>$store_id,'type'=>0,'id'=>0));
 

@@ -267,8 +267,8 @@ class Laikeplugin extends BaseController
     {
         $admin_name = $this->user_list['name']; // 管理员账号
 
-        $plugin_name = addslashes(trim($this->request->post('plugin_name'))); //插件
-        $status = addslashes(trim($this->request->post('status'))); //
+        $plugin_name = addslashes(safe_trim($this->request->post('plugin_name'))); //插件
+        $status = addslashes(safe_trim($this->request->post('status'))); //
 
         $pagesize = $this->request->post('pageSize');
         $pagesize = $pagesize ? $pagesize : '10';

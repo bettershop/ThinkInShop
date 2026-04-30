@@ -12,9 +12,9 @@ class Url
     // 请求地址获取接口
     public function geturl()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
         $get = addslashes(trim($_POST['get'])); // 纬度
         // $mch_id = addslashes(trim($_POST['mch_id'])); // 店铺ID

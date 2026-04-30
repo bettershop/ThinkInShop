@@ -3,6 +3,7 @@ namespace app\admin\controller\admin\saas;
 
 use think\facade\Db;
 use think\facade\Request;
+use think\facade\Cache; // 👈 关键引入
 use app\common\Tools;
 use app\common\PC_Tools;
 use app\common\Jurisdiction;
@@ -41,8 +42,8 @@ class User
             $imgCode = addslashes(Request::param('imgCode'));
 
             // 获取验证码
-            $cacheCode = cache($imgCodeToken);
-            $cacheImg = cache($imgCodeToken.'img');
+            $cacheCode = Cache::get($imgCodeToken);
+            $cacheImg = Cache::get($imgCodeToken.'img');
             if (file_exists($cacheImg))
             {
                 unlink($cacheImg);
@@ -78,7 +79,7 @@ class User
                 if ($result == false)
                 {
                     $message = Lang('supplier.34');
-                    return output(400,$message,null);
+                    return output(400,$message . 1,null);
                 }
                 $shop_id = $result[0]['shop_id']; //店主id
                 $defaultStoreId = $store_id1;
@@ -88,7 +89,6 @@ class User
         {
             // 客户编号为空,系统管理员
             // 根据管理员账号，查询管理员信息
-
             $result = AdminModel::where(['name'=> $name,'recycle'=>0,'store_id'=>0])
                 ->field('id,name,password,admin_type,permission,type,status,store_id,login_num,shop_id,token,role')
                 ->select()
@@ -107,6 +107,7 @@ class User
                 $defaultStoreId = $res_m[0]['id']; //默认商城id
             }
         }
+
         $haveStoreMchId = $shop_id != 0;
         $role_id = $result[0]['role'];//用户权限ID
         $admin_id = $result[0]['id']; // 管理员id
@@ -155,6 +156,7 @@ class User
                 }
             }
         }
+
         if ($login_password == $password)
         {
             if ($login_num >= 3)
@@ -192,6 +194,7 @@ class User
                     return output(400,$message,null);
                 }
             }
+
             // 没有查询到匹配值就在lkt_record表里添加一组数据
             $RecordModel           = new RecordModel;
             $RecordModel->store_id     = $defaultStoreId;
@@ -262,13 +265,14 @@ class User
                 }
             }
         }
-        cache($access_token.'serverURL', $serverURL);
+
+        Cache::set($access_token.'serverURL', $serverURL);
         // 用户信息存入redis
 
-        cache($old_token, NULL);//清理原token数据
-        cache($access_token, $res_a[0], 60*60*24);//添加新token数据
-        cache($old_token.'_8', NULL);
-        cache($access_token.'_8',$shop_id,60*60*24);
+        Cache::set($old_token, NULL);//清理原token数据
+        Cache::set($access_token, $res_a[0], 60*60*24);//添加新token数据
+        Cache::set($old_token.'_8', NULL);
+        Cache::set($access_token.'_8',$shop_id,60*60*24);
 
         //获取商城权限id写入session
         if($admin_type1 == 0)
@@ -292,14 +296,14 @@ class User
 
         $login_time = time();
         $store_type1 = '';
-        cache($access_token.'login_time', $login_time);// 登录时间
-        cache($access_token.'store_id', $defaultStoreId);// 商城ID
-        cache($access_token.'store_type', $store_type1);
-        cache($access_token.'mch_id', $shop_id);// 登录管理员店铺ID
-        cache($access_token.'admin_permission', $admin_permission);// 登录管理员权限
-        cache($access_token.'admin_id', $admin_id);
-        cache($access_token.'admin_name', $admin_name);
-        cache($access_token.'role', $role_id);
+        Cache::set($access_token.'login_time', $login_time);// 登录时间
+        Cache::set($access_token.'store_id', $defaultStoreId);// 商城ID
+        Cache::set($access_token.'store_type', $store_type1);
+        Cache::set($access_token.'mch_id', $shop_id);// 登录管理员店铺ID
+        Cache::set($access_token.'admin_permission', $admin_permission);// 登录管理员权限
+        Cache::set($access_token.'admin_id', $admin_id);
+        Cache::set($access_token.'admin_name', $admin_name);
+        Cache::set($access_token.'role', $role_id);
 
         $array = array('store_id'=>$defaultStoreId,'store_type'=>8,'read_id'=>$admin_id,'admin_type'=>$admin_type1);
         $r_system = PC_Tools::GetAnnouncement($array);
@@ -384,9 +388,9 @@ class User
     public function logout()
     {
         $token = Request::param('accessId')?Request::param('accessId'):Request::post('accessId');
-        $store_id = cache($token.'store_id');//商城ID
-        $admin_id = cache($token.'admin_id');
-        $admin_name = cache($token.'admin_name');
+        $store_id = Cache::get($token.'store_id');//商城ID
+        $admin_id = Cache::get($token.'admin_id');
+        $admin_name = Cache::get($token.'admin_name');
 
         //管理员记录
         $RecordModel           = new RecordModel;
@@ -399,7 +403,7 @@ class User
         $Jurisdiction = new Jurisdiction();
         $Jurisdiction->admin_record($store_id, $admin_name, ' 安全退出成功',0,1,0,$admin_id);
 
-        cache($token,null);//清理原token数据
+        Cache::set($token,null);//清理原token数据
         return output(200,'登出成功');
     }
 
@@ -414,8 +418,8 @@ class User
         if($r0)
         {
             $shop_id = $r0[0]['shop_id'];
-            cache($access_id.'role',null);
-            cache($access_id.'role',$r0[0]['role']);
+            Cache::set($access_id.'role',null);
+            Cache::set($access_id.'role',$r0[0]['role']);
         }
 
         $data = array('mchId'=>$shop_id);
@@ -543,7 +547,7 @@ class User
         $access_id = trim(Request::param('accessId')); // 授权id
         $language = trim(Request::param('language')); // 授权id
         $tell_id = trim(Request::param('tell_id')); // 公告ID
-        $admin_id = cache($access_id.'admin_id');
+        $admin_id = Cache::get($access_id.'admin_id');
 
         $array = array('store_id'=>$store_id,'store_type'=>$store_type,'read_id'=>$admin_id,'tell_id'=>$tell_id);
         PC_Tools::markToRead($array);
@@ -560,9 +564,9 @@ class User
         $access_id = trim(Request::param('accessId')); // 授权id
         $language = trim(Request::param('language')); // 授权id
 
-        $res = cache($access_id);
+        $res = Cache::get($access_id);
         $admin_type1 = $res['type'];
-        $read_id = cache($access_id.'admin_id');
+        $read_id = Cache::get($access_id.'admin_id');
         $array = array('store_id'=>$store_id,'store_type'=>8,'read_id'=>$read_id,'admin_type'=>$admin_type1);
         $data = PC_Tools::GetAnnouncement($array);
         // $data = PC_Tools::Obtain_maintenance_announcements($store_type);

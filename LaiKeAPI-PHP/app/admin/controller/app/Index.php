@@ -99,10 +99,10 @@ class Index
     // 获取前端基础信息配置
     public function GetBasicConfiguration()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
         if($store_id == '')
         {
-            $store_id = addslashes(trim(Request::param('storeId')));
+            $store_id = addslashes(safe_trim(Request::param('storeId')));
         }
 
         if($store_id == '')
@@ -120,10 +120,15 @@ class Index
         }
 
         $list = array();
-        $r = ConfigModel::where('store_id',$store_id)->field('H5_domain as h5_domain,message_day as messageSaveDay,exp_time as appLoginValid,watermark_name,watermark_url,logon_logo,copyright_information,record_information,link_to_landing_page,admin_default_portrait,store_name,app_logo,html_icon')->find();
+        $r = ConfigModel::where('store_id',$store_id)->field('H5_domain as h5_domain,message_day as messageSaveDay,exp_time as appLoginValid,watermark_name,watermark_url,logo as logon_logo,copyright_information,record_information,link_to_landing_page,company as store_name,app_logo,logo1 as html_icon')->find();
         if($r)
         {
             $list = $r->toArray();
+        }
+
+        $rsc = Db::name('system_configuration')->field('admin_default_portrait')->where('store_id', 0)->find();
+        if ($rsc) {
+            $list['admin_default_portrait'] = $rsc['admin_default_portrait'];
         }
 
         $store_logo = Db::name('customer')->where('id',$store_id)->value('merchant_logo');
@@ -1049,12 +1054,17 @@ class Index
     // 分销
     public function distribution_list()
     {
-        $store_id = addslashes(Request::param('store_id')); // 商城ID
-        $store_type = addslashes(Request::param('store_type')); // 来源
-        $access_id = addslashes(Request::param('access_id')); // 授权ID
-        $language = addslashes(Request::param('language')); // 语言
-        $limit_num = addslashes(Request::param('limit_num')); // 语言
-        $country_num = addslashes(Request::param('country_num')); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城ID
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权ID
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
+        $limit_num = (int)safe_trim(Request::param('limit_num'));
+        $country_num = addslashes(safe_trim(Request::param('country_num'))); // 语言
+
+        if ($limit_num <= 0)
+        {
+            $limit_num = 10;
+        }
 
         $user_id = '';
         if (!empty($access_id))
@@ -1078,16 +1088,20 @@ class Index
         $res_dc = DistributionConfigModel::where(['store_id'=>$store_id,'advertising'=>1])->field('ad_image')->select()->toArray();
         if($res_dc)
         {
-            $distribution_list['ad_image'] = $res_dc[0]['ad_image'];
+            $distribution_list['ad_image'] = (string)($res_dc[0]['ad_image'] ?? '');
         }
 
 
         $array_get_distribution_level = array('store_id'=>$store_id,'user_id'=>$user_id);
         $get_distribution_level_list = Distribution::get_distribution_level($array_get_distribution_level);
-        $level = $get_distribution_level_list['level']; // 分销等级
-        $discount = $get_distribution_level_list['discount']; // 折扣
-        $direct_m_type = $get_distribution_level_list['direct_m_type']; // 直推分销比例发放模式 0.百分比 1.固定金额
-        $direct_m = $get_distribution_level_list['direct_m']; // 直推分销奖
+        if (!is_array($get_distribution_level_list))
+        {
+            $get_distribution_level_list = array();
+        }
+        $level = (int)($get_distribution_level_list['level'] ?? 0); // 分销等级
+        $discount = (float)($get_distribution_level_list['discount'] ?? 100); // 折扣
+        $direct_m_type = (int)($get_distribution_level_list['direct_m_type'] ?? 1); // 直推分销比例发放模式 0.百分比 1.固定金额
+        $direct_m = (float)($get_distribution_level_list['direct_m'] ?? 0); // 直推分销奖
 
         $sql_dis = "select tt.* from (select a.*,b.product_title,b.imgurl,c.price,c.costprice,c.min_inventory,c.attribute,c.num,row_number () over (PARTITION BY a.p_id) AS top from lkt_distribution_goods as a left join lkt_product_list as b on a.p_id = b.id left join lkt_configure as c on a.s_id = c.id where a.store_id = '$store_id' and b.commodity_type in (0,1) and b.status = 2 and c.recycle = 0 and a.uplevel = 0 and a.recycle = 0 and b.mch_id != 0 order by a.add_time desc) as tt where tt.top<2 limit $limit_num";
         $res_dis = Db::query($sql_dis);
@@ -1095,19 +1109,28 @@ class Index
         {
             foreach ($res_dis as $k => $v)
             {
-                $res_dis[$k]['imgurl'] = ServerPath::getimgpath($v['imgurl'],$store_id); // 商品图
-                $price = $v['price'];
+                if (!is_array($v))
+                {
+                    continue;
+                }
+
+                $res_dis[$k]['imgurl'] = ServerPath::getimgpath((string)($v['imgurl'] ?? ''), $store_id); // 商品图
+                $price = (float)($v['price'] ?? 0);
 
                 $array_get_distribution = array('store_id'=>$store_id,'user_id'=>$user_id,'price'=>$price,'distribution_rule'=>$v['distribution_rule'],'rules_set'=>$v['rules_set'],'level'=>$level,'discount'=>$discount,'direct_m_type'=>$direct_m_type,'direct_m'=>$direct_m);
                 $get_distribution_list = Distribution::get_distribution($array_get_distribution);
-                $fx_price = $get_distribution_list['fx_price']; // 分享赚
-                $discount = $get_distribution_list['discount']; // 折扣
+                if (!is_array($get_distribution_list))
+                {
+                    $get_distribution_list = array();
+                }
+                $fx_price = (float)($get_distribution_list['fx_price'] ?? 0); // 分享赚
+                $discount = (float)($get_distribution_list['discount'] ?? $discount); // 折扣
 
                 $res_dis[$k]['fx_price'] = $fx_price;
-                $res_dis[$k]['goodsPrice'] = (float)$v['price'];
-                $res_dis[$k]['price'] = round($v['price'] * $discount * 0.01,2);
-                $res_dis[$k]['costprice'] = (float)$v['costprice'];
-                $res_dis[$k]['pv'] = (float)$v['pv'];
+                $res_dis[$k]['goodsPrice'] = $price;
+                $res_dis[$k]['price'] = round($price * $discount * 0.01, 2);
+                $res_dis[$k]['costprice'] = (float)($v['costprice'] ?? 0);
+                $res_dis[$k]['pv'] = (float)($v['pv'] ?? 0);
             }
             $distribution_list['list'] = $res_dis;
         }
@@ -1165,22 +1188,21 @@ class Index
     // 引导图
     public function guided_graph()
     {
-        $store_id = addslashes(trim($_GET['store_id']));
-        if(isset($_GET['store_type']))
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $guide_type = addslashes(safe_trim(Request::param('guideType')));
+        if($guide_type == '')
         {
-            $store_type = addslashes(trim($_GET['store_type']));
+            $guide_type = addslashes(safe_trim(Request::param('store_type')));
         }
-        else
+        $guide_type = (int)$guide_type;
+        if(!in_array($guide_type, [1,2], true))
         {
-            if(isset($_POST['store_type']))
-            {
-                $store_type = addslashes(trim($_POST['store_type']));
-            }
+            $guide_type = 1;
         }
 
         $guidedGraphArray = array();
         // 查询引导图
-        $r = GuideModel::where(['store_id'=>$store_id,'type'=>1])->limit(3)->order('sort', 'asc')->order('add_date', 'desc')->select()->toArray();
+        $r = GuideModel::where(['store_id'=>$store_id,'type'=>1,'source'=>$guide_type])->limit(3)->order('sort', 'asc')->order('add_date', 'desc')->select()->toArray();
         if ($r)
         {
             foreach ($r as $k => $v)
@@ -1446,14 +1468,14 @@ class Index
     // 推荐门店
     public function recommend_stores()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $longitude = trim(Request::param('longitude')); // 经度
-        $latitude = trim(Request::param('latitude')); // 纬度
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $longitude = safe_trim(Request::param('longitude')); // 经度
+        $latitude = safe_trim(Request::param('latitude')); // 纬度
 
-        $page = trim(Request::param('page')) ? trim(Request::param('page')) : trim(Request::param('pageNo')); // 页面
-        $pagesize = trim(Request::param('pageSize')) ? trim(Request::param('pageSize')) : 10; // 页面
+        $page = safe_trim(Request::param('page')) ? safe_trim(Request::param('page')) : safe_trim(Request::param('pageNo')); // 页面
+        $pagesize = safe_trim(Request::param('pageSize')) ? safe_trim(Request::param('pageSize')) : 10; // 页面
         $cid = '';
         if(isset($_POST['cid']))
         {
@@ -1515,9 +1537,9 @@ class Index
     // 获取首页商品数据
     public function classList()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
 
         $shop_id = addslashes(Request::param('shop_id')); // 语言
@@ -1589,10 +1611,10 @@ class Index
     // 更改语言
     public function select_language()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $language = trim(Request::param('language')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $language = safe_trim(Request::param('language')); // 授权id
 
         $lang = Tools::get_lang($language);
 
@@ -1610,11 +1632,11 @@ class Index
     // 获取用户能否看见插件入口
     public function pluginStatus()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $language = trim(Request::param('language')); // 授权id
-        $mch_id = trim(Request::param('mchId')); // 店铺ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $language = safe_trim(Request::param('language')); // 授权id
+        $mch_id = safe_trim(Request::param('mchId')); // 店铺ID
         // 插件
         $Plugin = new Plugin();
         $Plugin_arr = $Plugin->Get_plugin_entry($store_id);
@@ -1637,9 +1659,9 @@ class Index
     // 获取维护公告
     public function getUserTell()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         $user_id = '';
         // 查询用户ID
@@ -1667,10 +1689,10 @@ class Index
     // 公告已读
     public function markToRead()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $tell_id = trim(Request::param('tell_id')); // 公告ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $tell_id = safe_trim(Request::param('tell_id')); // 公告ID
 
         $sql0 = "select user_id from lkt_user where store_id = '$store_id' and access_id = '$access_id'";
         $r0 = Db::query($sql0);
@@ -1689,11 +1711,11 @@ class Index
     // 更改用户默认币种
     public function changeCurrency()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
-        $currency_id = trim(Request::param('currency_id')); // 币种ID
+        $currency_id = safe_trim(Request::param('currency_id')); // 币种ID
 
         $sql0 = "select id from lkt_user where store_id = '$store_id' and access_id = '$access_id'";
         $r0 = Db::query($sql0);

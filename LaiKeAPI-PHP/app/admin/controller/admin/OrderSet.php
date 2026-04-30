@@ -19,12 +19,27 @@ use app\admin\model\IntegralConfigModel;
  */
 class OrderSet extends BaseController
 {   
+    private function orderConfigHasColumn($column)
+    {
+        static $columns = null;
+        if ($columns === null) {
+            $columns = [];
+            $rows = Db::query("SHOW COLUMNS FROM lkt_order_config");
+            foreach ($rows as $row) {
+                if (isset($row['Field'])) {
+                    $columns[$row['Field']] = true;
+                }
+            }
+        }
+        return isset($columns[$column]);
+    }
+
     //订单设置页面
     public function index()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         $access_id = $this->request->param('accessId');
         $mch_id = cache($access_id.'_'.$store_type);
 
@@ -47,7 +62,11 @@ class OrderSet extends BaseController
             $order_ship = $r[0]['order_ship'];//发货时限
             $remind = $r[0]['remind'];//提醒限制
             $auto_good_comment_day = $r[0]['auto_good_comment_day'];//自动好评设置
-            $autoCommentContent = $r[0]['auto_comment_content']; //好评内容
+            if ($this->orderConfigHasColumn('auto_comment_content')) {
+                $autoCommentContent = $r[0]['auto_comment_content'] ?? '';
+            } else {
+                $autoCommentContent = '';
+            }
             $hour = $order_ship;
             //积分设置
             if ($r_config) 
@@ -97,23 +116,23 @@ class OrderSet extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         $access_id = $this->request->param('accessId');
 
-        $auto_the_goods = trim($this->request->param('autoTheGoods'))?trim($this->request->param('autoTheGoods')):7; // 自动收货时间
-        $order_failure = addslashes(trim($this->request->param('orderFailure')))?addslashes(trim($this->request->param('orderFailure'))):2; //订单过期删除时间
-        $order_after = addslashes(trim($this->request->param('orderAfter')))?addslashes(trim($this->request->param('orderAfter'))):0; //订单售后时间
-        $remind_day = trim($this->request->param('remindDay'))?trim($this->request->param('remindDay')):1; // 提醒限制
-        $remind_hour = trim($this->request->param('remindHour'))?trim($this->request->param('remindHour')):0; // 提醒限制
-        $auto_good_comment_day = trim($this->request->param('autoGoodCommentDay'))?trim($this->request->param('autoGoodCommentDay')):0; // 多少天默认好评
-        $auto_comment_content = addslashes(trim($this->request->param('autoCommentContent')))?addslashes(trim($this->request->param('autoCommentContent'))):''; //好评内容
-        $package_settings = trim($this->request->param('packageSettings')); // 包邮设置 0.未开启 1.开启
-        $same_piece = (int)trim($this->request->param('samePiece')); // 同件
-        $same_order = (int)trim($this->request->param('sameOrder')); // 同单
-        $proportion = trim($this->request->param('proportion'))?trim($this->request->param('proportion')):0;//购物赠积分比例
-        $giveStatus = trim($this->request->param('giveStatus'))?trim($this->request->param('giveStatus')):0;//发放状态(0=收货后 1=付款后)
-        $amsTime = trim($this->request->param('amsTime'))?trim($this->request->param('amsTime')):0;//积分发放时间 收货后多少天返回积分
+        $auto_the_goods = safe_trim($this->request->param('autoTheGoods'))?safe_trim($this->request->param('autoTheGoods')):7; // 自动收货时间
+        $order_failure = addslashes(safe_trim($this->request->param('orderFailure')))?addslashes(safe_trim($this->request->param('orderFailure'))):2; //订单过期删除时间
+        $order_after = addslashes(safe_trim($this->request->param('orderAfter')))?addslashes(safe_trim($this->request->param('orderAfter'))):0; //订单售后时间
+        $remind_day = safe_trim($this->request->param('remindDay'))?safe_trim($this->request->param('remindDay')):1; // 提醒限制
+        $remind_hour = safe_trim($this->request->param('remindHour'))?safe_trim($this->request->param('remindHour')):0; // 提醒限制
+        $auto_good_comment_day = safe_trim($this->request->param('autoGoodCommentDay'))?safe_trim($this->request->param('autoGoodCommentDay')):0; // 多少天默认好评
+        $auto_comment_content = addslashes(safe_trim($this->request->param('autoCommentContent')))?addslashes(safe_trim($this->request->param('autoCommentContent'))):''; //好评内容
+        $package_settings = safe_trim($this->request->param('packageSettings')); // 包邮设置 0.未开启 1.开启
+        $same_piece = (int)safe_trim($this->request->param('samePiece')); // 同件
+        $same_order = (int)safe_trim($this->request->param('sameOrder')); // 同单
+        $proportion = safe_trim($this->request->param('proportion'))?safe_trim($this->request->param('proportion')):0;//购物赠积分比例
+        $giveStatus = safe_trim($this->request->param('giveStatus'))?safe_trim($this->request->param('giveStatus')):0;//发放状态(0=收货后 1=付款后)
+        $amsTime = safe_trim($this->request->param('amsTime'))?safe_trim($this->request->param('amsTime')):0;//积分发放时间 收货后多少天返回积分
         
         $mch_id = cache($access_id.'_'.$store_type);
         $Jurisdiction = new Jurisdiction();
@@ -257,7 +276,9 @@ class OrderSet extends BaseController
         {
             $sql = OrderConfigModel::where('store_id',$store_id)->find();
             $sql->auto_good_comment_day = $auto_good_comment_day;
-            $sql->auto_comment_content = $auto_comment_content;
+            if ($this->orderConfigHasColumn('auto_comment_content')) {
+                $sql->auto_comment_content = $auto_comment_content;
+            }
             $sql->order_failure = $order_failure;
             $sql->order_after = $order_after;
             $sql->auto_the_goods = $auto_the_goods;
@@ -315,7 +336,9 @@ class OrderSet extends BaseController
             $sql = new OrderConfigModel();
             $sql->store_id = $store_id;
             $sql->auto_good_comment_day = $auto_good_comment_day;
-            $sql->auto_comment_content = $auto_comment_content;
+            if ($this->orderConfigHasColumn('auto_comment_content')) {
+                $sql->auto_comment_content = $auto_comment_content;
+            }
             $sql->order_failure = $order_failure;
             $sql->order_after = $order_after;
             $sql->auto_the_goods = $auto_the_goods;
@@ -373,8 +396,8 @@ class OrderSet extends BaseController
     //店铺设置
     public function mchIndex()
     {
-        $store_id = trim($this->request->param('storeId'))?trim($this->request->param('storeId')):trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('storeType'))?trim($this->request->param('storeType')):trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('storeId'))?safe_trim($this->request->param('storeId')):safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('storeType'))?safe_trim($this->request->param('storeType')):safe_trim($this->request->param('store_type'));
 
         $mch_id = addslashes($this->request->param('mchId'))?addslashes($this->request->param('mchId')):addslashes($this->request->post('mchId'));
         $is_type = addslashes($this->request->param('isType'))?addslashes($this->request->param('isType')):addslashes($this->request->post('isType'));
@@ -398,8 +421,8 @@ class OrderSet extends BaseController
     //保存店铺设置
     public function mchSaveConfig()
     {
-        $store_id = trim($this->request->param('storeId'))?trim($this->request->param('storeId')):trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('storeType'))?trim($this->request->param('storeType')):trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('storeId'))?safe_trim($this->request->param('storeId')):safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('storeType'))?safe_trim($this->request->param('storeType')):safe_trim($this->request->param('store_type'));
 
         $mch_id = addslashes($this->request->param('mchId'));
         $is_type = addslashes($this->request->param('isType'));

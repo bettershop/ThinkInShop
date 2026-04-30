@@ -56,11 +56,11 @@ class Presell_order
         $store_id = $action->store_id;
         $store_type = $action->store_type;
 
-        $product1 = addslashes(Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::post('cart_id')));  //购物车id-- 12,13,123,
+        $product1 = addslashes((string)Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::post('cart_id')));  //购物车id-- 12,13,123,
         $address_id = Request::post('address_id'); //  地址id
-        $buy_type = addslashes(Request::post('buy_type'));//提交状态 1是再次购买 空是正常提交
-        $canshu = addslashes(Request::post('canshu'));//参数
+        $buy_type = addslashes((string)Request::post('buy_type'));//提交状态 1是再次购买 空是正常提交
+        $canshu = addslashes((string)Request::post('canshu'));//参数
 
         $lktlog = new LaiKeLogUtils();
         list($product, $shop_list, $cart_id) = Tools::productHandle($product1, $cart_id);
@@ -170,16 +170,16 @@ class Presell_order
         $store_type = $action->store_type;
         $access_id = $action->access_id;
         // 1.开启事务
-        $product1 = addslashes(Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::post('cart_id')));  // 购物车id-- 12,13,123,
+        $product1 = addslashes((string)Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::post('cart_id')));  // 购物车id-- 12,13,123,
         $address_id = Request::post('address_id'); //  地址id
-        $remarks = trim(Request::post('remarks')); //  订单备注
-        $buy_type = addslashes(Request::post('buy_type'));//提交状态 1是再次购买 空是正常提交
-        $pay_type = addslashes(trim(Request::post('pay_type'))); // 支付方式
-        $payTarget = addslashes(trim(Request::post('payTarget'))); // 1.定金 2.尾款 3.全款
-        $currency_code_0 = trim(Request::param('currency_code')); // ISO货币代码(如USD)
-        $currency_symbol_0 = trim(Request::param('currency_symbol')); // 货币符号($)
-        $exchange_rate_0 = trim(Request::param('exchange_rate')); // 汇率
+        $remarks = safe_trim(Request::post('remarks')); //  订单备注
+        $buy_type = addslashes((string)Request::post('buy_type'));//提交状态 1是再次购买 空是正常提交
+        $pay_type = addslashes(safe_trim(Request::post('pay_type'))); // 支付方式
+        $payTarget = addslashes(safe_trim(Request::post('payTarget'))); // 1.定金 2.尾款 3.全款
+        $currency_code_0 = safe_trim(Request::param('currency_code')); // ISO货币代码(如USD)
+        $currency_symbol_0 = safe_trim(Request::param('currency_symbol')); // 货币符号($)
+        $exchange_rate_0 = safe_trim(Request::param('exchange_rate')); // 汇率
 
         if($remarks != '')
         {
@@ -260,7 +260,7 @@ class Presell_order
         $shi = $address['city'];
         $xian = $address['quyu'];
         $address_xq = $address['address'];
-        $code = $address['code'];
+        $code = $address['code'] ?? '';
 
         $products_data0 = Tools::get_products_data0($store_id, $products,$products_total, $user_id);
         $grade_rate = $products_data0['grade_rate'];

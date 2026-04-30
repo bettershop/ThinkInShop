@@ -783,6 +783,12 @@ class FreightPublicMethod
         {
             $operator = $data['operator'];
         }
+        $lang_code = '';
+        if (isset($data['lang_code']) && $data['lang_code'] !== '') {
+            $lang_code = Tools::get_lang($data['lang_code']);
+        } elseif (isset($data['language']) && $data['language'] !== '') {
+            $lang_code = Tools::get_lang($data['language']);
+        }
 
         $Jurisdiction = new Jurisdiction();
         Db::startTrans();
@@ -790,11 +796,19 @@ class FreightPublicMethod
         // 根据商城ID、店铺ID，查询剩余运费总数
         if($mch_id)
         {
-            $r_total = FreightModel::where(['store_id'=>$store_id,'mch_id'=>$mch_id,'lang_code'=>$lang_code])->field('count(id) as total')->select()->toArray();
+            $where_total = ['store_id'=>$store_id,'mch_id'=>$mch_id];
+            if ($lang_code !== '') {
+                $where_total['lang_code'] = $lang_code;
+            }
+            $r_total = FreightModel::where($where_total)->field('count(id) as total')->select()->toArray();
         }
         else
         {
-            $r_total = FreightModel::where(['store_id'=>$store_id,'supplier_id'=>$supplier_id,'lang_code'=>$lang_code])->field('count(id) as total')->select()->toArray();
+            $where_total = ['store_id'=>$store_id,'supplier_id'=>$supplier_id];
+            if ($lang_code !== '') {
+                $where_total['lang_code'] = $lang_code;
+            }
+            $r_total = FreightModel::where($where_total)->field('count(id) as total')->select()->toArray();
         }
         $total = $r_total[0]['total'];
 

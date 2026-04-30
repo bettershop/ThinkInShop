@@ -288,6 +288,7 @@ class Block extends BaseController
         $id = (int)$this->request->param('id');
         $bid = $this->request->param('bid');//品牌id
         $cid = $this->request->param('cid');//分类id
+        $langCode = trim((string)$this->request->param('langCode'));// 语种
         $sourceType = $this->request->param('sourceType');// 来源类型
         $sourceId = $this->request->param('sourceId');// 来源数据ID
         $search = $this->request->param('key');//商品名称，商品id
@@ -347,6 +348,23 @@ class Block extends BaseController
         if($cid != '')
         {
             $condition .= " and c.product_class like '%-$cid-%' ";
+        }
+        if($langCode != '')
+        {
+            static $blockProductHasLangCode = null;
+            if ($blockProductHasLangCode === null)
+            {
+                $cols = Db::query("SHOW COLUMNS FROM `lkt_block_product` LIKE 'lang_code'");
+                $blockProductHasLangCode = !empty($cols);
+            }
+            if ($blockProductHasLangCode)
+            {
+                $condition .= " and ((ifnull(b.lang_code,'') = '' and c.lang_code = '$langCode') or b.lang_code = '$langCode') ";
+            }
+            else
+            {
+                $condition .= " and c.lang_code = '$langCode' ";
+            }
         }
         if($bid != '')
         {
@@ -448,6 +466,7 @@ class Block extends BaseController
 
         $id = (int)$this->request->param('id');
         $goodsId = $this->request->param('goodsId');
+        $langCode = trim((string)$this->request->param('langCode'));
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -462,10 +481,21 @@ class Block extends BaseController
         Db::startTrans();
         foreach ($goods_arr as $key => $value) 
         {
+            $goodsLangCode = $langCode;
+            if($goodsLangCode == '')
+            {
+                $sql_lang = "select lang_code from lkt_product_list where id = '$value' limit 1";
+                $r_lang = Db::query($sql_lang);
+                if($r_lang)
+                {
+                    $goodsLangCode = $r_lang[0]['lang_code'];
+                }
+            }
             $sql = new BlockProductModel();
             $sql->store_id = $store_id;
             $sql->main_id = $id;
             $sql->product_id = $value;
+            $sql->lang_code = $goodsLangCode;
             $sql->add_date = date('Y-m-d H:i:s');
             $sql->save();
             $res = $sql->id;
@@ -574,6 +604,7 @@ class Block extends BaseController
         $block_id = $this->request->param('blockId');//楼层id
         $cid = $this->request->param('cid');//分类id
         $brand_id = $this->request->param('brandId');//品牌id
+        $langCode = trim((string)$this->request->param('langCode'));// 语种
         $sourceType = $this->request->param('sourceType');// 来源类型
         $sourceId = $this->request->param('sourceId');// 来源数据ID
         $productTitle = addslashes($this->request->param('productTitle')); // 商品名称
@@ -653,6 +684,10 @@ class Block extends BaseController
         if($cid)
         {
             $condition .= " and a.product_class like '%-$cid-%' ";
+        }
+        if($langCode != '')
+        {
+            $condition .= " and a.lang_code = '$langCode' ";
         }
         if($brand_id)
         {

@@ -2,6 +2,7 @@
 namespace app\common\third\logistics;
 
 use app\admin\model\ConfigModel;
+use think\facade\Db;
 
 // require_once MO_LIB_DIR . '/third/html/HtmlTool.class.php';
 require_once '../app/common/third/httpClient/HttpTools.class.php';
@@ -29,8 +30,12 @@ class LogisticsTool
         // $express_tel = '';
         $express_array = array();
 
+        $fields = ['is_express', 'express_address', 'express_number', 'express_key'];
+        if (self::configHasColumn('express_tel')) {
+            $fields[] = 'express_tel';
+        }
         $r_config = ConfigModel::where(['store_id'=>$store_id])
-                                ->field('is_express,express_address,express_number,express_key,express_tel')
+                                ->field(implode(',', $fields))
                                 ->select()
                                 ->toArray();
         if($r_config)
@@ -94,7 +99,7 @@ class LogisticsTool
                 $params = "";
                 foreach ($post_data as $k => $v)
                 {
-                    $params .= "$k=" . urlencode($v) . "&"; //默认UTF-8编码格式
+                    $params .= "$k=" . urlencode((string)$v) . "&"; //默认UTF-8编码格式
                 }
                 $post_data = substr($params, 0, -1);
 
@@ -121,6 +126,25 @@ class LogisticsTool
         }
 
         return $res_1;
+    }
+
+    private static function configHasColumn($column)
+    {
+        static $columns = null;
+        if ($columns === null) {
+            $columns = [];
+            try {
+                $rows = Db::connect('laiketui')->query("SHOW COLUMNS FROM lkt_config");
+                foreach ($rows as $row) {
+                    if (isset($row['Field'])) {
+                        $columns[$row['Field']] = true;
+                    }
+                }
+            } catch (\Throwable $e) {
+                $columns = [];
+            }
+        }
+        return isset($columns[$column]);
     }
 
 }

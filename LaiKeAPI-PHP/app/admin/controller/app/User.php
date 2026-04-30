@@ -45,12 +45,12 @@ class User extends BaseController
     // 请求我的数据
     public function index()
     {
-        $store_id = trim(Request::param('store_id'));
-        $Language = trim(Request::param('Language')); // 语言
-        $store_type = trim(Request::param('store_type'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $Language = safe_trim(Request::param('Language')); // 语言
+        $store_type = safe_trim(Request::param('store_type'));
         // 获取信息
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $mobile_n = trim(Request::param('mobile'));//新用户授权进入的传参
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $mobile_n = safe_trim(Request::param('mobile'));//新用户授权进入的传参
         // 查询系统参数
         $r_1 = ConfigModel::where('store_id',$store_id)->select()->toArray();
         if ($r_1)
@@ -356,7 +356,7 @@ class User extends BaseController
     public function luck_draw_msg($openid)
     {
 
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         $log = new LaiKeLogUtils();
 
         $page = 'pages/index/index';
@@ -392,9 +392,9 @@ class User extends BaseController
     // 我的钱包
     public function details()
     {
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         // 接收信息
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         // 根据微信id,查询用户id
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('user_id,money')->select()->toArray();
         if (!empty($r))
@@ -512,11 +512,11 @@ class User extends BaseController
     // 我的钱包明细加载更多
     public function wallet_detailed()
     {
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         // 接收信息
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $type = trim(Request::param('type'));
-        $num = trim(Request::param('page')); // 加载次数
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $type = safe_trim(Request::param('type'));
+        $num = safe_trim(Request::param('page')); // 加载次数
         $start = ($num-1) * 10;
         $end = 10;
 
@@ -608,10 +608,10 @@ class User extends BaseController
     // 钱包详情
     public function getRecordDetails()
     {
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         // 接收信息
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $id = trim(Request::param('id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $id = safe_trim(Request::param('id'));
 
         $list = array();
         // 根据微信id,查询用户id
@@ -663,9 +663,9 @@ class User extends BaseController
     // 进入提现页面
     public function into_withdrawals()
     {    
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $shop_id = (int)trim(Request::param('shop_id')); // 店铺ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $shop_id = (int)safe_trim(Request::param('shop_id')); // 店铺ID
 
         $wx_name = ''; // 微信名称
         $wx_open = false; // wx_open：是否开启微信余额提现
@@ -753,8 +753,8 @@ class User extends BaseController
     // 进入保证金页面
     public function bond()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         // 根据微信id,查询会员金额
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
@@ -803,9 +803,9 @@ class User extends BaseController
     {
         
         
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $pages = trim(Request::param('pages'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $pages = safe_trim(Request::param('pages'));
 
         $start = ($pages - 1) * 10;
         $limit = "$start,10";
@@ -844,10 +844,10 @@ class User extends BaseController
     // 店主进入提现页面
     public function into_wallet1()
     {
-        $store_id = trim(Request::param('store_id'));
-        $shop_id = trim(Request::param('shop_id')); // 店铺ID
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $id = trim(Request::param('id')); // id
+        $store_id = safe_trim(Request::param('store_id'));
+        $shop_id = safe_trim(Request::param('shop_id')); // 店铺ID
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $id = safe_trim(Request::param('id')); // id
 
         $wx_name = ''; // 微信名称
         $wx_open = false; // wx_open：是否开启微信余额提现
@@ -944,10 +944,10 @@ class User extends BaseController
     // 验证卡号与银行名是否匹配
     public function Verification()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $Bank_name = trim(Request::param('Bank_name')); // 银行名称
-        $Bank_card_number = trim(Request::param('Bank_card_number')); // 银行卡号
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $Bank_name = safe_trim(Request::param('Bank_name')); // 银行名称
+        $Bank_card_number = safe_trim(Request::param('Bank_card_number')); // 银行卡号
         // 银行卡号不为数字
         if (is_numeric($Bank_card_number) == false)
         {
@@ -996,11 +996,11 @@ class User extends BaseController
     // 获取区号
     public function getItuList()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id'));
 
         // 接收信息
-        $keyword = trim(Request::param('keyword'));//区号
+        $keyword = safe_trim(Request::param('keyword'));//区号
 
         $data = array();
 
@@ -1022,11 +1022,11 @@ class User extends BaseController
     // 发送邮箱验证码
     public function send_email_verification_code()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id'));
 
         // 接收信息
-        $email = trim(Request::param('email')); // 邮箱
+        $email = safe_trim(Request::param('email')); // 邮箱
 
         $array = array('store_id'=>$store_id,'email'=>$email);
         $EmailController = new EmailController();
@@ -1036,14 +1036,14 @@ class User extends BaseController
     // 短信验证码
     public function secret_key()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id'));
 
         // 接收信息
-        $cpc = trim(Request::param('cpc'));//区号
-        $mobile = trim(Request::param('phone')); // 手机号码
-        $message_type = trim(Request::param('message_type'))?trim(Request::param('message_type')):0; // 短信类型
-        $message_type1 = trim(Request::param('message_type1'))?trim(Request::param('message_type1')):1; // 短信类别
+        $cpc = safe_trim(Request::param('cpc'));//区号
+        $mobile = safe_trim(Request::param('phone')); // 手机号码
+        $message_type = safe_trim(Request::param('message_type'))?safe_trim(Request::param('message_type')):0; // 短信类型
+        $message_type1 = safe_trim(Request::param('message_type1'))?safe_trim(Request::param('message_type1')):1; // 短信类别
 
         $Tools = new Tools($store_id, 1);
         $array_code = array('cpc'=>$cpc,'mobile'=>$mobile,'type'=>$message_type,'type1'=>$message_type1,'bizparams'=>array());
@@ -1053,15 +1053,15 @@ class User extends BaseController
     // 提现申请
     public function withdrawals()
     {
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         // 接收信息
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $shop_id = (int)trim(Request::param('shop_id')); // 店铺ID
-        $amoney = trim(Request::param('amoney')); // 提现金额
-        $withdraw_status = trim(Request::param('withdrawStatus')); // 提现类型 1银行卡 2微信余额
-        $bank_id = trim(Request::param('bank_id'));//银行卡ID
-        $mobile = trim(Request::param('mobile')); // 手机号码
-        $keyCode = trim(Request::param('keyCode')); // 验证码
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $shop_id = (int)safe_trim(Request::param('shop_id')); // 店铺ID
+        $amoney = safe_trim(Request::param('amoney')); // 提现金额
+        $withdraw_status = safe_trim(Request::param('withdrawStatus')); // 提现类型 1银行卡 2微信余额
+        $bank_id = safe_trim(Request::param('bank_id'));//银行卡ID
+        $mobile = safe_trim(Request::param('mobile')); // 手机号码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
         
         $Tools = new Tools( $store_id, 1);
         if ($shop_id != 0)
@@ -1262,15 +1262,15 @@ class User extends BaseController
     // 申请提现
     public function withdrawals1()
     {
-        $store_id = trim(Request::param('store_id'));
-        $shop_id = trim(Request::param('shop_id')); // 店铺ID
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $amoney = trim(Request::param('amoney')); // 提现金额
-        $withdraw_status = trim(Request::param('withdrawStatus')); // 提现类型 1银行卡 2微信余额
-        $bank_id = trim(Request::param('bank_id'));//银行卡ID
-        $mobile = trim(Request::param('mobile')); // 手机号码
-        $keyCode = trim(Request::param('keyCode')); // 验证码
-        $id = trim(Request::param('id')); // 提现ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $shop_id = safe_trim(Request::param('shop_id')); // 店铺ID
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $amoney = safe_trim(Request::param('amoney')); // 提现金额
+        $withdraw_status = safe_trim(Request::param('withdrawStatus')); // 提现类型 1银行卡 2微信余额
+        $bank_id = safe_trim(Request::param('bank_id'));//银行卡ID
+        $mobile = safe_trim(Request::param('mobile')); // 手机号码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
+        $id = safe_trim(Request::param('id')); // 提现ID
 
         $Tools = new Tools( $store_id, 1);
         if($withdraw_status == 1)
@@ -1609,8 +1609,8 @@ class User extends BaseController
 
     public function set()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         // 根据授权id,查询用户id
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('password,mima')->select()->toArray();
@@ -1649,8 +1649,8 @@ class User extends BaseController
     // 修改密码
     public function updatepassword()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $o_password = Request::param('password'); // 密码
         $n_password = Request::param('newPwd');//新密码
         $c_password = Request::param('confirm');//确认密码
@@ -1712,13 +1712,13 @@ class User extends BaseController
     // 设置密码
     public function set_password()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $password = Tools::lock_url(Request::param('password')); // 密码
-        $cpc = trim(Request::param('cpc'));//区号
+        $cpc = safe_trim(Request::param('cpc'));//区号
         $country_num = Request::param('country_num'); // 国家代码
         $tel = Request::param('phone'); // 手机号码
-        $keyCode = trim(Request::param('keyCode')); // 验证码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
 
         $arr = array($cpc.$tel, array('store_id'=>$store_id,'code' => $keyCode));
         $Tools = new Tools( $store_id, 1);
@@ -1768,13 +1768,13 @@ class User extends BaseController
     // 修改手机号
     public function update_phone()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $y_tel = Request::param('y_phone'); // 旧手机号码
-        $cpc = trim(Request::param('cpc'));//区号
+        $cpc = safe_trim(Request::param('cpc'));//区号
         $country_num = Request::param('country_num'); // 国家代码
         $x_tel = Request::param('x_phone'); // 新手机号码
-        $keyCode = trim(Request::param('keyCode')); // 验证码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
         $time = date("Y-m-s H:i:s");
 
         $arr = array($cpc.$x_tel, array('store_id'=>$store_id,'code' => $keyCode));
@@ -1857,8 +1857,8 @@ class User extends BaseController
     //授权修改手机号
     public function bind_phone()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $y_tel = Request::param('y_phone'); // 旧手机号码
         $x_tel = Request::param('x_phone'); // 新手机号码
         $time = date("Y-m-s H:i:s");
@@ -1929,9 +1929,9 @@ class User extends BaseController
     // 修改用户信息
     public function set_user()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $Nickname = addslashes(trim(Request::param('Nickname'))); // 昵称
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $Nickname = addslashes(safe_trim(Request::param('Nickname'))); // 昵称
         $src_img = Request::param('src_img'); // 图片base64
         $store_type = Request::param('store_type');
         $birthday = Request::param('birthday'); // 出生日期
@@ -2120,8 +2120,8 @@ class User extends BaseController
     // 设置支付密码
     public function set_payment_password()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $password = MD5(Request::param('password')); // 密码
 
         // 根据授权id,查询用户id
@@ -2160,11 +2160,11 @@ class User extends BaseController
     // 修改支付密码
     public function modify_payment_password()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $x_password = MD5(Request::param('x_password')); // 新密码
         $tel = Request::param('phoneNum'); // 手机号码
-        $keyCode = trim(Request::param('keyCode')); // 验证码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
         $time = date("Y-m-s H:i:s");
 
         $arr = array($tel, array('store_id'=>$store_id,'code' => $keyCode));
@@ -2234,9 +2234,9 @@ class User extends BaseController
     // 验证支付密码
     public function payment_password()
     {
-        $store_id = trim(Request::param('store_id'));
-        $Language = trim(Request::param('Language')); // 语言
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $Language = safe_trim(Request::param('Language')); // 语言
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $password1 = MD5(Request::param('password')); // 密码
         $time = date('Y-m-d H:i:s', time());
 
@@ -2320,8 +2320,8 @@ class User extends BaseController
 
     public function about_us()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $aboutus = '';
         $r = ConfigModel::where('store_id',$store_id)->field('aboutus')->select()->toArray();
         if($r)
@@ -2344,14 +2344,14 @@ class User extends BaseController
     //银行卡添加
     public function add_bank()
     {
-        $store_id = trim(Request::param('store_id'));
-        $Cardholder = trim(Request::param('Cardholder')); // 开户人
-        $Bank_name = trim(Request::param('Bank_name')); // 银行名称
-        $branch = trim(Request::param('branch')); // 支行名称
-        $Bank_card_number = trim(Request::param('Bank_card_number')); // 卡号
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $is_default = (int)trim(Request::param('is_default'));//是否默认
-        $id = trim(Request::param('id'));//银行卡id
+        $store_id = safe_trim(Request::param('store_id'));
+        $Cardholder = safe_trim(Request::param('Cardholder')); // 开户人
+        $Bank_name = safe_trim(Request::param('Bank_name')); // 银行名称
+        $branch = safe_trim(Request::param('branch')); // 支行名称
+        $Bank_card_number = safe_trim(Request::param('Bank_card_number')); // 卡号
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $is_default = (int)safe_trim(Request::param('is_default'));//是否默认
+        $id = safe_trim(Request::param('id'));//银行卡id
         // 根据微信id,查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
         if($r)
@@ -2491,8 +2491,8 @@ class User extends BaseController
     //银行卡列表
     public function bank_list()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         // 根据微信id,查询会员信息
         $r =  UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
         if($r)
@@ -2537,9 +2537,9 @@ class User extends BaseController
     //银行卡详情
     public function getBankDetail()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $id = trim(Request::param('bankId'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $id = safe_trim(Request::param('bankId'));
         // 根据微信id,查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
         if($r)
@@ -2577,9 +2577,9 @@ class User extends BaseController
     //解除绑定
     public function del_bank()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $id = trim(Request::param('id'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $id = safe_trim(Request::param('id'));
         // 根据微信id,查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
         if($r)
@@ -2633,11 +2633,11 @@ class User extends BaseController
     //同步账号
     public function synchronizeAccount()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
         // 获取信息
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $mobile = trim(Request::param('mobile'));//电话
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $mobile = safe_trim(Request::param('mobile'));//电话
 
         // 查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
@@ -2739,9 +2739,9 @@ class User extends BaseController
     // 获取用户信息
     public function get_user_information()
     {
-        $store_id = trim(Request::param('store_id'));
-        $Language = trim(Request::param('Language')); // 语言
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $Language = safe_trim(Request::param('Language')); // 语言
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $r0 = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('zhanghao,mima')->select()->toArray();
         if($r0)
         {
@@ -2761,11 +2761,11 @@ class User extends BaseController
     // 个人中心-推荐商品
     public function myRecommendation()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
-        $page = trim(Request::param('page')); // 页码
+        $page = safe_trim(Request::param('page')); // 页码
 
         $lang_code = Tools::get_lang($language);
 
@@ -2851,9 +2851,9 @@ class User extends BaseController
     // 修改个人中心弹窗
     public function isDefaultValue()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         // 查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
@@ -2872,10 +2872,10 @@ class User extends BaseController
     // 【微信公众号,APP】 用户绑定微信
     public function bindWechat()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $code = addslashes(trim(Request::param('code'))); // code
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $code = addslashes(safe_trim(Request::param('code'))); // code
 
         // 查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
@@ -2971,15 +2971,15 @@ class User extends BaseController
     // 【小程序】用户绑定微信
     public function wxBind()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
-        // $unionid = addslashes(trim(Request::param('unionid'))); // 用户统一标识。针对一个微信开放平台帐号下的应用，同一用户的 unionid 是唯一的
-        $openid = addslashes(trim(Request::param('openId'))); // openid
-        $user_name = addslashes(trim(Request::param('wxName'))); // 用户昵称
-        // $headimgurl = trim(Request::param('headimgurl')); // 用户头像
-        // $sex = trim(Request::param('sex')); // 用户性别
+        // $unionid = addslashes(safe_trim(Request::param('unionid'))); // 用户统一标识。针对一个微信开放平台帐号下的应用，同一用户的 unionid 是唯一的
+        $openid = addslashes(safe_trim(Request::param('openId'))); // openid
+        $user_name = addslashes(safe_trim(Request::param('wxName'))); // 用户昵称
+        // $headimgurl = safe_trim(Request::param('headimgurl')); // 用户头像
+        // $sex = safe_trim(Request::param('sex')); // 用户性别
 
         // 查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
@@ -2999,10 +2999,10 @@ class User extends BaseController
     // 解除微信绑定
     public function wxUnbind()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $code = addslashes(trim(Request::param('code'))); // code
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $code = addslashes(safe_trim(Request::param('code'))); // code
 
         // 查询会员信息
         $r = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->select()->toArray();
@@ -3036,8 +3036,8 @@ class User extends BaseController
 
     public function getSystemIconAndName()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         $r = ConfigModel::where('store_id',$store_id)->select()->toArray();
         if($r)

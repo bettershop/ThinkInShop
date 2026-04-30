@@ -238,6 +238,7 @@
           :prev-text="$t('DemoPage.tableExamplePage.prev_text')"
           :next-text="$t('DemoPage.tableExamplePage.next_text')"
           @size-change="handleSizeChange"
+          :page-size="pageSize"
           :page-sizes="pagesizes"
           :current-page="pagination.page"
           @current-change="handleCurrentChange"
@@ -1337,4 +1338,3 @@ export default {
 //   top: 10px;
 // }
 </style>
-

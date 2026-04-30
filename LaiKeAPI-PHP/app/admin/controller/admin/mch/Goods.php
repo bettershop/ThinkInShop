@@ -18,11 +18,11 @@ class Goods extends BaseController
     // 获取语种
     public function getLangs()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $language = addslashes(trim($this->request->param('language')));
+        $language = addslashes(safe_trim($this->request->param('language')));
         $language = Tools::get_lang($language);
 
         $store_langs = "";

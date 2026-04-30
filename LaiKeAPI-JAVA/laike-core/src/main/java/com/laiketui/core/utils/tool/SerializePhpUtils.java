@@ -285,119 +285,76 @@ public class SerializePhpUtils
         Map<String, Object> resultMap = new HashMap<>(16);
         try
         {
-            PHPSerializer       p   = new PHPSerializer();
-            Map<String, Object> map = DataUtils.cast(p.unserialize(content.getBytes(GloabConst.Chartset.UTF_8), Map.class));
-
-            AssocArray levelmoneyObj = (AssocArray) map.get("levelmoney");
-            if (levelmoneyObj != null)
+            if (StringUtils.isEmpty(content))
             {
-                Map<Integer, Object> levelmoneyMap = levelmoneyObj.toLinkedHashMap();
+                return resultMap;
+            }
+            Map<String, Object> map;
+            if (isJsonContent(content))
+            {
+                map = JSON.parseObject(content, new TypeReference<Map<String, Object>>()
+                {
+                });
+            }
+            else
+            {
+                PHPSerializer p = new PHPSerializer();
+                map = DataUtils.cast(p.unserialize(content.getBytes(GloabConst.Chartset.UTF_8), Map.class));
+            }
+            if (map == null || map.isEmpty())
+            {
+                return resultMap;
+            }
+
+            Object levelmoneyObj = map.get("levelmoney");
+            if (levelmoneyObj instanceof AssocArray)
+            {
+                AssocArray levelmoneyArray = (AssocArray) levelmoneyObj;
+                Map<Integer, Object> levelmoneyMap = levelmoneyArray.toLinkedHashMap();
                 if (levelmoneyMap != null && !levelmoneyMap.isEmpty())
                 {
-                    levelmoneyMap.replaceAll((k, v) -> new String((byte[]) levelmoneyMap.get(k)));
+                    levelmoneyMap.replaceAll((k, v) -> readValueAsString(levelmoneyMap.get(k)));
                 }
+                resultMap.put("levelmoney", levelmoneyArray);
+            }
+            else if (levelmoneyObj != null)
+            {
                 resultMap.put("levelmoney", levelmoneyObj);
             }
-            AssocArray levelObj = (AssocArray) map.get("levelobj");
-            if (levelObj != null)
+
+            Object levelObj = map.get("levelobj");
+            if (levelObj instanceof AssocArray)
             {
-                Map<String, Object> levelObjMap = levelObj.toLinkedHashMap();
+                AssocArray levelObjArray = (AssocArray) levelObj;
+                Map<String, Object> levelObjMap = levelObjArray.toLinkedHashMap();
                 if (levelObjMap != null && !levelObjMap.isEmpty())
                 {
-                    levelObjMap.replaceAll((k, v) -> new String((byte[]) levelObjMap.get(k)));
+                    levelObjMap.replaceAll((k, v) -> readValueAsString(levelObjMap.get(k)));
                 }
+                resultMap.put("levelobj", levelObjArray);
+            }
+            else if (levelObj != null)
+            {
                 resultMap.put("levelobj", levelObj);
             }
-            resultMap.put("s_dengjiname", new String((byte[]) map.get("s_dengjiname")));
-            //折扣
-            BigDecimal zhekou = new BigDecimal("0");
-            if (!StringUtils.isEmpty(map.get("zhekou").toString()))
-            {
-                zhekou = new BigDecimal(new String((byte[]) map.get("zhekou")));
-            }
-            BigDecimal priceType = new BigDecimal("0");
-            if (!StringUtils.isEmpty(map.get("price_type")))
-            {
-                priceType = new BigDecimal(map.get("price_type").toString());
-            }
-            //级差金额
-            BigDecimal different     = new BigDecimal("0");
-            BigDecimal differentType = new BigDecimal("0");
-            if (!StringUtils.isEmpty(map.get("different")))
-            {
-                different = new BigDecimal(new String((byte[]) map.get("different")));
-                if (map.containsKey("different_type"))
-                {
-                    Object obj = map.get("different_type");
-                    if (obj instanceof Integer)
-                    {
-                        differentType = new BigDecimal(map.get("different_type").toString());
-                    }
-                    else
-                    {
-                        differentType = new BigDecimal(new String((byte[]) map.get("different_type")));
-                    }
-                }
-            }
-            //平级金额
-            BigDecimal sibling     = new BigDecimal("0");
-            BigDecimal siblingType = new BigDecimal("0");
-            if (!StringUtils.isEmpty(map.get("sibling")))
-            {
-                sibling = new BigDecimal(new String((byte[]) map.get("sibling")));
-                if (map.containsKey("sibling_type"))
-                {
-                    Object obj = map.get("sibling_type");
-                    if (obj instanceof Integer)
-                    {
-                        siblingType = new BigDecimal(map.get("sibling_type").toString());
-                    }
-                    else
-                    {
-                        siblingType = new BigDecimal(new String((byte[]) map.get("sibling_type")));
-                    }
-                }
-            }
-            //直推分销奖金额
-            BigDecimal directM = new BigDecimal("0");
-            //数值类型 1=元 other = 百分比
-            BigDecimal directmType = new BigDecimal("0");
-            if (map.containsKey("direct_m"))
-            {
-                directM = new BigDecimal(new String((byte[]) map.get("direct_m")));
-                if (map.containsKey("direct_m_type"))
-                {
-                    Object obj = map.get("direct_m_type");
-                    if (obj instanceof Integer)
-                    {
-                        directmType = new BigDecimal(map.get("direct_m_type").toString());
-                    }
-                    else
-                    {
-                        directmType = new BigDecimal(new String((byte[]) map.get("direct_m_type")));
-                    }
-                }
-            }
-            //间推分销奖金额
-            BigDecimal indirectM = new BigDecimal("0");
-            ;
-            BigDecimal indirectmType = new BigDecimal("0");
-            if (map.containsKey("indirect_m"))
-            {
-                indirectM = new BigDecimal(new String((byte[]) map.get("indirect_m")));
-                if (map.containsKey("indirect_m_type"))
-                {
-                    Object obj = map.get("indirect_m_type");
-                    if (obj instanceof Integer)
-                    {
-                        indirectmType = new BigDecimal(map.get("indirect_m_type").toString());
-                    }
-                    else
-                    {
-                        indirectmType = new BigDecimal(new String((byte[]) map.get("indirect_m_type")));
-                    }
-                }
-            }
+
+            resultMap.put("s_dengjiname", readValueAsString(map.get("s_dengjiname")));
+            // 折扣
+            BigDecimal zhekou = readValueAsBigDecimal(map.get("zhekou"));
+            BigDecimal priceType = readValueAsBigDecimal(map.get("price_type"));
+            // 级差金额
+            BigDecimal different = readValueAsBigDecimal(map.get("different"));
+            BigDecimal differentType = readValueAsBigDecimal(map.get("different_type"));
+            // 平级金额
+            BigDecimal sibling = readValueAsBigDecimal(map.get("sibling"));
+            BigDecimal siblingType = readValueAsBigDecimal(map.get("sibling_type"));
+            // 直推分销奖金额
+            BigDecimal directM = readValueAsBigDecimal(map.get("direct_m"));
+            // 数值类型 1=元 other = 百分比
+            BigDecimal directmType = readValueAsBigDecimal(map.get("direct_m_type"));
+            // 间推分销奖金额
+            BigDecimal indirectM = readValueAsBigDecimal(map.get("indirect_m"));
+            BigDecimal indirectmType = readValueAsBigDecimal(map.containsKey("indirectMType") ? map.get("indirectMType") : map.get("indirect_m_type"));
 
 
             resultMap.put("zhekou", zhekou);
@@ -442,6 +399,10 @@ public class SerializePhpUtils
             {
                 return null;
             }
+            if (isJsonContent(content))
+            {
+                return JSON.parseObject(content, Map.class);
+            }
             Map map = (Map) p.unserialize(content.getBytes(GloabConst.Chartset.UTF_8), Map.class);
             return map;
         }
@@ -469,6 +430,10 @@ public class SerializePhpUtils
             {
                 return null;
             }
+            if (isJsonContent(content))
+            {
+                return JSON.parseObject(content, cls);
+            }
             Map map = (Map) p.unserialize(content.getBytes(StandardCharsets.UTF_8), cls);
             if (map != null && !map.isEmpty())
             {
@@ -495,6 +460,46 @@ public class SerializePhpUtils
             logg.error("反序列化object: " + content + " 失败！！！");
         }
         return null;
+    }
+
+    private static boolean isJsonContent(String content)
+    {
+        if (StringUtils.isEmpty(content))
+        {
+            return false;
+        }
+        String trim = content.trim();
+        return (trim.startsWith("{") && trim.endsWith("}")) || (trim.startsWith("[") && trim.endsWith("]"));
+    }
+
+    private static String readValueAsString(Object val)
+    {
+        if (val == null)
+        {
+            return "";
+        }
+        if (val instanceof byte[])
+        {
+            return new String((byte[]) val, StandardCharsets.UTF_8);
+        }
+        return String.valueOf(val);
+    }
+
+    private static BigDecimal readValueAsBigDecimal(Object val)
+    {
+        String str = readValueAsString(val);
+        if (StringUtils.isEmpty(str))
+        {
+            return BigDecimal.ZERO;
+        }
+        try
+        {
+            return new BigDecimal(str);
+        }
+        catch (Exception e)
+        {
+            return BigDecimal.ZERO;
+        }
     }
 
     public static <T> T getUnserializeByBasic(String content, Class<T> cls) throws LaiKeAPIException

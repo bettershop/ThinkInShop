@@ -21,10 +21,10 @@ class DivideAccount extends BaseController
     // 分账设置
     public function divideAccountInfo()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $mch_id = addslashes(trim($this->request->param('mchId')));
+        $mch_id = addslashes(safe_trim($this->request->param('mchId')));
 
         $accounts_set = '';
         $list = array();
@@ -81,12 +81,12 @@ class DivideAccount extends BaseController
     // 设置分账设置
     public function saveDivideAccount()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $mch_id = addslashes(trim($this->request->param('mchId')));
-        $divideAccountInfo = trim($this->request->param('divideAccountInfo'));
+        $mch_id = addslashes(safe_trim($this->request->param('mchId')));
+        $divideAccountInfo = safe_trim($this->request->param('divideAccountInfo'));
 
         $list = json_decode($divideAccountInfo,true);
 
@@ -178,11 +178,11 @@ class DivideAccount extends BaseController
     // 申请分账账单
     public function applyBilling()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $date = trim($this->request->param('date'));
+        $date = safe_trim($this->request->param('date'));
         
         $lktlog = new LaiKeLogUtils();
         $Jurisdiction = new Jurisdiction();
@@ -219,11 +219,11 @@ class DivideAccount extends BaseController
     // 下载账单
     public function downloadBilling()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $url = trim($this->request->param('url'));
+        $url = safe_trim($this->request->param('url'));
         
         $lktlog = new LaiKeLogUtils();
 
@@ -250,15 +250,15 @@ class DivideAccount extends BaseController
     // 分账记录
     public function divideRecord()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
         
-        $condition = trim($this->request->param('condition'));
-        $startDate = trim($this->request->param('startDate'));
-        $endDate = trim($this->request->param('endDate'));
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $condition = safe_trim($this->request->param('condition'));
+        $startDate = safe_trim($this->request->param('startDate'));
+        $endDate = safe_trim($this->request->param('endDate'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $page = $page ? $page : '1';
         $pagesize = $pagesize ? $pagesize : '10';
 
@@ -450,7 +450,7 @@ class DivideAccount extends BaseController
                 $str .= "$k" . "=" . $v . "&";
             }
         }
-        $str = rtrim($str, "&");
+        $str = rsafe_trim($str, "&");
         return $str;
     }
 

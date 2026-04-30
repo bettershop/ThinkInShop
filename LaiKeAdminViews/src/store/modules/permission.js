@@ -1,10 +1,10 @@
-import {asyncRoutes, constantRoutes} from '@/router'
-import {getStorage,removeStorage,setStorage} from '@/utils/storage'
+import { asyncRoutes, constantRoutes } from '@/router'
+import { getStorage, removeStorage, setStorage } from '@/utils/storage'
 import request from "@/api/https";
 import Layout from "@/layout/index";
-import {isEmpty} from "element-ui/src/utils/util";
+import { isEmpty } from "element-ui/src/utils/util";
 import ElementUI from 'element-ui';
-import { cloneDeep,flatMapDeep } from 'lodash';
+import { cloneDeep, flatMapDeep } from 'lodash';
 /**
  * 使用 meta.role 确定当前用户是否有权限
  * @param roles
@@ -18,6 +18,90 @@ function hasPermission(roles, route) {
   }
 }
 
+function loadView(url) {
+  const viewPath = url.replace(/\.vue$/, '')
+  return resolve => {
+    require(
+      [`@/views${viewPath}.vue`],
+      resolve,
+      () => {
+        require(
+          [`@/views${viewPath}/index.vue`],
+          resolve,
+          err => {
+            console.error(`[permission] load view failed: ${url}`, err)
+          }
+        )
+      }
+    )
+  }
+}
+
+function normalizeToPath(path) {
+  if (!path || typeof path !== 'string') {
+    return ''
+  }
+  const value = path.trim()
+  if (!value) {
+    return ''
+  }
+  return value.startsWith('/') ? value : `/${value}`
+}
+
+function buildMenuRoutePath(module, parentRoutePath = '') {
+  const parent = normalizeToPath(parentRoutePath)
+  const current = normalizeToPath(module)
+  if (!current) {
+    return parent
+  }
+  if (current.startsWith('http://') || current.startsWith('https://')) {
+    return current
+  }
+  if (!parent || parent === '/') {
+    return current
+  }
+  return `${parent.replace(/\/$/, '')}/${current.replace(/^\//, '')}`
+}
+
+function buildMenuPathIndex(menuList, parentRoutePath = '') {
+  const result = []
+  if (!Array.isArray(menuList) || menuList.length === 0) {
+    return result
+  }
+
+  menuList.forEach(menu => {
+    const routePath = buildMenuRoutePath(menu.module, parentRoutePath)
+    const availablePathSet = new Set()
+    const appendPath = value => {
+      const normalized = normalizeToPath(value)
+      if (normalized) {
+        availablePathSet.add(normalized)
+      }
+    }
+
+    appendPath(routePath)
+    appendPath(menu.url)
+    appendPath(menu.redirect)
+    appendPath(menu.menuPath)
+
+    result.push({
+      id: menu.id,
+      path: menu.module,
+      url: menu.url,
+      redirect: menu.redirect,
+      menuPath: menu.menuPath,
+      fullPath: routePath,
+      availablePaths: Array.from(availablePathSet)
+    })
+
+    if (Array.isArray(menu.children) && menu.children.length) {
+      result.push(...buildMenuPathIndex(menu.children, routePath))
+    }
+  })
+
+  return result
+}
+
 /**
  * 通过递归过滤异步路由表
  * @param routes asyncRoutes
@@ -27,7 +111,7 @@ export function filterAsyncRoutes(routes, roles) {
   const res = []
 
   routes.forEach(route => {
-    const tmp = {...route}
+    const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
         tmp.children = tmp.children.filter(route => {
@@ -56,7 +140,7 @@ const mutations = {
 }
 
 const actions = {
-  getAsyncRoutes({commit}) {
+  getAsyncRoutes({ commit }) {
     const res = []
     return request({
       method: 'post',
@@ -64,23 +148,23 @@ const actions = {
         api: 'saas.role.getAsyncRoutesByRoutes',
       },
     }).then(routes => {
-      if(routes.data.code == '200' && routes.data.data.menu.length) {
+      if (routes.data.code == '200' && routes.data.data.menu.length) {
         let route = routes.data.data;
         // tab切换的配置（过滤掉一二三级菜单列表）
         let routerList = cloneDeep(routes.data.data)
-        const fn = (source)=>{
+        const fn = (source) => {
           let res = []
-          source.forEach(el=>{
-              res.push(el)
-              el.children && res.push(...fn(el.children))
+          source.forEach(el => {
+            res.push(el)
+            el.children && res.push(...fn(el.children))
           })
           // 过滤掉相关数据（新增加的tab配置）
-          return res.filter(i=>i.is_tab!==0)
-      }
-        console.log(route,"菜单权限707070707070",routerList,fn(routerList.menu))
-        setStorage("tabRouter",fn(routerList.menu))
+          return res.filter(i => i.is_tab !== 0)
+        }
+        console.log(route, "菜单权限707070707070", routerList, fn(routerList.menu))
+        setStorage("tabRouter", fn(routerList.menu))
         if (route.menu.length !== 0) {
-          const list=[]
+          const list = buildMenuPathIndex(route.menu)
           route.menu.forEach((menu, index) => {
             let icons = [];
             if (!isEmpty(menu.image)) {
@@ -96,21 +180,18 @@ const actions = {
               component: Layout,
               redirect: "/" + menu.module + "/" + modules,
               name: menu.module,
-              meta: {title: menu.title, icon: icons},
-              taburl:"/" + menu.module + "/" + modules,
-              taburl101:"/" + menu.module + "/" + modules
+              meta: { title: menu.title, icon: icons },
+              taburl: "/" + menu.module + "/" + modules,
+              taburl101: "/" + menu.module + "/" + modules
             }
             //递归子菜单
             topMenu.children = actions.getMenus(menu.children)
 
             res.push(topMenu)
-            menu.children.forEach((item, i)=>{
-              list.push(item)
-            })
 
           })
           removeStorage('route')
-          setStorage("route",list)
+          setStorage("route", list)
 
         }
         return actions.generateRoutes(commit, res);
@@ -126,7 +207,7 @@ const actions = {
     if (menuList.length == 0) {
       return [];
     }
-     console.log('getMenus',menuList)
+    console.log('getMenus', menuList)
 
     menuList.forEach((currentMenu, index) => {
       let childrenMenu = {
@@ -138,36 +219,54 @@ const actions = {
           permission: [],       // 存储权限URL列表
           permissionList: []    // 存储权限按钮信息
         },
-        id:currentMenu.id,
-        taburl:currentMenu.url,
-        taburl142:currentMenu.url
+        id: currentMenu.id,
+        taburl: currentMenu.url,
+        taburl142: currentMenu.url
       }
 
-      //增加按钮权限
-      menuList.forEach(item =>{
-        let arr =  {
-          label: item?.meta?.title || item?.title,
-          value: item?.id
+      const pushUnique = (list, value) => {
+        if (value && !list.includes(value)) {
+          list.push(value)
         }
-        childrenMenu.meta.permissionList.push(arr)
-        //弃用，本来是要用id判断按钮权限，但是php和Javaid可能不同意，改用label
-        // childrenMenu.meta.permission.push(item?.id)//此判断是因为在递归过程中可能有的数据结构已经变更了
-        if(item){
-          if( item.url )
-          {
-            childrenMenu.meta.permission.push(item.url)
-          }else if(item.action ){
-            childrenMenu.meta.permission.push(item.action)
-          }else if(item.path ){
-            childrenMenu.meta.permission.push(item.path)
+      }
+      const pushPermissionListUnique = (list, value) => {
+        if (!value || value.value === undefined) {
+          return
+        }
+        if (!list.some(v => v && v.value === value.value)) {
+          list.push(value)
+        }
+      }
+      const collectPermissions = (items, deep) => {
+        if (!items || items.length === 0) {
+          return
+        }
+        items.forEach(item => {
+          pushPermissionListUnique(childrenMenu.meta.permissionList, {
+            label: item?.meta?.title || item?.title,
+            value: item?.id
+          })
+          if (item) {
+            if (item.url) {
+              pushUnique(childrenMenu.meta.permission, item.url)
+            } else if (item.action) {
+              pushUnique(childrenMenu.meta.permission, item.action)
+            } else if (item.path) {
+              pushUnique(childrenMenu.meta.permission, item.path)
+            }
           }
-        }
+          if (deep && item && item.children && item.children.length) {
+            collectPermissions(item.children, deep)
+          }
+        })
+      }
 
-      })
+      collectPermissions(menuList, false)
+      collectPermissions(currentMenu.children, true)
       //是否有子菜单
-      console.log('currentMenu.isChildren',currentMenu.isChildren)
+      console.log('currentMenu.isChildren', currentMenu.isChildren)
       if (!currentMenu.isChildren) {
-        childrenMenu.component = resolve => require([`@/views${currentMenu.url}`], resolve)
+        childrenMenu.component = loadView(currentMenu.url)
       } else {
         childrenMenu.redirect = currentMenu.url
         childrenMenu.component = {
@@ -185,9 +284,9 @@ const actions = {
   generateRoutes(commit, authorizationList) {
     return new Promise(resolve => {
       let authorizationLists = authorizationList
-      if(getStorage('laike_admin_userInfo') && getStorage('laike_admin_userInfo').type != 0) {
+      if (getStorage('laike_admin_userInfo') && getStorage('laike_admin_userInfo').type != 0) {
         authorizationLists = authorizationLists.filter(item => {
-          if(item.meta.title !== '平台') {
+          if (item.meta.title !== '平台') {
             return item
           }
         })

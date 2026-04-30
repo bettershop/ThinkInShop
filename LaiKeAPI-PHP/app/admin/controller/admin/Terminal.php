@@ -27,14 +27,15 @@ class Terminal extends BaseController
     // 获取终端配置
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $type = addslashes(trim($this->request->param('type')));
+        $type = addslashes(safe_trim($this->request->param('type')));
 
         if($type == 2)
         {
+            $guide_source = 2;
             $appInfo = array();
             $r0 = EditionModel::where(['store_id'=>$store_id])->select()->toArray();
             if ($r0)
@@ -60,7 +61,7 @@ class Terminal extends BaseController
             }
 
             $guide_list = array();
-            $r2 = GuideModel::where(['store_id'=>$store_id])->order('sort','asc')->field('id,image,type,sort,add_date')->select()->toArray();
+            $r2 = GuideModel::where(['store_id'=>$store_id,'source'=>$guide_source,'type'=>1])->order('sort','asc')->order('add_date','desc')->limit(3)->field('id,image,type,sort,add_date,source')->select()->toArray();
             if ($r2)
             {
                 foreach($r2 as $k => $v)
@@ -74,6 +75,7 @@ class Terminal extends BaseController
         }
         else
         {
+            $guide_source = 1;
             $appid = ''; // 小程序id
             $appsecret = ''; // 小程序密钥
             $official_account_appid = ''; // 公众号appID
@@ -82,13 +84,11 @@ class Terminal extends BaseController
             $app_title = ''; // 首页标题
             $app_logo = ''; // 授权登录logo
             
-            $r0 = ConfigModel::where(['store_id'=>$store_id])->field('id,appid,appsecret,official_account_appid,official_account_appsecret,Hide_your_wallet,app_title,app_logo')->select()->toArray();
+            $r0 = ConfigModel::where(['store_id'=>$store_id])->field('id,appid,appsecret,Hide_your_wallet,app_title,app_logo')->select()->toArray();
             if ($r0)
             {
                 $appid = $r0[0]['appid']; // 小程序id
                 $appsecret = $r0[0]['appsecret']; // 小程序密钥
-                $official_account_appid = $r0[0]['official_account_appid']; // 公众号appID
-                $official_account_appsecret = $r0[0]['official_account_appsecret']; // 公众号app密钥
                 $Hide_your_wallet = $r0[0]['Hide_your_wallet']; // 是否隐藏钱包 0.不隐藏 1.隐藏
                 $app_title = $r0[0]['app_title']; // 首页标题
                 $app_logo = $r0[0]['app_logo']; // 授权登录logo
@@ -96,10 +96,6 @@ class Terminal extends BaseController
             if ($appsecret != '')
             {
                 $appsecret = $this->maskValue($appsecret, 4, 4);
-            }
-            if ($official_account_appsecret != '')
-            {
-                $official_account_appsecret = $this->maskValue($official_account_appsecret, 4, 4);
             }
 
             $weiXinInfo = array('id'=>'','store_id'=>'','pay_success'=>'','order_delivery'=>'','delivery'=>'','refund_res'=>'','update_time'=>'');
@@ -110,7 +106,7 @@ class Terminal extends BaseController
             }
 
             $guide_list = array();
-            $r2 = GuideModel::where(['store_id'=>$store_id])->order('sort','asc')->field('id,image,type,sort,add_date')->select()->toArray();
+            $r2 = GuideModel::where(['store_id'=>$store_id,'source'=>$guide_source,'type'=>1])->order('sort','asc')->order('add_date','desc')->limit(3)->field('id,image,type,sort,add_date,source')->select()->toArray();
             if ($r2)
             {
                 foreach($r2 as $k => $v)
@@ -130,9 +126,9 @@ class Terminal extends BaseController
     // APP提交（新）
     public function saveApp()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
     	$push_Appkey = addslashes($this->request->param('pushAppkey')); // 推送Appkey
     	$push_Appid = addslashes($this->request->param('pushAppid')); // 推送Appid
@@ -171,17 +167,15 @@ class Terminal extends BaseController
     // 小程序提交
     public function saveWeiXinApp()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $app_title = addslashes($this->request->param('appTitle')); // 首页标题
         $app_logo = addslashes($this->request->param('appLogo')); // 授权登录logo
 
         $appid = addslashes($this->request->param('appId')); // 小程序id
         $appsecret = addslashes($this->request->param('appSecret')); // 小程序密钥
-        $official_account_appid = addslashes($this->request->param('official_account_appid')); // 公众号appID
-        $official_account_appsecret = addslashes($this->request->param('official_account_appsecret')); // 公众号app密钥
 
         $pay_success = addslashes($this->request->param('paySuccess')); // 支付成功通知
         $delivery = addslashes($this->request->param('delivery')); // 支付成功通知 订单发货通知
@@ -225,19 +219,14 @@ class Terminal extends BaseController
         }
 
         $masked_appsecret = $this->isMaskedValue($appsecret);
-        $masked_official_secret = $this->isMaskedValue($official_account_appsecret);
-        if ($masked_appsecret || $masked_official_secret)
+        if ($masked_appsecret)
         {
-            $existing_secrets = ConfigModel::where(['store_id'=>$store_id])->field('appsecret,official_account_appsecret')->select()->toArray();
+            $existing_secrets = ConfigModel::where(['store_id'=>$store_id])->field('appsecret')->select()->toArray();
             if ($existing_secrets)
             {
                 if ($masked_appsecret)
                 {
                     $appsecret = $existing_secrets[0]['appsecret'];
-                }
-                if ($masked_official_secret)
-                {
-                    $official_account_appsecret = $existing_secrets[0]['official_account_appsecret'];
                 }
             }
         }
@@ -257,7 +246,7 @@ class Terminal extends BaseController
         {
             // 更新
             $sql1_where = array('store_id'=>$store_id);
-            $sql1_update = array('appid'=>$appid,'appsecret'=>$appsecret,'official_account_appid'=>$official_account_appid,'official_account_appsecret'=>$official_account_appsecret,'Hide_your_wallet'=>$Hide_your_wallet,'modify_date'=>$time,'app_title'=>$app_title,'app_logo'=>$app_logo);
+            $sql1_update = array('appid'=>$appid,'appsecret'=>$appsecret,'Hide_your_wallet'=>$Hide_your_wallet,'modify_date'=>$time,'app_title'=>$app_title,'app_logo'=>$app_logo);
             $r1 = Db::name('config')->where($sql1_where)->update($sql1_update);
             if ($r1 == -1)
             {
@@ -271,7 +260,7 @@ class Terminal extends BaseController
         else
         {
             // 添加系统设置
-            $sql1 = array('store_id'=>$store_id,'upserver'=>2,'modify_date'=>$time,'uploadImg'=>'./images/','user_id'=>'user','wx_name'=>'user','appid'=>$appid,'appsecret'=>$appsecret,'official_account_appid'=>$official_account_appid,'official_account_appsecret'=>$official_account_appsecret,'Hide_your_wallet'=>$Hide_your_wallet,'modify_date'=>$time,'app_title'=>$app_title,'app_logo'=>$app_logo);
+            $sql1 = array('store_id'=>$store_id,'upserver'=>2,'modify_date'=>$time,'uploadImg'=>'./images/','user_id'=>'user','wx_name'=>'user','appid'=>$appid,'appsecret'=>$appsecret,'Hide_your_wallet'=>$Hide_your_wallet,'modify_date'=>$time,'app_title'=>$app_title,'app_logo'=>$app_logo);
             $r1 = Db::name('config')->insert($sql1);
             if($r1 < 1)
             {

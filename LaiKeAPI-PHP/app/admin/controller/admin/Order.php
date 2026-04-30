@@ -45,12 +45,38 @@ use app\admin\model\FileDeliveryModel;
  */
 class Order extends BaseController
 {   
+    public $admin;
+    public $store_id;
+    public $store_type;
+    public $selfLifting;
+    public $mch_name;
+    public $operation_type;
+    public $status;
+    public $news_status;
+    public $delivery_status;
+    public $readd;
+    public $mch_id;
+    public $x_order;
+    public $sNo;
+    public $brand;
+    public $otype;
+    public $pagesize;
+    public $page;
+    public $source;
+    public $startdate;
+    public $enddate;
+    public $Servertype;
+    public $order_label;
+    public $exportType;
+    public $id;
+    public $order_type;
+
     //发货页面
     public function deliveryView()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = $this->request->param('sNo'); // 订单号
 
@@ -61,7 +87,7 @@ class Order extends BaseController
         {
             $sql = "select o.p_sNo,o.otype,d.id,d.r_sNo,d.user_id,d.p_id,d.p_name,d.p_price,d.num,d.r_status,d.sid,d.size,p.imgurl,o.otype,d.deliver_num,b.brand_name,o.mch_id,o.exchange_rate from lkt_order_details as d left join lkt_configure as c on d.sid = c.id left join lkt_product_list as p on p.id=c.pid left join lkt_brand_class as b on p.brand_id = b.brand_id left join lkt_order as o on d.r_sNo=o.sNo where d.store_id = '$store_id' and d.r_sNo='$id' and d.r_status=1";
             $res = Db::query($sql);
-            $mch_id = trim($res[0]['mch_id'],',');
+            $mch_id = safe_trim($res[0]['mch_id'],',');
             $logistics_type = PC_Tools::Determine_logistics_type($store_id,$mch_id);
             foreach ($res as $k => $v)
             {
@@ -106,8 +132,8 @@ class Order extends BaseController
     public function GetLogistics()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $sNo = $this->request->param('sNo'); // 订单号
 
@@ -121,11 +147,11 @@ class Order extends BaseController
     // 统一发货
     public function UnifiedShipment()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
-    	$list = trim($this->request->param('list'));
+    	$list = safe_trim($this->request->param('list'));
         $list = htmlspecialchars_decode($list);
 
         $operator_id = cache($access_id.'admin_id');
@@ -140,12 +166,12 @@ class Order extends BaseController
     public function FaceSheetSend()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
-        $id = trim($this->request->param('orderDetailIds')); // 订单详情表id
-        $express_id = trim($this->request->param('exId'));//快递id
-        $courier_num = trim($this->request->param('exNo'));//快递单号
+        $id = safe_trim($this->request->param('orderDetailIds')); // 订单详情表id
+        $express_id = safe_trim($this->request->param('exId'));//快递id
+        $courier_num = safe_trim($this->request->param('exNo'));//快递单号
         $admin_name = $admin_list['name'];
 
         $operator_id = cache($access_id.'admin_id');
@@ -161,12 +187,12 @@ class Order extends BaseController
     public function deliverySave()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
-        $id = trim($this->request->param('orderDetailIds')); // 订单详情表id
-        $express_id = trim($this->request->param('exId'));//快递id
-        $courier_num = trim($this->request->param('exNo'));//快递单号
+        $id = safe_trim($this->request->param('orderDetailIds')); // 订单详情表id
+        $express_id = safe_trim($this->request->param('exId'));//快递id
+        $courier_num = safe_trim($this->request->param('exNo'));//快递单号
         
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
@@ -181,13 +207,13 @@ class Order extends BaseController
     public function deliverySaveForStoreSelf()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
-        $sNo = trim($this->request->param('sNo')); // 订单号
-        $courier_name = trim($this->request->param('courier_name')); // 快递人名称
-        $phone = trim($this->request->param('phone')); // 快递人电话
+        $sNo = safe_trim($this->request->param('sNo')); // 订单号
+        $courier_name = safe_trim($this->request->param('courier_name')); // 快递人名称
+        $phone = safe_trim($this->request->param('phone')); // 快递人电话
         
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
@@ -202,9 +228,9 @@ class Order extends BaseController
     public function batchDelivery()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         $mch_id = cache($access_id.'_'.$store_type);
 
         $admin_name = $this->user_list['name'];
@@ -253,7 +279,7 @@ class Order extends BaseController
                 $r0 = Db::query($sql0);
                 if($r0)
                 {
-                    $shop_id = trim($r0[0]['mch_id'],','); // 店铺ID
+                    $shop_id = safe_trim($r0[0]['mch_id'],','); // 店铺ID
                 }
                 else
                 {   
@@ -461,13 +487,13 @@ class Order extends BaseController
     public function deliveryList()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         $mch_id = cache($access_id.'_'.$store_type);
 
-        $fileName  = trim($this->request->param('fileName')); // 编号
-        $status = trim($this->request->param('status')); // 是否成功 0.失败 1.成功
+        $fileName  = safe_trim($this->request->param('fileName')); // 编号
+        $status = safe_trim($this->request->param('status')); // 是否成功 0.失败 1.成功
         $startdate = $this->request->param("startDate");
         $enddate = $this->request->param("endDate"); 
         $pagesize = $this->request->param('pageSize');// 每页显示多少条数据
@@ -537,9 +563,9 @@ class Order extends BaseController
     public function delDelivery()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         $mch_id = cache($access_id.'_'.$store_type);
 
         $id = $this->request->param("id");
@@ -601,8 +627,8 @@ class Order extends BaseController
     // 关闭订单
     public function close()
     {
-        $store_id = trim($this->request->post('storeId'));
-        $store_type = trim($this->request->post('storeType'));
+        $store_id = safe_trim($this->request->post('storeId'));
+        $store_type = safe_trim($this->request->post('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         $sNo = $this->request->post('oid'); // 订单号
@@ -620,8 +646,8 @@ class Order extends BaseController
     // 刪除订单
     public function del()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         $sNo = $this->request->param('orders'); // 订单号逗号隔开
@@ -639,8 +665,8 @@ class Order extends BaseController
     // 取消订单
     public function CancellationOfOrder()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         $sNo = $this->request->param('sNo'); // 订单号
@@ -655,8 +681,8 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $sNo = $this->request->param('sNo'); // 订单号
 
@@ -701,8 +727,8 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $sNo = $this->request->param('sNo'); // 订单号
 
@@ -753,42 +779,42 @@ class Order extends BaseController
         $this->admin = $admin_list;
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
+        $store_id = safe_trim($this->request->param('storeId'));
         $this->store_id = $store_id;
-        $store_type = trim($this->request->param('storeType'));
+        $store_type = safe_trim($this->request->param('storeType'));
         $this->store_type = $store_type;
         $Jurisdiction = new Jurisdiction();
-        $access_id = trim($this->request->param('accessId'));
+        $access_id = safe_trim($this->request->param('accessId'));
         $shop_id = cache($access_id.'_'.$store_type); //店铺ID
         
-        $selfLifting = trim($this->request->param('selfLifting')); // 
+        $selfLifting = safe_trim($this->request->param('selfLifting')); // 
         $this->selfLifting = $selfLifting;
 
-        $mch_name = trim($this->request->param('mchName')); // 请输入店铺名称
+        $mch_name = safe_trim($this->request->param('mchName')); // 请输入店铺名称
         $this->mch_name = $mch_name;
-        $operation_type  = trim($this->request->param('operationType')); // 下单类型1用户下单2店铺下单3平台下单
+        $operation_type  = safe_trim($this->request->param('operationType')); // 下单类型1用户下单2店铺下单3平台下单
         $this->operation_type  = $operation_type ;
-        $status = trim($this->request->param('status')); // 订单状态
+        $status = safe_trim($this->request->param('status')); // 订单状态
         $this->status = $status;
-        $news_status = trim($this->request->param('news_status')); // 订单状态
+        $news_status = safe_trim($this->request->param('news_status')); // 订单状态
         $this->news_status = $news_status;
-        $delivery_status = trim($this->request->param('delivery_status')); // 提醒发货
+        $delivery_status = safe_trim($this->request->param('delivery_status')); // 提醒发货
         $this->delivery_status = $delivery_status;
-        $readd = trim($this->request->param('readd')); // 未查看信息
+        $readd = safe_trim($this->request->param('readd')); // 未查看信息
         $this->readd = $readd;
-        $mch_id = trim($this->request->param('mch_id')); // 店铺ID
+        $mch_id = safe_trim($this->request->param('mch_id')); // 店铺ID
         $this->mch_id = $mch_id;
-        $x_order = trim($this->request->param('x_order')); // 店铺ID
+        $x_order = safe_trim($this->request->param('x_order')); // 店铺ID
         $this->x_order = $x_order;
-        $sNo = trim($this->request->param('keyWord'));//查询
-        $id = trim($this->request->param('id'));//订单号
+        $sNo = safe_trim($this->request->param('keyWord'));//查询
+        $id = safe_trim($this->request->param('id'));//订单号
         
         if($id)
         {
             $sNo = $id;
         }
         $this->sNo = $sNo;
-        $brand = trim($this->request->param('brand'));
+        $brand = safe_trim($this->request->param('brand'));
         $this->brand = $brand;
         $otype = 'GM';//订单类型
         $this->otype = $otype;
@@ -796,7 +822,7 @@ class Order extends BaseController
         $this->pagesize = $pagesize;
         $page = $this->request->param('pageNo');
         $this->page = $page;
-        $source = trim($this->request->param('source'));
+        $source = safe_trim($this->request->param('source'));
         $this->source = $source;
         $startdate = $this->request->param("startDate");
         $this->startdate = $startdate;
@@ -908,8 +934,8 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $r_sNo = $this->request->param('orderno'); // 订单号
 
@@ -926,8 +952,8 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         $name = $this->request->param('userName');
@@ -939,6 +965,7 @@ class Order extends BaseController
         $mobile = $this->request->param('tel');
         $status = $this->request->param('orderStatus');
         $z_price = $this->request->param('orderAmt');
+        $freight = $this->request->param('freight');
         $remarks = $this->request->param('remarks');
         $sNo =  $this->request->param('orderNo');
 
@@ -964,9 +991,13 @@ class Order extends BaseController
             {
                 $data['u_status'] = $status;
             }
-            if($z_price)
+            if($z_price !== '' && $z_price !== null)
             {
                 $data['z_price'] = $z_price;
+            }
+            if($freight !== '' && $freight !== null)
+            {
+                $data['z_freight'] = $freight;
             }
             $remark = array('0'=>$remarks);
             $data['remarks'] = serialize($remark);//订单备注
@@ -992,16 +1023,16 @@ class Order extends BaseController
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
         $mch_id = cache($access_id.'_'.$store_type);
        
         $id = $this->request->param("id"); // 售后id
-        $sNo = addslashes(trim($this->request->param('orderno'))); // 订单号
+        $sNo = addslashes(safe_trim($this->request->param('orderno'))); // 订单号
         $mch_name = $this->request->param('mchName'); // 店铺名称
         $re_type = $this->request->param('reType'); // 店铺ID
-        $r_type = trim($this->request->param('status')); 
+        $r_type = safe_trim($this->request->param('status')); 
         $startdate = $this->request->param("startDate");
         $enddate = $this->request->param("endDate");   
         $page = $this->request->param('pageNo'); // 页码
@@ -1031,16 +1062,16 @@ class Order extends BaseController
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         $id = $this->request->param('id');
         $m = intval($this->request->param('type'));
-        $text = trim($this->request->param('text'));
-        $price = trim($this->request->param('price'))?trim($this->request->param('price')) : 0;
-        $express = trim($this->request->param('expressId'));
-        $courier_num = trim($this->request->param('courierNum'));
+        $text = safe_trim($this->request->param('text'));
+        $price = safe_trim($this->request->param('price'))?safe_trim($this->request->param('price')) : 0;
+        $express = safe_trim($this->request->param('expressId'));
+        $courier_num = safe_trim($this->request->param('courierNum'));
 
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
@@ -1066,9 +1097,9 @@ class Order extends BaseController
     // 评论列表
     public function getCommentsInfo()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
         $shop_id = cache($access_id.'_'.$store_type);
 
         $cid = $this->request->param('cid');//评论id
@@ -1093,8 +1124,8 @@ class Order extends BaseController
     // 删除评论
     public function delComments()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         // 接收信息
@@ -1114,8 +1145,8 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $cid = $this->request->param('cid');//评论id
         $search = $this->request->param("key");//用户id
@@ -1135,8 +1166,8 @@ class Order extends BaseController
     // 删除明细
     public function delCommentReply()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
         $id = $this->request->param('id');//回复id
@@ -1156,14 +1187,14 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
-        $id = addslashes(trim($this->request->param('cid')));
-        $comment_input = addslashes(trim($this->request->param('commentText')));
-        $comment_type = addslashes(trim($this->request->param('commentType')));
-        $review = addslashes(trim($this->request->param('review')));
+        $id = addslashes(safe_trim($this->request->param('cid')));
+        $comment_input = addslashes(safe_trim($this->request->param('commentText')));
+        $comment_type = addslashes(safe_trim($this->request->param('commentType')));
+        $review = addslashes(safe_trim($this->request->param('review')));
         $imgurls = $this->request->param('commentImgUrls');//逗号分隔
         $review_time_images = $this->request->param('reviewImgList');//逗号分隔
 
@@ -1181,12 +1212,12 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
     	$access_id = addslashes($this->request->param('accessId'));
 
-        $id = addslashes(trim($this->request->param('commentId')));
-        $comment_input = addslashes(trim($this->request->param('commentText')));
+        $id = addslashes(safe_trim($this->request->param('commentId')));
+        $comment_input = addslashes(safe_trim($this->request->param('commentText')));
 
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
@@ -1201,13 +1232,13 @@ class Order extends BaseController
     public function orderCount()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $access_id = $this->request->post('accessId');
         $mch_id = cache($access_id.'_'.$store_type);
 
-        $condition = " o.store_id = '$store_id' and lu.store_id = '$store_id' and o.recycle != 1 and o.supplier_id = 0 and o.store_recycle = 1 ";
+        $condition = " o.store_id = '$store_id' and lu.store_id = '$store_id' and o.recycle != 1 and p.gongyingshang = 0 and o.store_recycle = 1 ";
         if($store_type != 8)
         {
             $condition .= " and p.mch_id = '$mch_id' ";
@@ -1331,8 +1362,8 @@ class Order extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $sNo = $this->request->param('sNo'); // 订单号
         $orders = explode(',', $sNo);
@@ -1391,13 +1422,13 @@ class Order extends BaseController
     // 获取核销门店
     public function getMch_store()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $mchId = trim($this->request->param('mchId')); // 店铺ID
-        $sNo = trim($this->request->param('sNo')); // 订单号
-        $pid = trim($this->request->param('pid')); // 商品ID
+        $mchId = safe_trim($this->request->param('mchId')); // 店铺ID
+        $sNo = safe_trim($this->request->param('sNo')); // 订单号
+        $pid = safe_trim($this->request->param('pid')); // 商品ID
 
         $total = 0;
         $list = array();
@@ -1452,13 +1483,13 @@ class Order extends BaseController
     // 虚拟订单-获取商品信息
     public function testExtractionCode()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $id = trim($this->request->param('orderId')); // 订单id
-        $mch_store_id = trim($this->request->param('mch_store_id')); // 店铺门店id
-        $extraction_code = trim($this->request->param('extractionCode')); // 提货码
+        $id = safe_trim($this->request->param('orderId')); // 订单id
+        $mch_store_id = safe_trim($this->request->param('mch_store_id')); // 店铺门店id
+        $extraction_code = safe_trim($this->request->param('extractionCode')); // 提货码
         
         $shop_id = cache($access_id.'_'.$store_type);
 
@@ -1471,12 +1502,12 @@ class Order extends BaseController
     // 验证提货码
     public function VerificationExtractionCode()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $id = trim($this->request->param('orderId')); // 订单id
-        $extraction_code = trim($this->request->param('extractionCode')); // 提货码
+        $id = safe_trim($this->request->param('orderId')); // 订单id
+        $extraction_code = safe_trim($this->request->param('extractionCode')); // 提货码
 
         $shop_id = cache($access_id.'_'.$store_type);
         $operator_id = cache($access_id.'admin_id');
@@ -1490,9 +1521,9 @@ class Order extends BaseController
     public function helpOrder()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         $admin_name = $this->user_list['name'];
         $admin_type1 = $this->user_list['type'];
 
@@ -1936,8 +1967,8 @@ class Order extends BaseController
     public function ShippingRecords()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $express_name = $this->request->param('express_name'); // 快递单号、快递订单ID
         $sNo = $this->request->param('sNo'); // 订单号
@@ -1945,8 +1976,8 @@ class Order extends BaseController
         $status = $this->request->param('status'); // 是否打印 0.未打印 1.已打印
         $startdate = $this->request->param("startDate"); // 查询开始时间
         $enddate = $this->request->param("endDate"); // 查询结束时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
 
         $array = array('store_id'=>$store_id,'express_name'=>$express_name,'sNo'=>$sNo,'mch_name'=>$mch_name,'status'=>$status,'startdate'=>$startdate,'enddate'=>$enddate,'page'=>$page,'pagesize'=>$pagesize);
 
@@ -1960,13 +1991,13 @@ class Order extends BaseController
     public function getPro()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = $this->request->param('id'); // 发货记录ID
         $name = $this->request->param('name'); // 商品名称
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
 
         $array = array('store_id'=>$store_id,'id'=>$id,'name'=>$name,'page'=>$page,'pagesize'=>$pagesize);
 
@@ -1980,9 +2011,9 @@ class Order extends BaseController
     public function CancelElectronicWaybill()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $id = trim($this->request->param('id')); // 发货记录id
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $id = safe_trim($this->request->param('id')); // 发货记录id
         $admin_name = $admin_list['name'];
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
@@ -2001,11 +2032,11 @@ class Order extends BaseController
         $operator_id = cache($access_id.'admin_id');
         $operator = cache($access_id.'admin_name');
 
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $sNo = trim($this->request->param('sNo')); // 订单号
-        $review_status = trim($this->request->param('review_status')); // 凭证审核状态 0.未上传凭证 1.待审核 2.通过 3.拒绝
-        $reason_for_rejection = trim($this->request->param('reason_for_rejection')); // 拒绝原因
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $sNo = safe_trim($this->request->param('sNo')); // 订单号
+        $review_status = safe_trim($this->request->param('review_status')); // 凭证审核状态 0.未上传凭证 1.待审核 2.通过 3.拒绝
+        $reason_for_rejection = safe_trim($this->request->param('reason_for_rejection')); // 拒绝原因
 
         $array = array('store_id'=>$store_id,'shop_id'=>0,'admin_name'=>$admin_name,'sNo'=>$sNo,'review_status'=>$review_status,'reason_for_rejection'=>$reason_for_rejection,'source'=>'1','operator_id'=>$operator_id,'operator'=>$operator);
         $data = DeliveryHelper::offlineReview($array);

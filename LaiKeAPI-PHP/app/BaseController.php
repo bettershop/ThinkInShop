@@ -171,6 +171,8 @@ abstract class BaseController
         }
 
         $list = array(
+            'admin.system.GetBasicConfiguration', // 获取基础配置
+            'admin.mch.home.GetBasicConfiguration', // 商家后台基础配置
             /* 移动端 */ 
             'app.Order.getPayment', // 获取支付方式
             'app.common.getLangs', // 获取商城语种

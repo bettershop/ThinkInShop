@@ -33,10 +33,10 @@ class MchAdminDiy extends BaseController
     // 获取H5域名
     public function Index()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
-        $lang_code = trim($this->request->param('language'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
+        $lang_code = safe_trim($this->request->param('language'));
 
         $mch_id = cache($access_id.'_'.$store_type);
         $H5_domain = '';
@@ -56,9 +56,9 @@ class MchAdminDiy extends BaseController
     public function GetDiyList()
     {
         $store_id = $this->request->param('storeId');
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
-        $lang_code = trim($this->request->param('language'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
+        $lang_code = safe_trim($this->request->param('language'));
         $id = $this->request->param('id');
         $mch_id = cache($access_id.'_'.$store_type);
 
@@ -91,12 +91,12 @@ class MchAdminDiy extends BaseController
     // 获取路径
     public function BannerPathList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
-        $lang_code = trim($this->request->param('language'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
+        $lang_code = safe_trim($this->request->param('language'));
         
-        $type0 = trim($this->request->param('type'));
+        $type0 = safe_trim($this->request->param('type'));
         $mch_id = cache($access_id.'_'.$store_type);
 
         // $where_list = array('store_id'=>$store_id,'type0'=>$type0,'status'=>1,'type'=>1,'lang_code'=>$lang_code,'mch_id'=>$mch_id);
@@ -137,10 +137,10 @@ class MchAdminDiy extends BaseController
     // 获取页面数据
     public function getBindPageList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id'));
+        $id = safe_trim($this->request->param('id'));
 
         $list = array();
         $sql = "select a.bind_id,a.id,a.link_key,a.page_name,a.link,a.page_key,a.image,a.page_context,a.status,a.recycle,a.create_time,a.create_by,a.update_time from (select b.id AS bind_id,b.link_key,p.*,ROW_NUMBER() over ( PARTITION BY b.diy_page_id ) AS top from lkt_diy_page_bind b left join lkt_diy_page p on p.id = b.diy_page_id where b.diy_id = '$id') AS a WHERE a.top = 1";
@@ -159,9 +159,9 @@ class MchAdminDiy extends BaseController
     public function AddOrUpdateDiy()
     {
         $store_id = $this->request->param('storeId');
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
-        $lang_code = trim($this->request->param('language'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
+        $lang_code = safe_trim($this->request->param('language'));
 
         $id = $this->request->param('id');
         $name = $this->request->param('name'); // 页面名称
@@ -234,9 +234,9 @@ class MchAdminDiy extends BaseController
     public function DiyStatus()
     {
         $store_id = $this->request->param('storeId');
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
-        $lang_code = trim($this->request->param('language'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
+        $lang_code = safe_trim($this->request->param('language'));
         $id = $this->request->param('id');
 
         $mch_id = cache($access_id.'_'.$store_type);
@@ -268,9 +268,9 @@ class MchAdminDiy extends BaseController
     public function DelDiy()
     {
         $store_id = $this->request->param('storeId');
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
-        $lang_code = trim($this->request->param('language'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
+        $lang_code = safe_trim($this->request->param('language'));
         $id = $this->request->param('id');
 
         $mch_id = cache($access_id.'_'.$store_type);

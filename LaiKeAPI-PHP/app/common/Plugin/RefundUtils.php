@@ -316,7 +316,7 @@ class RefundUtils
         Db::startTrans();
 
         /*----------- 进入订单详情把未读状态改成已读状态，已读状态的状态不变 -------*/
-        $sql1 = "select m.p_name,a.readd,a.id,a.user_id,a.mch_id,m.r_sNo,a.p_sNo,a.status,a.real_sno,b.re_type,m.express_id,b.p_id,b.pid,b.sid,a.supplier_id,m.freight,a.otype,m.after_write_off_num,b.r_write_off_num,m.num,m.living_room_id from lkt_order as a ,lkt_order_details AS m,lkt_return_order as b where a.store_id = '$store_id' and a.sNo = m.r_sNo and b.id = '$id' and b.p_id = m.id";
+        $sql1 = "select m.p_name,a.readd,a.id,a.user_id,a.mch_id,m.r_sNo,a.p_sNo,a.status,a.real_sno,b.re_type,m.express_id,b.p_id,b.pid,b.sid,d.gongyingshang as supplier_id,m.freight,a.otype,m.after_write_off_num,b.r_write_off_num,m.num,m.living_room_id from lkt_order as a ,lkt_order_details AS m,lkt_return_order as b,lkt_configure as c ,lkt_product_list as d where a.store_id = '$store_id' and a.sNo = m.r_sNo and b.id = '$id' and b.p_id = m.id";
         $r1 = Db::query($sql1);
         if(empty($r1))
         {
@@ -442,7 +442,7 @@ class RefundUtils
             //同意退款
             if ($m == 9 || $m == 4 || $m == 13)
             {
-                $sql_id = "select a.baiduId,a.orderId,a.offset_balance,m.id as oid,a.id,a.trade_no,m.num,a.sNo,a.pay,a.z_price,a.old_total,a.user_id,a.coupon_id,a.allow,a.spz_price,a.reduce_price,a.coupon_price,a.coupon_id,a.subtraction_id,a.p_sNo,m.p_name,m.p_price,a.consumer_money,a.mch_id,m.express_id,m.freight,a.real_sno,b.re_apply_money,a.old_freight,a.z_freight,m.arrive_time,m.coupon_id as coupon_id0,a.otype,a.status,m.supplier_settlement,m.supplier_id,m.mch_store_write_id,m.write_time,m.write_time_id,p.write_off_settings,p.is_appointment,b.r_write_off_num,m.r_status,a.supplier_id,m.is_addp,m.actual_total,m.after_discount
+                $sql_id = "select a.baiduId,a.orderId,a.offset_balance,m.id as oid,a.id,a.trade_no,m.num,a.sNo,a.pay,a.z_price,a.old_total,a.user_id,a.coupon_id,a.allow,a.spz_price,a.reduce_price,a.coupon_price,a.coupon_id,a.subtraction_id,a.p_sNo,m.p_name,m.p_price,a.consumer_money,a.mch_id,m.express_id,m.freight,a.real_sno,b.re_apply_money,a.old_freight,a.z_freight,m.arrive_time,m.coupon_id as coupon_id0,a.otype,a.status,m.supplier_settlement,m.mch_store_write_id,m.write_time,m.write_time_id,p.write_off_settings,p.is_appointment,b.r_write_off_num,m.r_status,p.gongyingshang as supplier_id,m.is_addp,m.actual_total,m.after_discount
                             from lkt_order as a 
                             LEFT JOIN lkt_order_details AS m ON a.sNo = m.r_sNo 
                             left join lkt_product_list as p on m.p_id = p.id
@@ -537,7 +537,7 @@ class RefundUtils
 
                     if($pay == 'wallet_pay')
                     {
-                        $str_a = "a.store_id,a.user_id,a.otype,a.sNo,a.mch_id,a.old_total,a.z_price,a.z_freight,a.old_freight,a.p_sNo,a.offset_balance,a.supplier_id";
+                        $str_a = "a.store_id,a.user_id,a.otype,a.sNo,a.mch_id,a.old_total,a.z_price,a.z_freight,a.old_freight,a.p_sNo,a.offset_balance,p.gongyingshang as supplier_id";
                         $str_b = "b.id as order_details_id,b.r_status,b.living_room_id,b.p_id,b.sid,b.num,b.p_name,b.actual_total,b.after_discount,b.freight,b.coupon_id,b.mch_store_write_id,b.write_time,b.write_time_id,b.is_addp,b.supplier_settlement,b.p_integral";
                         $str_c = "c.re_type,c.audit_status,c.content,c.r_write_off_num";
                         $str_p = "p.write_off_settings,p.is_appointment";
@@ -897,7 +897,7 @@ class RefundUtils
             $start = ($page - 1) * $pagesize;
         }
 
-        $condition = " b.store_id = '$store_id' and a.supplier_id = 0 and b.r_type != 100 ";
+        $condition = " b.store_id = '$store_id' and (lpl.gongyingshang = '' or lpl.gongyingshang is null or lpl.gongyingshang = 0) and b.r_type != 100 ";
         if($store_type == 8)
         { // 管理后台
             // $condition .= " and a.mch_id = ',$mch_id,' ";
@@ -912,7 +912,7 @@ class RefundUtils
         }
         else
         {
-            $condition .= " and a.mch_id = ',$mch_id,' and lpl.gongyingshang = 0 and a.otype = '$otype' ";
+            $condition .= " and a.mch_id = ',$mch_id,' and (lpl.gongyingshang = '' or lpl.gongyingshang is null or lpl.gongyingshang = 0) and a.otype = '$otype' ";
         }
 
         if ($sNo != '')    
@@ -944,7 +944,7 @@ class RefundUtils
         }    
         else if ($r_type == 1)//退款中    
         {
-            $condition .= " and b.r_type in (1,3) and b.re_type = 1 ";    
+            $condition .= " and b.r_type in (1,3,16) and b.re_type = 1 ";    
         }    
         else if ($r_type == 2)//退款成功   
         {    
@@ -1385,12 +1385,19 @@ class RefundUtils
                 $coupon_id = $r[0]['coupon_id']; // 优惠券ID
                 $living_room_id = $r[0]['living_room_id']; // 直播间ID
 
-                $order_res = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->field('old_total,z_price,spz_price,mch_id,supplier_id,status,pay,otype,real_sno,z_freight,old_freight,p_sNo,offset_balance,self_lifting,currency_symbol,exchange_rate,currency_code')->select()->toArray();
+                $supplier_id = 0;
+                $sql_p = "select gongyingshang from lkt_product_list as a left join lkt_configure as c on a.id = c.pid where id = '$attr_id' ";
+                $r_p = Db::query($sql_p);
+                if($r_p)
+                {
+                    $supplier_id = $r_p[0]['gongyingshang']; // 供应商ID
+                }
+
+                $order_res = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->field('old_total,z_price,spz_price,mch_id,status,pay,otype,real_sno,z_freight,old_freight,p_sNo,offset_balance,self_lifting,currency_symbol,exchange_rate,currency_code')->select()->toArray();
                 $old_total = $order_res[0]['old_total'];// 历史总价
                 $z_price = $order_res[0]['z_price'];
                 $spz_price = $order_res[0]['spz_price'];
                 $mch_id = trim($order_res[0]['mch_id'],','); // 店铺id
-                $supplier_id = $order_res[0]['supplier_id']; // 供应商ID
                 $status = $order_res[0]['status'];
                 $pay = $order_res[0]['pay']; // 支付方式
                 $otype = $order_res[0]['otype']; // 订单类型
@@ -1659,7 +1666,7 @@ class RefundUtils
 
         if($pay == 'wallet_pay')
         {
-            $str_a = "a.store_id,a.user_id,a.otype,a.sNo,a.mch_id,a.old_total,a.z_price,a.z_freight,a.old_freight,a.p_sNo,a.offset_balance,a.supplier_id";
+            $str_a = "a.store_id,a.user_id,a.otype,a.sNo,a.mch_id,a.old_total,a.z_price,a.z_freight,a.old_freight,a.p_sNo,a.offset_balance,p.gongyingshang as supplier_id";
             $str_b = "b.id as order_details_id,b.r_status,b.living_room_id,b.p_id,b.sid,b.num,b.p_name,b.actual_total,b.after_discount,b.freight,b.coupon_id,b.mch_store_write_id,b.write_time,b.write_time_id,b.is_addp,b.supplier_settlement,b.p_integral";
             $str_c = "c.re_type,c.audit_status,c.content,c.r_write_off_num";
             $str_p = "p.write_off_settings,p.is_appointment";
@@ -2037,14 +2044,13 @@ class RefundUtils
         $time = date("Y-m-d H:i:s");
         Db::startTrans();
         $p_name = array();
-        $order_res = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->field('user_id,old_total,z_price,mch_id,supplier_id,status,pay,otype,real_sno,z_freight,old_freight,p_sNo,offset_balance')->select()->toArray();
+        $order_res = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->field('user_id,old_total,z_price,mch_id,status,pay,otype,real_sno,z_freight,old_freight,p_sNo,offset_balance')->select()->toArray();
         if($order_res)
         {
             $user_id = $order_res[0]['user_id'];// user_id
             $old_total = $order_res[0]['old_total'];// 历史总价
             $z_price = $order_res[0]['z_price'];
             $mch_id = trim($order_res[0]['mch_id'],','); // 店铺id
-            $supplier_id = $order_res[0]['supplier_id']; // 供应商ID
             $status = $order_res[0]['status'];
             $pay = $order_res[0]['pay']; // 支付方式
             $otype = $order_res[0]['otype']; // 订单类型
@@ -2083,6 +2089,14 @@ class RefundUtils
                     $write_off_num = $v['write_off_num']; // 虚拟商品待核销次数
                     $coupon_id = $v['coupon_id']; // 优惠券ID
                     $living_room_id = $v['living_room_id']; // 直播间ID
+
+                    $supplier_id = 0;
+                    $sql_p = "select gongyingshang from lkt_product_list as a left join lkt_configure as c on a.id = c.pid where id = '$attr_id' ";
+                    $r_p = Db::query($sql_p);
+                    if($r_p)
+                    {
+                        $supplier_id = $r_p[0]['gongyingshang']; // 供应商ID
+                    }
 
                     $refund_price = 0;
                     if($otype == 'VI')
@@ -2160,7 +2174,7 @@ class RefundUtils
             $id = strtok(trim($remaining), ' '); // 售后ID
         }
 
-        $str_a = "a.store_id,a.user_id,a.otype,a.sNo,a.mch_id,a.old_total,a.z_price,a.z_freight,a.old_freight,a.p_sNo,a.offset_balance,a.supplier_id";
+        $str_a = "a.store_id,a.user_id,a.otype,a.sNo,a.mch_id,a.old_total,a.z_price,a.z_freight,a.old_freight,a.p_sNo,a.offset_balance,p.gongyingshang as supplier_id";
         $str_b = "b.id as order_details_id,b.r_status,b.living_room_id,b.p_id,b.sid,b.num,b.p_name,b.actual_total,b.after_discount,b.freight,b.coupon_id,b.mch_store_write_id,b.write_time,b.write_time_id,b.is_addp,b.supplier_settlement,b.p_integral";
         $str_c = "c.re_type,c.audit_status,c.content,c.r_write_off_num";
         $str_p = "p.write_off_settings,p.is_appointment";
@@ -2653,7 +2667,7 @@ class RefundUtils
         if($otype == 'FS')
         {
             // 根据商城ID、订单号、加购商品，查询详单
-            $sql_d = "select id,supplier_id,p_id,sid,num from lkt_order_details where store_id = '$store_id' and r_sNo = '$sNo' and is_addp = 1 ";
+            $sql_d = "select a.id,b.gongyingshang as supplier_id,a.p_id,a.sid,a.num from lkt_order_details as a left join lkt_configure as c on a.sid = c.id left join lkt_product_list as b on c.pid = b.id where store_id = '$store_id' and r_sNo = '$sNo' and is_addp = 1 ";
             $r_d = Db::query($sql_d);
             if($r_d)
             {

@@ -20,6 +20,8 @@ public class AddBlockGoodsVo extends MainVo implements Serializable
     private String id;
     @ApiModelProperty(value = "商品id集", name = "goodsId")
     private String goodsId;
+    @ApiModelProperty(value = "语种编码", name = "langCode")
+    private String langCode;
 
     public String getId()
     {
@@ -39,5 +41,15 @@ public class AddBlockGoodsVo extends MainVo implements Serializable
     public void setGoodsId(String goodsId)
     {
         this.goodsId = goodsId;
+    }
+
+    public String getLangCode()
+    {
+        return langCode;
+    }
+
+    public void setLangCode(String langCode)
+    {
+        this.langCode = langCode;
     }
 }

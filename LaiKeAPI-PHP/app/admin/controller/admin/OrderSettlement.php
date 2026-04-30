@@ -22,12 +22,12 @@ class OrderSettlement extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $exportType = $this->request->param('exportType');
 
-        $search = addslashes(trim($this->request->param('search'))); // 订单号/订单id
+        $search = addslashes(safe_trim($this->request->param('search'))); // 订单号/订单id
         $startdate = $this->request->param("startDate");
         $enddate = $this->request->param("endDate"); 
         $status = $this->request->param('status');
@@ -99,8 +99,8 @@ class OrderSettlement extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $sNo = $this->request->param('orderNo'); // 订单号
 
@@ -114,8 +114,8 @@ class OrderSettlement extends BaseController
     // 结算订单-刪除
     public function del()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         $access_id = addslashes($this->request->param('accessId'));
 
         $id = $this->request->param('id'); // 订单id

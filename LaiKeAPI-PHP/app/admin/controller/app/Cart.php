@@ -25,12 +25,12 @@ class Cart
 	// 进入购物车页面
     public function index()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
 
-        $pro_type = trim(Request::param('commodity_type')); // 类型
-        $num = trim(Request::param('page')); // 加载次数
+        $pro_type = safe_trim(Request::param('commodity_type')); // 类型
+        $num = safe_trim(Request::param('page')); // 加载次数
 
         $currency_id = cache($access_id . '_currency'); // 获取用户默认币种
         $lang_code = Tools::get_lang($language);
@@ -356,10 +356,11 @@ class Cart
     // 用户修改购物车数量操作
     public function up_cart()
     {
-        $store_id = trim(Request::param('store_id'));
-        $language = trim(Request::post('language')); // 语言
+        $store_id = safe_trim(Request::param('store_id'));
+        $language = safe_trim(Request::post('language')); // 语言
         $access_id = Request::post('access_id'); // 授权id
         $goods = Request::post('goods'); // 购物车id(购物车id+数量)
+        $cart_token = Tools::fitDbString('lkt_cart', 'token', $access_id);
 
         $goods1 = htmlspecialchars_decode($goods);
         $goods2 = json_decode($goods1);
@@ -384,7 +385,7 @@ class Cart
                     }
                     if (empty($user_id))
                     {
-                        $r_1 = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->field('Size_id')->select()->toArray();
+                        $r_1 = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->field('Size_id')->select()->toArray();
                     }
                     else
                     {
@@ -400,7 +401,7 @@ class Cart
                         {
                             if (empty($user_id))
                             {
-                                $sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->find();
+                                $sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->find();
                             } else
                             {
                                 $sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'user_id'=>$user_id])->find();
@@ -425,7 +426,7 @@ class Cart
                         {
                             if (empty($user_id))
                             {	
-                            	$sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->find();
+                            	$sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->find();
                             } 
                             else
                             {	
@@ -465,7 +466,7 @@ class Cart
                 }
                 if (empty($user_id))
                 {
-                    $r_1 = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->field('Size_id')->select()->toArray();
+                    $r_1 = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->field('Size_id')->select()->toArray();
                 } 
                 else
                 {
@@ -482,7 +483,7 @@ class Cart
                     {
                         if (empty($user_id))
                         {	
-                        	$sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->find();
+                        	$sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->find();
                         } 
                         else
                         {
@@ -507,7 +508,7 @@ class Cart
                     {
                         if (empty($user_id))
                         {	
-                        	$sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->find();
+                        	$sql_u = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->find();
                         } 
                         else
                         {	
@@ -542,9 +543,10 @@ class Cart
     // 清空购物车
     public function delAll_cart()
     {
-        $store_id = trim(Request::param('store_id'));
-        $language = trim(Request::post('language')); // 语言
-        $access_id = trim(Request::post('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $language = safe_trim(Request::post('language')); // 语言
+        $access_id = safe_trim(Request::post('access_id')); // 授权id
+        $cart_token = Tools::fitDbString('lkt_cart', 'token', $access_id);
         if (!empty($access_id))
         { // 存在
             $r0_0 = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('user_id')->select()->toArray();
@@ -554,7 +556,7 @@ class Cart
             }
             if (empty($user_id))
             {
-                $res = CartModel::where(['store_id'=>$store_id,'token'=>$access_id])->delete();
+                $res = CartModel::where(['store_id'=>$store_id,'token'=>$cart_token])->delete();
             } 
             else
             {
@@ -584,9 +586,10 @@ class Cart
     // 删除购物车指定商品
     public function delcart()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::post('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::post('access_id')); // 授权id
         $cart_id = Request::post('cart_id');
+        $cart_token = Tools::fitDbString('lkt_cart', 'token', $access_id);
         if (!empty($access_id))
         { // 存在
             $r0_0 = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('user_id')->select()->toArray();
@@ -624,7 +627,7 @@ class Cart
                 {
                     if (empty($user_id))
                     {
-                        $res = CartModel::where(['store_id'=>$store_id,'id'=>$value,'token'=>$access_id])->delete();
+                        $res = CartModel::where(['store_id'=>$store_id,'id'=>$value,'token'=>$cart_token])->delete();
                     } 
                     else
                     {
@@ -670,10 +673,11 @@ class Cart
     // 修改购物车商品属性
     public function modify_attribute()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::post('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::post('access_id')); // 授权id
         $cart_id = Request::post('cart_id'); // 传过来的购物车id
         $attribute_id = Request::post('attribute_id'); // 传过来的修改后的属性id
+        $cart_token = Tools::fitDbString('lkt_cart', 'token', $access_id);
         $user_id = null;
         if (empty($cart_id) || empty($attribute_id))
         {
@@ -690,7 +694,7 @@ class Cart
             // 根据购物车ID，查询购物车里的数据
             if (empty($user_id))
             {
-                $r_1 = CartModel::where(['store_id'=>$store_id,'token'=>$access_id,'id'=>$cart_id])->select()->toArray();
+                $r_1 = CartModel::where(['store_id'=>$store_id,'token'=>$cart_token,'id'=>$cart_id])->select()->toArray();
             } 
             else
             {
@@ -703,7 +707,7 @@ class Cart
                 // 根据操作人信息，查询所以购物车信息
                 if (empty($user_id))
                 {
-                    $r_2 = CartModel::where(['store_id'=>$store_id,'token'=>$access_id])->select()->toArray();
+                    $r_2 = CartModel::where(['store_id'=>$store_id,'token'=>$cart_token])->select()->toArray();
                 } 
                 else
                 {
@@ -801,9 +805,10 @@ class Cart
     // 修改购物车商品属性获取属性
     public function dj_attribute()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::post('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::post('access_id')); // 授权id
         $cart_id = Request::post('cart_id'); // 购物车id
+        $cart_token = Tools::fitDbString('lkt_cart', 'token', $access_id);
         $is_grade = 0;//非会员
 
         $currency_id = cache($access_id . '_currency'); // 获取用户默认币种
@@ -832,7 +837,7 @@ class Cart
             }
             else
             {	
-            	$r1 = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$access_id])->field('Goods_id')->select()->toArray();
+            	$r1 = CartModel::where(['store_id'=>$store_id,'id'=>$cart_id,'token'=>$cart_token])->field('Goods_id')->select()->toArray();
             }
 
             if ($r1)

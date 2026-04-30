@@ -16,8 +16,8 @@ class CurrencyStore extends BaseController
     // 币种列表
     public function currencyStoreList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
@@ -61,8 +61,8 @@ class CurrencyStore extends BaseController
     // 修改币种设置
     public function saveOrEditCurrencyStore()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $currency_id = addslashes($this->request->param('currency_id'));
         $exchange_rate = addslashes($this->request->param('exchange_rate'));
@@ -99,8 +99,8 @@ class CurrencyStore extends BaseController
     // 设置默认币种
     public function setDefaultCurrency()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $currency_id = addslashes($this->request->param('currency_id'));
         $time = date("Y-m-d H:i:s"); // 当前时间
@@ -129,8 +129,8 @@ class CurrencyStore extends BaseController
     // 删除
     public function delCurrencyStore()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $currency_id = addslashes($this->request->param('currency_id'));
 

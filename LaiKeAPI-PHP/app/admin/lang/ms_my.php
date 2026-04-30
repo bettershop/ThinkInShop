@@ -51,6 +51,7 @@ return [
         '22'=> 'Nombor e-mel sudah wujud',
         '23'=> 'E-mel sudah didaftarkan',
         '24'=> 'E-mel sama dengan e-mel yang dipasang pada masa ini',
+        '25'=> 'Kod pengesahan telah dihantar, sila cuba lagi nanti!',
     ],
     'favorites' =>[
         '0' => 'Sudah disimpan!',
@@ -328,6 +329,7 @@ return [
         '100' => 'Bilangan penebusan atribut tidak boleh kosong',
         '101' => 'Tajuk barangan tidak boleh melebihi 20 aksara',
         '102' => 'Wujud pesanan yang belum selesai, tidak boleh dipadam',
+        '103' => 'Panjang tajuk pengenalan produk mestilah antara 1 hingga 60 aksara!',
     ],
     'coupon' => [
         '0' => 'Aktiviti ini sudah tamat!',
@@ -906,6 +908,8 @@ return [
         '8' => 'Gagal memadam rekod!',
         '9' => 'Aktiviti sudah tamat!',
         '10'=> 'Kuantiti pembelian anda melebihi had pembelian!',
+        '11'=> 'Panjang tajuk seckill mestilah antara 1 hingga 30 aksara!',
+        'title' => 'Jualan Kilat',
     ],
     'image' => [
         '0' => 'Sila isi nama ruang storan!',

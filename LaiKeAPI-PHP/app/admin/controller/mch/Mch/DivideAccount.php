@@ -19,15 +19,15 @@ class DivideAccount extends BaseController
     // 分账记录
     public function divideRecord()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
         
-        $condition = trim($this->request->param('condition'));
-        $startDate = trim($this->request->param('startDate'));
-        $endDate = trim($this->request->param('endDate'));
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $condition = safe_trim($this->request->param('condition'));
+        $startDate = safe_trim($this->request->param('startDate'));
+        $endDate = safe_trim($this->request->param('endDate'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $page = $page ? $page : '1';
         $pagesize = $pagesize ? $pagesize : '10';
 

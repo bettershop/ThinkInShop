@@ -302,7 +302,7 @@
             <div class="OP-button">
               <div class="OP-button-top">
                 <el-button
-                  v-has-permi="'/goods/goodslist/editorphysical'"
+                  v-has-permi="['/goods/goodslist/editorphysical','/goods/goodslist/virtualgoods']"
                   icon="el-icon-edit-outline"
                   @click="Edit(scope.row)"
                   >{{ $t('physicalgoods.bianji') }}</el-button

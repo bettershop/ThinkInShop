@@ -22,12 +22,12 @@ class Code extends BaseController
     // 竞拍分享
     public function shareQrCode()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id'));
 
-        $id = trim($this->request->param('id'));
-        $parameter = trim($this->request->param('parameter'));
+        $id = safe_trim($this->request->param('id'));
+        $parameter = safe_trim($this->request->param('parameter'));
         $parameter = json_decode($parameter,true);
         $apiUrl = $parameter['apiUrl'];
         $path = $parameter['path'];

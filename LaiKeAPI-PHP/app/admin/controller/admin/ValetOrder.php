@@ -27,8 +27,8 @@ class ValetOrder extends BaseController
     public function Settlement()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         $admin_name = $this->user_list['name'];
         $admin_type1 = $this->user_list['type'];
 

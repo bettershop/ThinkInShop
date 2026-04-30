@@ -23,7 +23,7 @@ class Message extends BaseController
      */
     public function getWXTemplates()
     {
-        $store_id = trim($this->request->param('store_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
         $res = NoticeModel::where('store_id',$store_id)->select()->toArray();
         if ($res)
         {
@@ -55,7 +55,7 @@ class Message extends BaseController
     // 消息列表
     public function index()
     {
-        $store_id = trim($this->request->param('store_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
         $user_id = $this->user_list['user_id'];//会员ID
 
 	    // 根据用户id,查询消息
@@ -73,8 +73,8 @@ class Message extends BaseController
     // 后续加载
     public function more()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $page = intval(trim($this->request->post('page'))); // 页数
+        $store_id = safe_trim($this->request->param('store_id'));
+        $page = intval(safe_trim($this->request->post('page'))); // 页数
         $user_id = $this->user_list['user_id'];//会员ID
         $pagesize = 10;
         $start = $page * $pagesize;
@@ -90,7 +90,7 @@ class Message extends BaseController
     // 消息详情
     public function oneindex()
     {
-        $store_id = trim($this->request->param('store_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
         $user_id = $this->user_list['user_id'];//会员ID
         $id = $this->request->post('id'); //消息ID
 
@@ -108,7 +108,7 @@ class Message extends BaseController
     // 全部已读
     public function all()
     {
-        $store_id = trim($this->request->param('store_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
         $user_id = $this->user_list['user_id'];//会员ID
 
         // 根据用户id,查询地址表
@@ -123,8 +123,8 @@ class Message extends BaseController
     // 删除
     public function del()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $id = trim($this->request->post('id')); // 消息ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $id = safe_trim($this->request->post('id')); // 消息ID
 
         $user_id = $this->user_list['user_id'];//会员ID
 
@@ -155,8 +155,8 @@ class Message extends BaseController
     // 获取客服未读消息
     public function messageNotReade()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $access_id = trim($this->request->param('access_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $access_id = safe_trim($this->request->param('access_id'));
 
         $mchOnlineMessageNotRead = 0; // 店铺未读客服消息
         $userOnlineMessageNotRead = 0; // 用户未读客服消息

@@ -33,6 +33,7 @@ use app\admin\model\DistributionConfigModel;
 use app\admin\model\MemberConfigModel;
 use app\admin\model\AuctionPromiseModel;
 
+#[\AllowDynamicProperties]
 class Pay extends BaseController
 {
 
@@ -47,17 +48,17 @@ class Pay extends BaseController
         header('Access-Control-Allow-Origin: *');
         header('Content-type: text/plain');
 
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $language = trim($this->request->param('language')); // 语言
-        $access_id = trim($this->request->param('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $language = safe_trim($this->request->param('language')); // 语言
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
         
-        $type = trim($this->request->param('type')); // 支付类型
-        $title = trim($this->request->param('title')); // 
-        $remarks = trim($this->request->param('remarks')); // 订单备注
-        $grade_l = trim($this->request->param('grade_l')); // 会员特惠 兑换券级别
-        $code = trim($this->request->param('code')); // 会员特惠 兑换券级别
-        $order_list = trim($this->request->param('order_list')); // 订单信息
+        $type = safe_trim($this->request->param('type')); // 支付类型
+        $title = safe_trim($this->request->param('title')); // 
+        $remarks = safe_trim($this->request->param('remarks')); // 订单备注
+        $grade_l = safe_trim($this->request->param('grade_l')); // 会员特惠 兑换券级别
+        $code = safe_trim($this->request->param('code')); // 会员特惠 兑换券级别
+        $order_list = safe_trim($this->request->param('order_list')); // 订单信息
         $order_list = htmlspecialchars_decode($order_list);
         $order_list = json_decode($order_list, true);
         
@@ -97,7 +98,7 @@ class Pay extends BaseController
         }
         else
         {
-            $sNo = addslashes(trim($this->request->param('sNo'))); // 订单sNo
+            $sNo = addslashes(safe_trim($this->request->param('sNo'))); // 订单sNo
         }
 
         if (empty($sNo))
@@ -110,8 +111,8 @@ class Pay extends BaseController
         $this->or_type = $or_type;
         $this->sNo = $sNo;
         //付款金额
-        $payment_money = trim($this->request->param('total')); // 余额抵扣金额
-        $payment_money = $payment_money ? $payment_money : trim($this->request->param('payment_money'));
+        $payment_money = safe_trim($this->request->param('total')); // 余额抵扣金额
+        $payment_money = $payment_money ? $payment_money : safe_trim($this->request->param('payment_money'));
         if(!$payment_money)
         {
             $payment_money = $order_list['total'];
@@ -224,18 +225,18 @@ class Pay extends BaseController
      */
     public function wallet_pay()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $language = trim($this->request->param('language')); // 语言
-        $access_id = trim($this->request->param('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $language = safe_trim($this->request->param('language')); // 语言
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
 
-        $type = trim($this->request->param('type')); // 支付类型
-        $order_list = trim($this->request->param('order_list')); // 订单信息
-        $sNo = addslashes(trim($this->request->param('sNo'))); // 订单sNo
-        $remarks = trim($this->request->param('remarks')); // 订单备注
-        $payment_money = trim($this->request->param('payment_money')); // 支付金额
-        $parameter = trim($this->request->param('parameter')); // 参数
-        $payTarget = trim($this->request->param('payTarget')); // 1.定金 2.尾款 3.全款
+        $type = safe_trim($this->request->param('type')); // 支付类型
+        $order_list = safe_trim($this->request->param('order_list')); // 订单信息
+        $sNo = addslashes(safe_trim($this->request->param('sNo'))); // 订单sNo
+        $remarks = safe_trim($this->request->param('remarks')); // 订单备注
+        $payment_money = safe_trim($this->request->param('payment_money')); // 支付金额
+        $parameter = safe_trim($this->request->param('parameter')); // 参数
+        $payTarget = safe_trim($this->request->param('payTarget')); // 1.定金 2.尾款 3.全款
         
         $or_type = substr($sNo, 0, 2);
 
@@ -825,7 +826,9 @@ class Pay extends BaseController
                         return output(400, $message);
                     }
 
-                    $sql1 = "select a.id,d.id as p_id,d.supplier_superior,b.num,a.offset_balance,b.supplier_id,b.living_room_id,b.sid from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id where a.store_id = $store_id and b.r_sNo = '$v'";
+                    $cols = Db::query("SHOW COLUMNS FROM `lkt_order_details` LIKE 'supplier_id'");
+                    $supplierIdField = !empty($cols) ? "b.supplier_id" : "d.gongyingshang as supplier_id";
+                    $sql1 = "select a.id,d.id as p_id,d.supplier_superior,b.num,a.offset_balance,$supplierIdField,b.living_room_id,b.sid from lkt_order as a left join lkt_order_details as b on a.sNo = b.r_sNo left join lkt_configure as c on b.sid = c.id left join lkt_product_list as d on c.pid = d.id where a.store_id = $store_id and b.r_sNo = '$v'";
                     $r1 = Db::query($sql1);
                     if ($r1)
                     {   
@@ -1387,7 +1390,7 @@ class Pay extends BaseController
         $store_id = $this->store_id;
         $sNo = $this->sNo;
         $appid = $this->config_data->appid;
-        $alimp_authcode = addslashes(trim($this->request->post('alimp_authcode'))); // 阿里授权code
+        $alimp_authcode = addslashes(safe_trim($this->request->post('alimp_authcode'))); // 阿里授权code
 
         $data = TestImage::loadMPAlipay($real_sno, $total, $title, $appid, $store_id, $type, $alimp_authcode);
         $tno = $this->trimall($data->trade_no);
@@ -1420,7 +1423,7 @@ class Pay extends BaseController
         $riskIp = '127.0.0.1';
         $valid_time = "7200";
 
-        $tt_authcode = addslashes(trim($this->request->post('tt_authcode')));//授权code
+        $tt_authcode = addslashes(safe_trim($this->request->post('tt_authcode')));//授权code
         //1.获取openid
         $tt_openid = TTUtils::getTTOpenId($ttAppid, $ttAppSecret, $tt_authcode);
 
@@ -1666,11 +1669,11 @@ class Pay extends BaseController
     // 捕获订单的付款
     public function capture()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
-        $orderId = trim($this->request->param('orderId'));
-        $sNo = trim($this->request->param('sNo')); // 订单号
+        $orderId = safe_trim($this->request->param('orderId'));
+        $sNo = safe_trim($this->request->param('sNo')); // 订单号
 
         $config = LKTConfigInfo::getPayConfig($store_id, 'paypal');
         $client_id = $config['client_id'];

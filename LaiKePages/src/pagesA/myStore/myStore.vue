@@ -257,133 +257,17 @@
                                 }}</view>
                             </view>
                             <!-- 竞拍 -->
-                            <view
-                                class="toollist-box"
-                                v-if="hidden"
-                            >
-                                <image
-                                    :src="wdpm"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                    language.myStore.jp
-                                }}</view>
-                            </view>
-                            <!-- 报名活动 -->
-                            <view
-                                class="toollist-box"
-                                v-if="hidden"
-                            >
-                                <image
-                                    :src="bmhd"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                    language.myStore.bmhd
-                                }}</view>
-                            </view>
-                            <!-- 积分商城 -->
-                            <view
-                                class="toollist-box"
-                                @tap="
-                                    _navigateTo(
-                                    )
-                                "
-                            >
-                                <image
-                                    :src="jfsc"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                    language.myStore.jfsc
-                                }}</view>
-                            </view>
-                            <!-- 供应商 -->
-                            <view
-                                class="toollist-box" 
-                            >
-                                <image
-                                    :src="ptcj"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                  language.myStore.supplier
-                                }}</view>
-                            </view>
-                            <!-- 拼团 -->
-                            <view
-                                class="toollist-box"
-                                @tap="
-                                    _navigateTo(
-                                    )
-                                "
-                            >
-                                <image
-                                    :src="ptcj"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                    language.myStore.ptgl
-                                }}</view>
-                            </view>
-                            <!-- 预售 -->
-                            <view
-                                class="toollist-box"
-                                @tap="
-                                    _navigateTo(
-                                    )
-                                "
-                            >
-                                <image
-                                    :src="ysgl"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                    language.myStore.ysgl
-                                }}</view>
-                            </view>
-                            <!-- 直播 -->
-                            <!-- #ifdef H5 -->
-                            <view
-                                class="toollist-box"
-                                @tap="
-                                    _navigateTo(
-                                    )
-                                "
-                            >
-                                <image
-                                    :src="zbcj"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                                <view class="toollist-box-txt">{{
-                                    language.myStore.zbgl
-                                }}</view>
-                            </view>
-                            <!-- #endif -->
-                             <!-- 限时折扣 -->
-                             <view
-                                class="toollist-box"
-                                @tap="
-                                    _navigateTo(
-                                    )
-                                "
-                            >
-                                <image
-                                    :src="xszk"
-                                    style="width: 72rpx; height: 72rpx"
-                                    class="toollist-box-img"
-                                ></image>
-                               <view class="toollist-box-txt"> {{
-                                   language.myStore.xszk
-                               }}</view>
-                            </view>
+                             
+
+                             
+
+                             
+                             
+                             
+
+                             
+
+                             
                         </view>
                     </view>
 

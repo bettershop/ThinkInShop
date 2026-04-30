@@ -17,7 +17,7 @@
 | Nacos | 2.1.1 | 配置中心与服务发现 |
 | Dubbo | 3.0.8 | RPC 框架（部分已弃用，新代码使用 OpenFeign） |
 | MyBatis/Tk-MyBatis | 2.1.5 | 持久层框架 |
-| MySQL | 5.6-5.7 | 需配置 `sql_mode=NO_ZERO_DATE` |
+| MySQL | 8.0 | 需配置 `sql_mode=NO_ZERO_DATE` |
 | Redis | 7 | - |
 | Maven | 3.6.1 | 3.8+ 版本存在兼容问题 |
 | Tomcat | 9.0.55 | 用于 WAR 包部署 |

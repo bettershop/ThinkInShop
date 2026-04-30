@@ -1,0 +1,2 @@
+ALTER TABLE `lkt_mch_browse`
+MODIFY COLUMN `token` VARCHAR(512) DEFAULT '';

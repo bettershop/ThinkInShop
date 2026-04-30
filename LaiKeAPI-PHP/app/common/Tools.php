@@ -57,6 +57,10 @@ require_once 'aliyun-dysms-php-sdk-lite/demo/sendSms.php';
  */
 class Tools
 {
+    public $store_id;
+    public $store_type;
+    public $config;
+
     public function __construct( $store_id, $store_type)
     {
         $this->store_id = $store_id;
@@ -339,7 +343,7 @@ class Tools
     }
 
     //加密函数
-    public static function lock_url($txt, $key = 'www.jb51.net')
+    public static function lock_url($txt, $key = 'www.laiketui.com')
     {
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
         $nh = rand(0, 64);
@@ -361,12 +365,16 @@ class Tools
     }
 
     //解密函数
-    public static function unlock_url($txt, $key = 'www.jb51.net')
+    public static function unlock_url($txt, $key = 'www.laiketui.com')
     {
+        $rawTxt = $txt;
         $txt = urldecode($txt);
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
         $ch = $txt[0];
         $nh = strpos($chars, $ch);
+        if ($nh === false) {
+            return '';
+        }
         $mdKey = md5($key . $ch);
         $mdKey = substr($mdKey, $nh % 8, $nh % 8 + 7);
         $txt = substr($txt, 1);
@@ -377,15 +385,77 @@ class Tools
         for ($i = 0; $i < strlen($txt); $i++)
         {
             $k = $k == strlen($mdKey) ? 0 : $k;
-            $j = strpos($chars, $txt[$i]) - $nh - ord($mdKey[$k++]);
+            $pos = strpos($chars, $txt[$i]);
+            // 兼容 PHP 8：防止字符未找到时 strpos 返回 false 导致报错
+            if ($pos === false) {
+                $pos = 0; 
+            }
+            $j = $pos - $nh - ord($mdKey[$k++]);
             while ($j < 0)
             {
                 $j += 64;
             }
-
             $tmp .= $chars[$j];
         }
-        return base64_decode($tmp);
+        // --- 核心修复：自定义 Base64 解码逻辑 ---
+        // 你的自定义字符表中，- 对应 62，= 对应 63，+ 被用作填充符
+        $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=";
+        $output = "";
+        $bits = 0;
+        $buf = 0;
+        $len = strlen($tmp);
+        for ($i = 0; $i < $len; $i++) {
+            $char = $tmp[$i];
+            // 忽略填充符 '+' (相当于标准 Base64 中的 '=')
+            if ($char === '+') {
+                continue;
+            }
+            $val = strpos($alphabet, $char);
+            if ($val === false) {
+                continue; // 跳过非法字符
+            }
+            $buf = ($buf << 6) | $val;
+            $bits += 6;
+            if ($bits >= 8) {
+                $bits -= 8;
+                $output .= chr(($buf >> $bits) & 0xFF);
+                $buf &= (1 << $bits) - 1;
+            }
+        }
+        $decoded = $output;
+        // 如果解码结果是合法的 UTF-8，直接返回
+        if (mb_check_encoding($output, 'UTF-8')) {
+            $decoded = $output;
+        }
+        else
+        {
+            // --- 兼容回退机制 ---
+            // 网上流传的部分 lock_url 加密函数本身有 Bug：它们用了原生的 base64_encode，
+            // 然后仅仅把 '+' 替换成了 '-'，导致尾部依然保留了原生的 '=' 填充符。
+            // 如果上面的自定义解码产生了乱码，则尝试用标准 Base64 规则解码（将 '-' 还原为 '+'）
+            $standard_tmp = str_replace('-', '+', $tmp);
+            $fallback_output = base64_decode($standard_tmp);
+            if ($fallback_output !== false && mb_check_encoding($fallback_output, 'UTF-8')) {
+                $decoded = $fallback_output;
+            }
+        }
+
+        // 兼容历史密码登录：默认新key失败时自动回退旧key
+        if ($key === 'www.laiketui.com')
+        {
+            $isPrintable = ($decoded !== '' && preg_match('/^[\\x20-\\x7E\\s]+$/', $decoded));
+            if (!$isPrintable)
+            {
+                $oldDecoded = self::unlock_url($rawTxt, 'www.jb51.net');
+                if ($oldDecoded !== '')
+                {
+                    return $oldDecoded;
+                }
+            }
+        }
+
+        // 如果确实是非 UTF-8 的二进制数据（如图片等），作为最后手段返回
+        return $decoded;
     }
 
     /**
@@ -1006,17 +1076,21 @@ class Tools
                                 $off_num2 = explode(',',$v_mch_store2['off_num']); // 已预约核销次数
                                 $diff_days = count($off_num2); // 相差天数
 
-                                $sort = date('H:i',strtotime($start_time2));
-                                $endTime = date('H:i',strtotime($end_time2));
-                                $endTime_0 = date('H:i:s',strtotime($end_time2));
+                                $start_ts = strtotime((string)$start_time2);
+                                $end_ts = strtotime((string)$end_time2);
+                                $sort = $start_ts === false ? '' : date('H:i', $start_ts);
+                                $endTime = $end_ts === false ? '' : date('H:i', $end_ts);
+                                $endTime_0 = $end_ts === false ? '00:00:00' : date('H:i:s', $end_ts);
                                 $time_range = $sort . '~' . $endTime;
                                 $write_status = 0; // 不能预约
 
                                 for($i=0;$i<$diff_days;$i++)
                                 {
-                                    $key_time = date("Y-m-d H:i:s",strtotime("+ $i day",strtotime($start_time2))); // 每天预约的开始时间
-                                    $key_time_e = date("Y-m-d ".$endTime_0,strtotime("+ $i day",strtotime($start_time2))); // 每天预约的结束时间
-                                    $key_time0 = date("Y-m-d",strtotime("+ $i day",strtotime($start_time2))); // 可预约日期
+                                    $base_ts = strtotime((string)$start_time2);
+                                    $day_ts = $base_ts === false ? false : strtotime("+ $i day", $base_ts);
+                                    $key_time = $day_ts === false ? '' : date("Y-m-d H:i:s", $day_ts); // 每天预约的开始时间
+                                    $key_time_e = $day_ts === false ? '' : date("Y-m-d ".$endTime_0, $day_ts); // 每天预约的结束时间
+                                    $key_time0 = $day_ts === false ? '' : date("Y-m-d", $day_ts); // 可预约日期
                                    
                                     if($time_0 <= $key_time0)
                                     { // 当前日期 <= 可预约日期  （今天或者还没到的预约日期）
@@ -1253,6 +1327,10 @@ class Tools
                     $address = $r3[0]; // 收货地址
                 }
             }
+        }
+        if (is_array($address) && !isset($address['code']))
+        {
+            $address['code'] = '';
         }
         return $address;
     }
@@ -2310,7 +2388,7 @@ class Tools
             foreach ($r0 as $key => $val)
             {
                 $banner_id = $val['id'];
-                if (strpos($val['url'], $type) !== false)
+                if (strpos((string)$val['url'], $type) !== false)
                 {
                     $parameter = trim(strrchr($val['url'], '='), '=');
                     if ($id == $parameter)
@@ -2366,12 +2444,12 @@ class Tools
             else
             {
                 // 当为下架或待上架状态
-                if (strlen($r0[0]['product_class']) == '')
+                if (strlen((string)($r0[0]['product_class'] ?? '')) == 0)
                 {
                     $info = '请先去完善商品信息！';
                     return $info;
                 }
-                if (strlen($r0[0]['brand_id']) == 0)
+                if (strlen((string)($r0[0]['brand_id'] ?? '')) == 0)
                 {
                     $info = '请先去完善商品信息！';
                     return $info;
@@ -2800,7 +2878,7 @@ class Tools
     public static function test_data_dictionary($id, $status)
     {
         $res = array('status' => true, 'msg' => '');
-        $sql0 = "select a.s_name,a.text,b.name from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.id = '$id'";
+        $sql0 = "select a.s_name,a.ctext as text,b.name from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.id = '$id'";
         $r0 = Db::query($sql0);
         if ($r0)
         {
@@ -3109,7 +3187,8 @@ class Tools
         $user_password = $r[0]['password']; // 支付密码
         $login_num = $r[0]['login_num']; // 支付密码错误次数
         $verification_time = $r[0]['verification_time']; // 支付密码验证时间
-        $verification_time = date('Y-m-d H:i:s', strtotime('+1 day', strtotime($verification_time)));
+        $verification_ts = strtotime((string)$verification_time);
+        $verification_time = $verification_ts === false ? '' : date('Y-m-d H:i:s', strtotime('+1 day', $verification_ts));
         $time = date('Y-m-d H:i:s', time());
 
         if ($login_num == 5)
@@ -3467,7 +3546,7 @@ class Tools
         $r0 = OrderDetailsModel::where(['store_id'=>$store_id,'id'=>$oid])->field('r_sNo,r_status,arrive_time,exchange_num,settlement_type')->select()->toArray();
         $otype = substr($r0[0]['r_sNo'], 0, 2);
         $arrive_time = $r0[0]['arrive_time']; // 到货时间
-        $arrive_times = strtotime($arrive_time);
+        $arrive_times = strtotime((string)$arrive_time);
         $order_after_times = $order_after * 24 * 60 * 60;
         if($otype == 'JP')
         { // 竞拍订单没有售后
@@ -4168,7 +4247,7 @@ class Tools
         if($name == '商品分类')
         {
             // 查询数据字典里，存在的分类级别
-            $sql0_0 = "select a.value,a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' ";
+            $sql0_0 = "select a.value,a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' ";
             $r0_0 = Db::query($sql0_0);
             if($r0_0)
             {
@@ -4183,7 +4262,7 @@ class Tools
         {
             $show_adr = $array['show_adr'];
 
-            $sql0_0 = "select a.value,a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' and a.status = 1";
+            $sql0_0 = "select a.value,a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' and a.status = 1";
             $r0_0 = Db::query($sql0_0);
             if ($r0_0)
             {
@@ -4202,7 +4281,7 @@ class Tools
         }
         else if($name == '单位')
         {
-            $sql0_0 = "select a.value,a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' and a.status = 1";
+            $sql0_0 = "select a.value,a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' and a.status = 1";
             $r0_0 = Db::query($sql0_0);
             if ($r0_0)
             {
@@ -4214,7 +4293,7 @@ class Tools
         }
         else if($name == 'DIY主题')
         {
-            $sql0_0 = "select a.code,a.value,a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.status = 1";
+            $sql0_0 = "select a.code,a.value,a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.lang_code = '$lang_code' and a.status = 1";
             $r0_0 = Db::query($sql0_0);
             if ($r0_0)
             {
@@ -4226,7 +4305,7 @@ class Tools
         }
         else if($name == 'VOD视频存储地' || $name == 'VOD视频转码模板')
         {
-            $sql0_0 = "select a.value,a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.status = 1";
+            $sql0_0 = "select a.value,a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '$name' and a.status = 1";
             $r0_0 = Db::query($sql0_0);
             if ($r0_0)
             {
@@ -4277,6 +4356,92 @@ class Tools
             }
         }
         return $amount;
+    }
+
+    public static function fitDbString($tableName, $columnName, $value)
+    {
+        $value = (string)$value;
+        if ($value === '')
+        {
+            return $value;
+        }
+
+        $tableName = (string)$tableName;
+        $columnName = (string)$columnName;
+        if ($tableName === '' || $columnName === '')
+        {
+            return $value;
+        }
+
+        static $maxLenCache = array();
+        $cacheKey = $tableName . '.' . $columnName;
+        if (!array_key_exists($cacheKey, $maxLenCache))
+        {
+            $maxLen = null;
+            try
+            {
+                $tableCandidates = array($tableName);
+                if (strpos($tableName, 'lkt_') === 0)
+                {
+                    $tableCandidates[] = substr($tableName, 4);
+                }
+                else
+                {
+                    $tableCandidates[] = 'lkt_' . $tableName;
+                }
+                $tableCandidates = array_values(array_unique($tableCandidates));
+
+                $cols = array();
+                foreach ($tableCandidates as $tn)
+                {
+                    $cols = Db::query("SHOW COLUMNS FROM `{$tn}` LIKE '{$columnName}'");
+                    if (!empty($cols))
+                    {
+                        break;
+                    }
+                }
+
+                if (!empty($cols) && isset($cols[0]['Type']))
+                {
+                    $type = (string)$cols[0]['Type'];
+                    if (preg_match('/\((\d+)\)/', $type, $m))
+                    {
+                        $maxLen = (int)$m[1];
+                    }
+                }
+            }
+            catch (\Throwable $e)
+            {
+                $maxLen = null;
+            }
+            $maxLenCache[$cacheKey] = $maxLen;
+        }
+
+        $maxLen = $maxLenCache[$cacheKey];
+        if (empty($maxLen) || $maxLen <= 0)
+        {
+            return $value;
+        }
+
+        if (strlen($value) <= $maxLen)
+        {
+            return $value;
+        }
+
+        if ($maxLen >= 64)
+        {
+            return hash('sha256', $value);
+        }
+        if ($maxLen >= 40)
+        {
+            return sha1($value);
+        }
+        if ($maxLen >= 32)
+        {
+            return md5($value);
+        }
+
+        return substr(md5($value), 0, $maxLen);
     }
 
     // 是否登录

@@ -28,9 +28,9 @@ class Payment extends BaseController
     // 支付管理
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $page = addslashes($this->request->param('pageNo')); // 页码
     	$pagesize = addslashes($this->request->param('pageSize')); // 每页多少条数据
@@ -70,9 +70,9 @@ class Payment extends BaseController
     // 参数修改页面
     public function paymentParmaInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 支付方式ID
 
@@ -116,13 +116,13 @@ class Payment extends BaseController
     // 保存
     public function setPaymentParma()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 支付方式ID
-        $json = trim($this->request->param('json')); // 参数
-        $status = addslashes(trim($this->request->param('status'))); // 是否显示 0否 1是
+        $id = addslashes(safe_trim($this->request->param('id'))); // 支付方式ID
+        $json = safe_trim($this->request->param('json')); // 参数
+        $status = addslashes(safe_trim($this->request->param('status'))); // 是否显示 0否 1是
 
         $data = json_decode($json,true);
         if(is_array($data))
@@ -257,14 +257,14 @@ class Payment extends BaseController
     // 钱包支付保存
     public function setPayment()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 支付方式ID
-        $name = trim($this->request->param('name')); // 参数
-        $remark  = addslashes(trim($this->request->param('remark'))); // 是否显示 0否 1是
-        $Logo  = addslashes(trim($this->request->param('Logo'))); // 是否显示 0否 1是
+        $id = addslashes(safe_trim($this->request->param('id'))); // 支付方式ID
+        $name = safe_trim($this->request->param('name')); // 参数
+        $remark  = addslashes(safe_trim($this->request->param('remark'))); // 是否显示 0否 1是
+        $Logo  = addslashes(safe_trim($this->request->param('Logo'))); // 是否显示 0否 1是
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -292,11 +292,11 @@ class Payment extends BaseController
     // 是否开启
     public function setPaymentSwitch()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 支付方式ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 支付方式ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -354,11 +354,11 @@ class Payment extends BaseController
     // 是否默认
     public function settingDefaultPaytype()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 支付方式ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 支付方式ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -406,9 +406,9 @@ class Payment extends BaseController
     // 上传图片
     public function setPaymentLoge()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $imgUrls = array();
         $dir = $store_id . '/' . $store_type . '/' . date("Ymd") . '/';

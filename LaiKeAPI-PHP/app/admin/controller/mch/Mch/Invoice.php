@@ -24,17 +24,17 @@ class Invoice extends BaseController
     //列表
     public function GetList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $mch_id = cache($access_id.'_'.$store_type);
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $invoice_status = addslashes(trim($this->request->param('invoiceStatus')));//发票状态 1.申请中 2.已完成 3.已撤销
-        $type = addslashes(trim($this->request->param('type')));//抬头类型 1.企业 2.个人
-        $search = trim($this->request->param('condition'));//发票抬头，税号，订单号
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $invoice_status = addslashes(safe_trim($this->request->param('invoiceStatus')));//发票状态 1.申请中 2.已完成 3.已撤销
+        $type = addslashes(safe_trim($this->request->param('type')));//抬头类型 1.企业 2.个人
+        $search = safe_trim($this->request->param('condition'));//发票抬头，税号，订单号
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
         $pagesize = $pagesize ? $pagesize:'10';
         if($page)
         {
@@ -146,9 +146,9 @@ class Invoice extends BaseController
     //发票详情
     public function GetInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $mch_id = cache($access_id.'_'.$store_type);
         $id = $this->request->param('id');//开票id
@@ -192,9 +192,9 @@ class Invoice extends BaseController
     //上传发票
     public function UploadInvoice()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = $this->request->param('id');//开票id
         $file = $this->request->param('filePath');//发票地址
@@ -241,9 +241,9 @@ class Invoice extends BaseController
     //删除
     public function DelInvoice()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = $this->request->param('ids');//开票id
 

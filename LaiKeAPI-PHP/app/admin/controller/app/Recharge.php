@@ -12,10 +12,10 @@ class Recharge extends BaseController
     // 请求我的详细数据
     public function index()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $language = trim($this->request->param('language')); // 语言
-        $access_id = trim($this->request->param('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $language = safe_trim($this->request->param('language')); // 语言
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
 
         //查询最低充值金额
         $rs = FinanceConfigModel::where(['store_id'=>$store_id])

@@ -19,9 +19,9 @@ class InvoiceHeader extends BaseController
     //发票抬头管理
     public function getList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $id = trim($this->request->param('id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $id = safe_trim($this->request->param('id'));
 
         $user_id = $this->user_list['user_id'];
         $condition = array('store_id'=>$store_id,'user_id'=>$user_id,'recovery'=>0);
@@ -49,19 +49,19 @@ class InvoiceHeader extends BaseController
     //添加、编辑发票抬头
     public function addOrUpdate()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         $user_id = $this->user_list['user_id'];
 
-        $id = trim($this->request->param('id'));//抬头id
-        $type = trim($this->request->param('type'));//抬头类型 1.企业 2.个人
-        $company_name = trim($this->request->param('companyName'));//公司名称(抬头名称)
-        $company_tax_number = trim($this->request->param('companyTaxNumber'));//公司税号
-        $register_address = trim($this->request->param('registerAddress'));//注册地址
-        $deposit_bank = trim($this->request->param('depositBank'));//开户银行
-        $bank_number = trim($this->request->param('bankNumber'));//银行卡账号
-        $register_phone = trim($this->request->param('registerPhone'));//注册电话
-        $is_default = (int)trim($this->request->param('isDefault'));//是否默认 0.否 1.是
+        $id = safe_trim($this->request->param('id'));//抬头id
+        $type = safe_trim($this->request->param('type'));//抬头类型 1.企业 2.个人
+        $company_name = safe_trim($this->request->param('companyName'));//公司名称(抬头名称)
+        $company_tax_number = safe_trim($this->request->param('companyTaxNumber'));//公司税号
+        $register_address = safe_trim($this->request->param('registerAddress'));//注册地址
+        $deposit_bank = safe_trim($this->request->param('depositBank'));//开户银行
+        $bank_number = safe_trim($this->request->param('bankNumber'));//银行卡账号
+        $register_phone = safe_trim($this->request->param('registerPhone'));//注册电话
+        $is_default = (int)safe_trim($this->request->param('isDefault'));//是否默认 0.否 1.是
 
         if ($company_name == '')
         {
@@ -190,11 +190,11 @@ class InvoiceHeader extends BaseController
     //删除
     public function del()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         $user_id = $this->user_list['user_id'];
 
-        $id = trim($this->request->param('ids'));//抬头id
+        $id = safe_trim($this->request->param('ids'));//抬头id
         $sql = InvoiceHeaderModel::find($id);
         if($sql)
         {
@@ -217,8 +217,8 @@ class InvoiceHeader extends BaseController
     //获取默认抬头
     public function getDefault()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
         $user_id = $this->user_list['user_id'];
         $list = array();

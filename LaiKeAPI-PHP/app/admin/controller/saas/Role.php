@@ -143,6 +143,10 @@ class Role extends BaseController
                         $res[$key]['isChildren'] = true;
                     }
                 }
+                if(!$res[$key]['isChildren'])
+                {
+                    $res[$key]['url'] = $this->normalizeViewUrl($res[$key]['url'] ?? '');
+                }
                 $res[$key]['image'] = ServerPath::getimgpath($res[$key]['image'], $store_id);
                 $res[$key]['image1'] = ServerPath::getimgpath($res[$key]['image1'], $store_id);
                 $res[$key]['children'] = $this->buildChildren0ByMap($child_id,$store_id,$menu_map);
@@ -184,11 +188,55 @@ class Role extends BaseController
                         $res[$key]['isChildren'] = true;
                     }
                 }
+                if(!$res[$key]['isChildren'])
+                {
+                    $res[$key]['url'] = $this->normalizeViewUrl($res[$key]['url'] ?? '');
+                }
                 $res[$key]['children'] = $this->buildChildrenByMap($child_id,$store_id,$role_menu_map,$menu_map,false);
             }
             $children = $res;
         }
         return $children;
+    }
+
+    private function normalizeViewUrl($url)
+    {
+        if(!$url || $url === 'undefined')
+        {
+            return $url;
+        }
+        if(strpos($url,'/index') !== false || substr($url,-4) === '.vue')
+        {
+            return $url;
+        }
+        $viewsBasePath = $this->getAdminViewsBasePath();
+        if($viewsBasePath === '')
+        {
+            return $url;
+        }
+        $vueFilePath = $viewsBasePath . '/' . ltrim($url,'/') . '.vue';
+        if(is_file($vueFilePath))
+        {
+            return $url;
+        }
+        $indexFilePath = $viewsBasePath . '/' . ltrim($url,'/') . '/index.vue';
+        if(is_file($indexFilePath))
+        {
+            return $url . '/index';
+        }
+        return $url;
+    }
+
+    private function getAdminViewsBasePath()
+    {
+        static $path = null;
+        if($path !== null)
+        {
+            return $path;
+        }
+        $candidate = dirname(__DIR__,4) . '/../LaiKeJavaViews/src/views';
+        $path = is_dir($candidate) ? rtrim($candidate,'/') : '';
+        return $path;
     }
 
     private function getAsyncRoutesCacheKey($admin_type,$role_id,$store_id,$lang_code)
@@ -330,8 +378,8 @@ class Role extends BaseController
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
         $id = $this->request->param('$id');
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         $page = $this->request->param('pageNo');
         $pagesize = $this->request->param('pageSize');
         $pagesize = $pagesize ? $pagesize:'10';
@@ -366,15 +414,15 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $pinyin = new pinyin();
 
         $id = $this->request->param('id');//菜单id
         $parentId = $this->request->param('sid'); // 上级ID
         $type = $this->request->param('type'); // 菜单类型0=控制台 1=商城
-        $lang_code = trim($this->request->param('lang_code'));
+        $lang_code = safe_trim($this->request->param('lang_code'));
         $title = $this->request->param('name'); // 菜单名称
         $page = $this->request->param('pageNo');
         $pagesize = $this->request->param('pageSize');
@@ -430,21 +478,40 @@ class Role extends BaseController
             {
                 foreach($r1 as $k1 => $v1)
                 {
+                    $lang_code = $v1['lang_code'];
                     $r_title = $v1['title'];
                     $res = $pinyin->str2py($r_title) . '_';
                     $v1['id_id'] = $res . $v1['id'];
+                    $v1['fatherName'] = '';
                     if($v1['s_id'] > 0)
                     {
                         $r2 = CoreMenuModel::where('id',$v1['s_id'])->field('title')->select()->toArray();
-                        $v1['fatherName'] = $r2[0]['title'];
+                        if($r2)
+                        {
+                            $v1['fatherName'] = $r2[0]['title'];
+                        }
                     }
+
+                    $v1['lang_name'] = '';
+                    $sql2 = "select lang_name from lkt_lang where lang_code = '$lang_code' and recycle = 1";
+                    $r2 = Db::query($sql2);
+                    if($r2)
+                    {
+                        $v1['lang_name'] = $r2[0]['lang_name'];
+                    }
+
                     $list[] = $v1;
                 }
             }
         }
-        $data = array('total'=>$total,'list'=>$list,'sid'=>$parentId);
-        $message = Lang("Success");
-        return output(200,$message,$data);
+        $data = array('total'=>$total,'list'=>$list,'sid'=>($parentId === '' || $parentId === null) ? null : $parentId);
+        return json([
+            'code' => '200',
+            'message' => '操作成功',
+            'data' => $data,
+            'error' => false,
+            'ok' => true
+        ]);
     }
 
     //添加菜单
@@ -454,8 +521,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $lktlog = new LaiKeLogUtils();
         $id = intval($this->request->param('mid')); // ID
@@ -466,15 +533,15 @@ class Role extends BaseController
         $is_button = intval($this->request->param('isButton'));//是否按钮
         $is_core = intval($this->request->param('isCore')); // 是否是核心
         $level = intval($this->request->param('level')); // 级别
-        $title = addslashes(trim($this->request->param('menuName'))); // 菜单名称
-        $guide_name = addslashes(trim($this->request->param('guideName'))); // 导览名称
-        $briefintroduction = addslashes(trim($this->request->param('briefintroduction'))); // 导览简介
-        $image1 = addslashes(trim($this->request->param('chekedLogo'))); // 选中图标、导览图标
-        $image = addslashes(trim($this->request->param('defaultLogo'))); // 默认图标
+        $title = addslashes(safe_trim($this->request->param('menuName'))); // 菜单名称
+        $guide_name = addslashes(safe_trim($this->request->param('guideName'))); // 导览名称
+        $briefintroduction = addslashes(safe_trim($this->request->param('briefintroduction'))); // 导览简介
+        $image1 = addslashes(safe_trim($this->request->param('chekedLogo'))); // 选中图标、导览图标
+        $image = addslashes(safe_trim($this->request->param('defaultLogo'))); // 默认图标
         $s_id = intval($this->request->param('fatherMenuId')); // 上级ID
         $isTab = intval($this->request->param('isTab')); // 是否为tab页面
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语言
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 国家代码
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语言
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 国家代码
 
         if($id == '')
         {
@@ -656,8 +723,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $lktlog = new LaiKeLogUtils();
         // 接收信息
@@ -707,8 +774,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $downId = $this->request->param('downId'); //下移菜单id
         $upId = $this->request->param('upId'); //上移菜单id
@@ -753,8 +820,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = $this->request->param('id'); //菜单id
         $sid = $this->request->param('sid'); //上级菜单id
@@ -786,12 +853,12 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = $this->request->param('id');
         // 接收数据
-        $name = addslashes(trim($this->request->param('roleName'))); // 角色
+        $name = addslashes(safe_trim($this->request->param('roleName'))); // 角色
         $permissions = $this->request->param('permissions'); // 权限，逗号分隔
         $role_describe = $this->request->param('describe'); // 描述
         $this->clearAsyncRoutesCache();
@@ -815,8 +882,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = $this->request->param('roleId');//角色id
         $name = $this->request->param('name');//商城名
@@ -854,8 +921,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $admin_ids = $this->request->param('adminIds');//管理员id
         $id_arr = explode(',',$admin_ids);
@@ -888,8 +955,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = $this->request->param('roleId');//角色id
         $admin_ids = $this->request->param('adminIds');//管理员id
@@ -908,8 +975,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $id = intval($this->request->param('id')); //角色id
         $this->clearAsyncRoutesCache();
@@ -929,8 +996,8 @@ class Role extends BaseController
         $admin_type1 = $admin_list['type'];
         $accessId = $this->request->param('accessId');
         $role_id = cache($accessId.'role');//管理员类型
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         
         $id = intval($this->request->param('menuId')); //角色id
         
@@ -964,8 +1031,8 @@ class Role extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $role_id = intval($this->request->param('roleId'));
 

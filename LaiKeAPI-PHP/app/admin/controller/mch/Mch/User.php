@@ -332,8 +332,8 @@ class User
     {
         $store_id = addslashes(Request::param('storeId'));
         // 接收信息
-        $cpc = trim(Request::param('cpc'));//区号
-        $mobile = trim(Request::param('phone')); // 手机号码
+        $cpc = safe_trim(Request::param('cpc'));//区号
+        $mobile = safe_trim(Request::param('phone')); // 手机号码
 
         $Tools = new Tools($store_id, 1);
         $array_code = array('cpc'=>$cpc,'mobile'=>$mobile,'type'=>0,'type1'=>0,'bizparams'=>array());
@@ -345,8 +345,8 @@ class User
     {
         $store_id = addslashes(Request::param('storeId'));
         // 接收信息
-        $cpc = trim(Request::param('cpc'));//区号
-        $mobile = trim(Request::param('phone')); // 手机号码
+        $cpc = safe_trim(Request::param('cpc'));//区号
+        $mobile = safe_trim(Request::param('phone')); // 手机号码
 
         $Tools = new Tools($store_id, 1);
         $array_code = array('cpc'=>$cpc,'mobile'=>$mobile,'type'=>0,'type1'=>1,'bizparams'=>array());
@@ -356,13 +356,13 @@ class User
     //忘记密码重置密码
     public function ForgetPwd()
     {   
-        $store_id = trim(Request::param('storeId'));
+        $store_id = safe_trim(Request::param('storeId'));
         $tel = Request::param('phone'); // 手机号码
-        $keyCode = trim(Request::param('pcode')); // 短信验证码
-        $password = trim(Request::param('pwd')); // 重置密码
-        $r_password = trim(Request::param('rpwd'));//确认密码
-        // $imgCode = trim(Request::param('imgCode'));//图形验证码
-        // $imgtoken = trim(Request::param('accessId'));//图形验证令牌
+        $keyCode = safe_trim(Request::param('pcode')); // 短信验证码
+        $password = safe_trim(Request::param('pwd')); // 重置密码
+        $r_password = safe_trim(Request::param('rpwd'));//确认密码
+        // $imgCode = safe_trim(Request::param('imgCode'));//图形验证码
+        // $imgtoken = safe_trim(Request::param('accessId'));//图形验证令牌
 
         // if($imgCode != cache($imgtoken))
         // {
@@ -429,10 +429,10 @@ class User
     // 公告已读
     public function markToRead()
     {
-        $store_id = trim(Request::param('storeId'));
-        $store_type = trim(Request::param('storeType')); // 来源
-        $access_id = trim(Request::param('accessId')); // 授权id
-        $tell_id = trim(Request::param('tell_id')); // 公告ID
+        $store_id = safe_trim(Request::param('storeId'));
+        $store_type = safe_trim(Request::param('storeType')); // 来源
+        $access_id = safe_trim(Request::param('accessId')); // 授权id
+        $tell_id = safe_trim(Request::param('tell_id')); // 公告ID
         $read_id = cache($access_id.'_uid');
         
         $array = array('store_id'=>$store_id,'store_type'=>$store_type,'read_id'=>$read_id,'tell_id'=>$tell_id);
@@ -445,9 +445,9 @@ class User
     // 退出
     public function quit()
     {
-        $store_id = trim(Request::param('storeId'));
-        $store_type = trim(Request::param('storeType')); // 来源
-        $access_id = trim(Request::param('accessId')); // 授权id
+        $store_id = safe_trim(Request::param('storeId'));
+        $store_type = safe_trim(Request::param('storeType')); // 来源
+        $access_id = safe_trim(Request::param('accessId')); // 授权id
         
         $user_id = cache($access_id.'_uid');
 

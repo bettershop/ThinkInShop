@@ -49,16 +49,16 @@ class Members
         $store_id = $action->store_id;
         $store_type = $action->store_type;
 
-        $product1 = addslashes(Request::param('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::param('cart_id')));  //购物车id-- 12,13,123,
+        $product1 = addslashes((string)Request::param('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::param('cart_id')));  //购物车id-- 12,13,123,
         $address_id = Request::param('address_id'); //  地址id
         $vipSource = Request::param('vipSource')?Request::param('vipSource'):0;
         $shop_address_id = Request::param('shop_address_id'); //  门店地址id
-        $product_type = addslashes(Request::param('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
-        $buy_type = addslashes(Request::param('buy_type')) ? addslashes(Request::param('buy_type')) : 0;//提交状态 1是再次购买 空是正常提交
-        $canshu = addslashes(Request::param('canshu'));//参数
-        $coupon_id = trim(Request::param('coupon_id')); // 优惠券id
-        $grade_l = addslashes(Request::param('grade_l'));   //会员特惠 兑换券级别
+        $product_type = addslashes((string)Request::param('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
+        $buy_type = addslashes((string)Request::param('buy_type')) ? addslashes((string)Request::param('buy_type')) : 0;//提交状态 1是再次购买 空是正常提交
+        $canshu = addslashes((string)Request::param('canshu'));//参数
+        $coupon_id = safe_trim(Request::param('coupon_id')); // 优惠券id
+        $grade_l = addslashes((string)Request::param('grade_l'));   //会员特惠 兑换券级别
         if($canshu == 'false')
         {
             $canshu = 'true';

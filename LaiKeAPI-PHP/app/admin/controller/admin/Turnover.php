@@ -17,14 +17,14 @@ class Turnover extends BaseController
     public function mchTurnoverReport()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $type = trim($this->request->param('type'));//时间段
-        $startdate = trim($this->request->param('startDate'));
-        $enddate = trim($this->request->param('endDate'));
-        $sorttype = trim($this->request->param('sortType'));//排序0升序1降序
-        $mch_name = trim($this->request->param('mchName'));//商户名称
+        $type = safe_trim($this->request->param('type'));//时间段
+        $startdate = safe_trim($this->request->param('startDate'));
+        $enddate = safe_trim($this->request->param('endDate'));
+        $sorttype = safe_trim($this->request->param('sortType'));//排序0升序1降序
+        $mch_name = safe_trim($this->request->param('mchName'));//商户名称
         $pagesize = $this->request->param('pageSize');// 每页显示多少条数据
         $page = $this->request->param('pageNo');
         $pagesize = $pagesize ? ($pagesize == 'undefined' ? 10 : $pagesize) : 10;
@@ -122,14 +122,14 @@ class Turnover extends BaseController
     public function mchTurnoverNewUserReport()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $type = trim($this->request->param('type'));//时间段
-        $startdate = trim($this->request->param('startDate'));
-        $enddate = trim($this->request->param('endDate'));
-        $sorttype = trim($this->request->param('sortType'));//排序0升序1降序
-        $mch_name = trim($this->request->param('mchName'));//商户名称
+        $type = safe_trim($this->request->param('type'));//时间段
+        $startdate = safe_trim($this->request->param('startDate'));
+        $enddate = safe_trim($this->request->param('endDate'));
+        $sorttype = safe_trim($this->request->param('sortType'));//排序0升序1降序
+        $mch_name = safe_trim($this->request->param('mchName'));//商户名称
         $pagesize = $this->request->param('pageSize');// 每页显示多少条数据
         $page = $this->request->param('pageNo');
         $pagesize = $pagesize ? ($pagesize == 'undefined' ? 10 : $pagesize) : 10;
@@ -224,14 +224,14 @@ class Turnover extends BaseController
     public function mchTurnoverOrderReport()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $type = trim($this->request->param('type'));//时间段
-        $startdate = trim($this->request->param('startDate'));
-        $enddate = trim($this->request->param('endDate'));
-        $sorttype = trim($this->request->param('sortType'));//排序0升序1降序
-        $mch_name = trim($this->request->param('mchName'));//商户名称
+        $type = safe_trim($this->request->param('type'));//时间段
+        $startdate = safe_trim($this->request->param('startDate'));
+        $enddate = safe_trim($this->request->param('endDate'));
+        $sorttype = safe_trim($this->request->param('sortType'));//排序0升序1降序
+        $mch_name = safe_trim($this->request->param('mchName'));//商户名称
         $pagesize = $this->request->param('pageSize');// 每页显示多少条数据
         $page = $this->request->param('pageNo');
         $pagesize = $pagesize ? ($pagesize == 'undefined' ? 10 : $pagesize) : 10;

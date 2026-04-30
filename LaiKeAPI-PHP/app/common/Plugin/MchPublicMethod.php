@@ -152,7 +152,7 @@ class MchPublicMethod
                 $shi = $r0[0]['shi'];
                 $xian = $r0[0]['xian'];
                 $address = $r0[0]['address'];
-                $code = $r0[0]['code'];
+                $code = $r0[0]['code'] ?? '';
                 $business_hours = explode('~', $r0[0]['business_hours']);
 
                 $shop_status = 1;
@@ -1098,7 +1098,7 @@ class MchPublicMethod
                         $r2_2 = Db::query($sql2_2);
                         if($r2_2)
                         { // 存在，修改
-                            $data_update = array('order_number'=>$orderNum,'money'=>$orderMoney,'add_date'=>$time0);
+                            $data_update = array('order_num'=>$orderNum,'money'=>$orderMoney,'add_date'=>$time0);
                             // $data_where = array('store_id'=>$store_id,'mch_id'=>$mch_id,'count_day'=>$add_time,'recycle'=>0);
                             $data_where = array('store_id'=>$store_id,'mch_id'=>$mch_id,'count_day'=>$time,'recycle'=>0);
                             $r2_3 = Db::name('mch_order_record')->where($data_where)->update($data_update);
@@ -1106,7 +1106,7 @@ class MchPublicMethod
                         else
                         { // 不存在，添加
                             // $data_insert = array('store_id'=>$store_id,'mch_id'=>$mch_id,'count_day'=>$add_time,'order_number'=>$orderNum,'money'=>$orderMoney,'add_date'=>$time0,'recycle'=>0);
-                            $data_insert = array('store_id'=>$store_id,'mch_id'=>$mch_id,'count_day'=>$time,'order_number'=>$orderNum,'money'=>$orderMoney,'add_date'=>$time0,'recycle'=>0);
+                            $data_insert = array('store_id'=>$store_id,'mch_id'=>$mch_id,'count_day'=>$time,'order_num'=>$orderNum,'money'=>$orderMoney,'add_date'=>$time0,'recycle'=>0);
                             $r2_3 = Db::name('mch_order_record')->insert($data_insert);
                         }
                 //     }

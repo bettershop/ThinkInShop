@@ -20,15 +20,26 @@ class WeixinApp extends BaseController
     // 引导图列表
     public function getWeiXinGuideImageInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $source = addslashes(safe_trim($this->request->param('source')));
+        if($source == '')
+        {
+            $source = $store_type;
+        }
+        $source = (int)$source;
         
-        $id = addslashes(trim($this->request->param('id'))); // 引导图ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 引导图ID
         $list = array();
         if($id != '' && $id != 0)
         {
-            $r = GuideModel::where(['store_id'=>$store_id,'id'=>$id])->select()->toArray();
+            $where = array('store_id'=>$store_id,'id'=>$id);
+            if(in_array($source, [1,2], true))
+            {
+                $where['source'] = $source;
+            }
+            $r = GuideModel::where($where)->select()->toArray();
             if ($r)
             {
                 $r[0]['image'] = ServerPath::getimgpath($r[0]['image'], $store_id); // 轮播图
@@ -42,7 +53,12 @@ class WeixinApp extends BaseController
         }
         else
         {
-            $r = GuideModel::where(['store_id'=>$store_id])->order('sort','desc')->select()->toArray();
+            $query = GuideModel::where(['store_id'=>$store_id,'type'=>1]);
+            if(in_array($source, [1,2], true))
+            {
+                $query = $query->where('source', $source)->limit(3);
+            }
+            $r = $query->order('sort','asc')->order('add_date','desc')->select()->toArray();
             if ($r)
             {
                 foreach($r as $k => $v)
@@ -61,15 +77,31 @@ class WeixinApp extends BaseController
     // 添加/编辑引导图
     public function addWeiXinGuideImage()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->post('id'))); // 引导图ID
-        $top_type = addslashes(trim($this->request->post('source'))); // 1.小程序 2.APP
-        $image = addslashes(trim($this->request->post('imgUrl'))); // 图片
-    	$type = addslashes(trim($this->request->post('type'))); // 类型
-    	$sort = addslashes(trim($this->request->post('sort'))); // 排序
+        $id = addslashes(safe_trim($this->request->post('id'))); // 引导图ID
+        $top_type = addslashes(safe_trim($this->request->post('source'))); // 1.小程序 2.APP
+        $image = addslashes(safe_trim($this->request->post('imgUrl'))); // 图片
+    	$type = addslashes(safe_trim($this->request->post('type'))); // 类型
+    	$sort = addslashes(safe_trim($this->request->post('sort'))); // 排序
+        $top_type = $top_type == '' ? $store_type : $top_type;
+        $top_type = (int)$top_type;
+        if(!in_array($top_type, [1,2], true))
+        {
+            $top_type = 1;
+        }
+        $type = (int)$type;
+        if($type != 0 && $type != 1)
+        {
+            $type = 1;
+        }
+        $sort = (int)$sort;
+        if($sort < 0)
+        {
+            $sort = 0;
+        }
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -90,8 +122,18 @@ class WeixinApp extends BaseController
         }
         if($id != '' && $id != 0)
         {
+            if($type == 1 && in_array($top_type, [1,2], true))
+            {
+                $guide_total = GuideModel::where(['store_id'=>$store_id,'type'=>1,'source'=>$top_type])->where('id','<>',$id)->count();
+                if($guide_total >= 3)
+                {
+                    $message = Lang('移动端启动引导图最多只能设置三张！');
+                    return output(109,$message);
+                }
+            }
+
             $sql_where = array('store_id'=>$store_id,'id'=>$id);
-            $sql_update = array('image'=>$image,'sort'=>$sort,'type'=>$type);
+            $sql_update = array('image'=>$image,'source'=>$top_type,'sort'=>$sort,'type'=>$type);
             $r = Db::name('guide')->where($sql_where)->update($sql_update);
             if ($r == -1)
             {
@@ -112,6 +154,16 @@ class WeixinApp extends BaseController
         }
         else
         {
+            if($type == 1 && in_array($top_type, [1,2], true))
+            {
+                $guide_total = GuideModel::where(['store_id'=>$store_id,'type'=>1,'source'=>$top_type])->count();
+                if($guide_total >= 3)
+                {
+                    $message = Lang('移动端启动引导图最多只能设置三张！');
+                    return output(109,$message);
+                }
+            }
+
             // 添加
             $sql = array('store_id'=>$store_id,'image'=>$image,'source'=>$top_type,'sort'=>$sort,'type'=>$type,'add_date'=>$time);
             $r = Db::name('guide')->insert($sql);
@@ -137,11 +189,11 @@ class WeixinApp extends BaseController
     // 删除引导图
     public function delWeiXinGuideImage()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id'))); // 引导图ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 引导图ID
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');

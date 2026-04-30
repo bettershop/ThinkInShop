@@ -27,10 +27,10 @@ class Promise extends BaseController
     // 缴纳保证金页面
     public function Index()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $access_id = addslashes(trim($this->request->param('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $access_id = addslashes(safe_trim($this->request->param('access_id')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 保证金审核ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 保证金审核ID
 
         $user_id = $this->user_list['user_id'];
 
@@ -72,13 +72,13 @@ class Promise extends BaseController
     // 缴纳保证金
     public function Payment()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $access_id = addslashes(trim($this->request->post('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $access_id = addslashes(safe_trim($this->request->post('access_id')));
 
-        $mch_id = addslashes(trim($this->request->post('mch_id'))); // 店铺ID
-        $money = addslashes(trim($this->request->post('money'))); // 金额
-        $pwd = MD5(addslashes(trim($this->request->post('pwd')))); // 密码
-        $payType = addslashes(trim($this->request->post('payType'))); // 支付方式
+        $mch_id = addslashes(safe_trim($this->request->post('mch_id'))); // 店铺ID
+        $money = addslashes(safe_trim($this->request->post('money'))); // 金额
+        $pwd = MD5(addslashes(safe_trim($this->request->post('pwd')))); // 密码
+        $payType = addslashes(safe_trim($this->request->post('payType'))); // 支付方式
 
         $user_id = $this->user_list['user_id'];
         $user_money = $this->user_list['money'];
@@ -171,10 +171,10 @@ class Promise extends BaseController
     // 保证金管理
     public function PromiseManage()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $access_id = addslashes(trim($this->request->post('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $access_id = addslashes(safe_trim($this->request->post('access_id')));
 
-        $mch_id = addslashes(trim($this->request->post('mch_id'))); // 店铺ID
+        $mch_id = addslashes(safe_trim($this->request->post('mch_id'))); // 店铺ID
 
         $user_id = $this->user_list['user_id'];
         $user_money = $this->user_list['money'];
@@ -216,8 +216,8 @@ class Promise extends BaseController
     // 缴纳记录
     public function PromiseList()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $access_id = addslashes(trim($this->request->post('access_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $access_id = addslashes(safe_trim($this->request->post('access_id')));
 
         $user_id = $this->user_list['user_id'];
 
@@ -256,9 +256,9 @@ class Promise extends BaseController
     // 申请退还保证金
     public function InsertPromisePrice()
     {
-        $store_id = addslashes(trim($this->request->param('store_id')));
-        $access_id = addslashes(trim($this->request->post('access_id')));
-        $mch_id = addslashes(trim($this->request->post('mch_id')));
+        $store_id = addslashes(safe_trim($this->request->param('store_id')));
+        $access_id = addslashes(safe_trim($this->request->post('access_id')));
+        $mch_id = addslashes(safe_trim($this->request->post('mch_id')));
         
         $user_id = $this->user_list['user_id'];
 

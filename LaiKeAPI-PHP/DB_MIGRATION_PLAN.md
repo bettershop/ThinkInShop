@@ -707,6 +707,21 @@ WHERE table_schema = 'v3_db'
 4. 回滚说明：
    - 文档回滚：删除 `M3_D2_GROUPBUY_DOMAIN_BASELINE.md`
 
+### 记录 15（2026-04-17）
+
+1. 迁移项：V3 独有废弃表清理
+2. 变更文件：
+   - **Java 删除**：`PlatformActivitiesModel.java`, `PlatformActivitiesDelModel.java`, `PlatformActivitiesModelMapper.java`, `PlatformActivitiesDelModelMapper.java`, `PlatformActivitiesModelMapper.xml`, `PlatformActivitiesDelModelMapper.xml`, `AppsCstrPlatformActivitiesService.java`, `AppsCstrPlatformActivitiesServiceImpl.java`
+   - **SQL 脚本**：`scripts/drop_deprecated_tables.sql`
+3. 验证结果：
+   - 砍价 4 张废弃表（bargain_config/goods/order/record）无对应 Java 代码，无需删除
+   - 平台活动 2 张废弃表（platform_activities/platform_activities_del）已删除对应 Java 代码
+   - 后台菜单备份表、插件表、用户角色备份表均无 Java 代码，无需删除
+   - 已生成 SQL 废弃表删除脚本
+4. 回滚说明：
+   - Java 回滚：SVN 回退上述 8 个文件
+   - SQL 回滚：执行 `source scripts/drop_deprecated_tables.sql` 的逆操作（从备份恢复）
+
 ---
 
 除非你明确指定新的规则，否则本文件是 `LaikeAPI` 数据库迁移工作的统一执行口径。

@@ -352,6 +352,8 @@ class PC_Tools
         $type0 = $array['type0'];
         $id = $array['id'];
         $name = $array['name'];
+        $jumpPathHasLangCode = !empty(Db::query("SHOW COLUMNS FROM lkt_jump_path LIKE 'lang_code'"));
+        $jumpPathHasCountryNum = !empty(Db::query("SHOW COLUMNS FROM lkt_jump_path LIKE 'country_num'"));
         $lang_code = "";
         if(isset($array['lang_code']))
         {
@@ -388,13 +390,25 @@ class PC_Tools
 
         if($url != '')
         {
-            $sql0 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>1,'name'=>$name,'url'=>$url,'status'=>1,'parameter_status'=>true,'parameter'=>$parameter,'add_date'=>$time,'sid'=>$id,'lang_code'=>$lang_code,'country_num'=>$country_num);
+            $sql0 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>1,'name'=>$name,'url'=>$url,'status'=>1,'parameter_status'=>true,'parameter'=>$parameter,'add_date'=>$time,'sid'=>$id);
+            if ($jumpPathHasLangCode) {
+                $sql0['lang_code'] = $lang_code;
+            }
+            if ($jumpPathHasCountryNum) {
+                $sql0['country_num'] = $country_num;
+            }
             $r0 = Db::name('jump_path')->save($sql0);
         }
 
         if($url1 != '')
         {
-            $sql1 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>2,'name'=>$name,'url'=>$url,'status'=>1,'parameter_status'=>true,'parameter'=>$parameter,'add_date'=>$time,'sid'=>$id,'lang_code'=>$lang_code,'country_num'=>$country_num);
+            $sql1 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>2,'name'=>$name,'url'=>$url,'status'=>1,'parameter_status'=>true,'parameter'=>$parameter,'add_date'=>$time,'sid'=>$id);
+            if ($jumpPathHasLangCode) {
+                $sql1['lang_code'] = $lang_code;
+            }
+            if ($jumpPathHasCountryNum) {
+                $sql1['country_num'] = $country_num;
+            }
             $r1 = Db::name('jump_path')->save($sql1);
         }
     }
@@ -407,6 +421,8 @@ class PC_Tools
         $type0 = $array['type0'];
         $id = $array['id'];
         $name = $array['name'];
+        $jumpPathHasLangCode = !empty(Db::query("SHOW COLUMNS FROM lkt_jump_path LIKE 'lang_code'"));
+        $jumpPathHasCountryNum = !empty(Db::query("SHOW COLUMNS FROM lkt_jump_path LIKE 'country_num'"));
         $lang_code = "";
         if(isset($array['lang_code']))
         {
@@ -443,14 +459,26 @@ class PC_Tools
 
         if($url != '')
         {
-            $sql0 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>1,'parameter'=>$parameter,'lang_code'=>$lang_code,'country_num'=>$country_num);
-            $r0 = Db::name('jump_path')->where($sql0)->update(['name' => $name]);
+            $where0 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>1,'parameter'=>$parameter);
+            if ($jumpPathHasLangCode) {
+                $where0['lang_code'] = $lang_code;
+            }
+            if ($jumpPathHasCountryNum) {
+                $where0['country_num'] = $country_num;
+            }
+            $r0 = Db::name('jump_path')->where($where0)->update(['name' => $name]);
         }
 
         if($url1 != '')
         {
-            $sql1 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>2,'parameter'=>$parameter,'lang_code'=>$lang_code,'country_num'=>$country_num);
-            $r1 = Db::name('jump_path')->where($sql1)->update(['name' => $name]);
+            $where1 = array('store_id'=>$store_id,'type0'=>$type0,'type'=>2,'parameter'=>$parameter);
+            if ($jumpPathHasLangCode) {
+                $where1['lang_code'] = $lang_code;
+            }
+            if ($jumpPathHasCountryNum) {
+                $where1['country_num'] = $country_num;
+            }
+            $r1 = Db::name('jump_path')->where($where1)->update(['name' => $name]);
         }
         return;
     }
@@ -492,7 +520,14 @@ class PC_Tools
         {
             if($otype == 'GM')
             {
-                $sql_o = "select supplier_id,self_lifting,otype from lkt_order where sNo = '$parameter' ";
+                static $orderHasSupplierId = null;
+                if($orderHasSupplierId === null)
+                {
+                    $cols = Db::query("SHOW COLUMNS FROM `lkt_order` LIKE 'supplier_id'");
+                    $orderHasSupplierId = !empty($cols);
+                }
+                $supplierIdField = $orderHasSupplierId ? 'supplier_id' : '0 as supplier_id';
+                $sql_o = "select $supplierIdField,self_lifting,otype from lkt_order where sNo = '$parameter' ";
                 $r_o = Db::query($sql_o);
                 if($r_o[0]['supplier_id'] == 0)
                 {
@@ -609,6 +644,16 @@ class PC_Tools
         else
         {
             $sql_message_logging = array('store_id'=>$store_id,'supplier_id'=>$gongyingshang,'type'=>$type,'content'=>$content,'parameter'=>$parameter,'add_date'=>$time,'to_url'=>$to_url);
+        }
+        static $messageLoggingHasSupplierId = null;
+        if($messageLoggingHasSupplierId === null)
+        {
+            $cols = Db::query("SHOW COLUMNS FROM `lkt_message_logging` LIKE 'supplier_id'");
+            $messageLoggingHasSupplierId = !empty($cols);
+        }
+        if(!$messageLoggingHasSupplierId)
+        {
+            unset($sql_message_logging['supplier_id']);
         }
         
         $r = Db::name('message_logging')->insert($sql_message_logging);
@@ -1066,7 +1111,7 @@ class PC_Tools
             $r1 = Db::query($sql1);
             $mobile = $r1[0]['mobile'];
             
-            $sql0 = "select a.order_details_id,a.express_id,a.courier_num,a.num,b.sid,a.logistics from lkt_express_delivery as a left join lkt_order_details as b on a.order_details_id = b.id where a.store_id = '$store_id' and a.sNo = '$sNo' ";
+            $sql0 = "select a.order_details_id,a.express_id,a.courier_num,a.num,b.sid,'' as logistics from lkt_express_delivery as a left join lkt_order_details as b on a.order_details_id = b.id where a.store_id = '$store_id' and a.sNo = '$sNo' ";
             $r0 = Db::query($sql0);
             if($r0)
             {
@@ -1402,6 +1447,7 @@ class PC_Tools
         $pid = $array['pid']; // 商品ID
         $sid = $array['sid']; // 属性ID
         $num = $array['num']; // 数量
+        $needNum = (int)$num;
         $type = $array['type']; // 类型 1.下单 2.售后 3.取消订单
         
         $time = date("Y-m-d H:i:s");
@@ -1418,10 +1464,16 @@ class PC_Tools
         $total_num = $r1[0]['num'];
         $min_inventory = $r1[0]['min_inventory']; // 预警值
         $supplier_superior_c = $r1[0]['supplier_superior']; // 供应商商品属性ID
+        $totalNumInt = (int)$total_num;
 
         if($type == 1)
         { // 下单，库存减少
             $user_id = $array['user_id'];
+            if ($needNum > 0 && $totalNumInt < $needNum)
+            {
+                $lktlog->log("common/stock.log",__METHOD__ . ":" . __LINE__ . "库存不足！参数：" . json_encode(array('store_id'=>$store_id,'pid'=>$pid,'sid'=>$sid,'need'=>$needNum,'current'=>$totalNumInt)));
+                return 1;
+            }
 
             $total_num1 = $total_num - $num; // 剩余库存
             $sql_c = array('num'=>Db::raw('num-'.$num));
@@ -1449,7 +1501,7 @@ class PC_Tools
                 {
                     $data_where_1 = array('id'=>$v,'commodity_type'=>2,'recycle'=>0);
                     $data_update_1 = array('num'=>Db::raw('num-'.$num));
-                    $r_1 = Db::name('product_list')->where($data_where_1)->update($data_update_1);
+                    $r_1 = Db::name('product_list')->where($data_where_1)->where('num','>=',$needNum)->update($data_update_1);
                 }
 
                 if($r1[0]['attribute_str'] != '')
@@ -1459,7 +1511,7 @@ class PC_Tools
                     {
                         $data_where_2 = array('id'=>$v_1,'recycle'=>0);
                         $data_update_2 = array('num'=>Db::raw('num-'.$num));
-                        $r_2 = Db::name('configure')->where($data_where_2)->update($data_update_2);
+                        $r_2 = Db::name('configure')->where($data_where_2)->where('num','>=',$needNum)->update($data_update_2);
                     }
                 }
             }
@@ -1534,7 +1586,12 @@ class PC_Tools
             $sql_p_where = array('store_id'=>$store_id,'supplier_superior'=>$supplier_superior_p);
 
             $sql_c_where0 = array('id'=>$supplier_superior_c);
-            $r_p0 = Db::name('configure')->where($sql_c_where0)->update($sql_c);
+            $q_p0 = Db::name('configure')->where($sql_c_where0);
+            if($type == 1 && $needNum > 0)
+            {
+                $q_p0 = $q_p0->where('num','>=',$needNum);
+            }
+            $r_p0 = $q_p0->update($sql_c);
             if ($r_p0 < 1)
             {
                 $code = 1;
@@ -1543,7 +1600,12 @@ class PC_Tools
 
             // 根据商品id,修改卖出去的销量
             $sql_p_where0 = array('store_id'=>$store_id,'id'=>$supplier_superior_p);
-            $r_x0 = Db::name('product_list')->where($sql_p_where0)->update($sql_p);
+            $q_x0 = Db::name('product_list')->where($sql_p_where0);
+            if($type == 1 && $needNum > 0)
+            {
+                $q_x0 = $q_x0->where('num','>=',$needNum);
+            }
+            $r_x0 = $q_x0->update($sql_p);
             if ($r_x0 < 1)
             {
                 $code = 1;
@@ -1565,7 +1627,12 @@ class PC_Tools
             $sql_p_where = array('store_id'=>$store_id,'id'=>$pid);
         }
 
-        $r2 = Db::name('configure')->where($sql_c_where)->update($sql_c);
+        $q2 = Db::name('configure')->where($sql_c_where);
+        if($type == 1 && $needNum > 0)
+        {
+            $q2 = $q2->where('num','>=',$needNum);
+        }
+        $r2 = $q2->update($sql_c);
         if ($r2 < 1)
         {
             $code = 1;
@@ -1573,7 +1640,12 @@ class PC_Tools
         }
 
         // 根据商品id,修改卖出去的销量
-        $r3 = Db::name('product_list')->where($sql_p_where)->update($sql_p);
+        $q3 = Db::name('product_list')->where($sql_p_where);
+        if($type == 1 && $needNum > 0)
+        {
+            $q3 = $q3->where('num','>=',$needNum);
+        }
+        $r3 = $q3->update($sql_p);
         if ($r3 < 1)
         {
             $code = 1;

@@ -58,14 +58,14 @@ class Distribution
         $store_id = $action->store_id;
         $store_type = $action->store_type;
 
-        $product1 = addslashes(Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::post('cart_id')));  //购物车id-- 12,13,123,
+        $product1 = addslashes((string)Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::post('cart_id')));  //购物车id-- 12,13,123,
         $address_id = Request::post('address_id'); //  地址id
         $shop_address_id = Request::post('shop_address_id'); //  门店地址id
-        $product_type = addslashes(Request::post('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
-        $buy_type = addslashes(Request::post('buy_type')) ? addslashes(Request::post('buy_type')) : 0;//提交状态 1是再次购买 空是正常提交
-        $canshu = addslashes(Request::post('canshu'));//参数
-        $coupon_id = trim(Request::post('coupon_id')); // 优惠券id
+        $product_type = addslashes((string)Request::post('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
+        $buy_type = addslashes((string)Request::post('buy_type')) ? addslashes((string)Request::post('buy_type')) : 0;//提交状态 1是再次购买 空是正常提交
+        $canshu = addslashes((string)Request::post('canshu'));//参数
+        $coupon_id = safe_trim(Request::post('coupon_id')); // 优惠券id
 
         // $product1 = "";
         // $cart_id = "5410,5411,5417,5420";
@@ -228,15 +228,15 @@ class Distribution
         $store_type = $action->store_type;
         $access_id = $action->access_id;
 
-        $product1 = addslashes(Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::post('cart_id')));  // 购物车id-- 12,13,123,
-        $type = trim(Request::post('type')) ? Request::post('type') : 'FX'; // 订单类型
+        $product1 = addslashes((string)Request::post('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::post('cart_id')));  // 购物车id-- 12,13,123,
+        $type = safe_trim(Request::post('type')) ? Request::post('type') : 'FX'; // 订单类型
         $address_id = Request::post('address_id'); //  地址id
-        $coupon_id = trim(Request::post('coupon_id')); // 优惠券id
-        $pay_type = addslashes(trim(Request::post('pay_type'))); // 支付方式
-        $buy_type = addslashes(Request::post('buy_type')) ? addslashes(Request::post('buy_type')) : 0; // 提交状态 1是再次购买 空是正常提交
+        $coupon_id = safe_trim(Request::post('coupon_id')); // 优惠券id
+        $pay_type = addslashes(safe_trim(Request::post('pay_type'))); // 支付方式
+        $buy_type = addslashes((string)Request::post('buy_type')) ? addslashes((string)Request::post('buy_type')) : 0; // 提交状态 1是再次购买 空是正常提交
         $shop_address_id = Request::post('shop_address_id',0)?Request::post('shop_address_id',0):0; //  门店地址id
-        $remarks = trim(Request::post('remarks')); //  订单备注
+        $remarks = safe_trim(Request::post('remarks')); //  订单备注
 
         $remarks = htmlspecialchars_decode($remarks); // 将特殊的 HTML 实体转换回普通字符
         $remarks = json_decode($remarks, true);
@@ -284,7 +284,7 @@ class Distribution
         $shi = $address['city'];
         $xian = $address['quyu'];
         $address_xq = $address['address'];
-        $code = $address['code'];
+        $code = $address['code'] ?? '';
 
         $products_data0 = Tools::get_products_data0($store_id, $products,$products_total, $user_id);
         $grade_rate = $products_data0['grade_rate'];
@@ -334,7 +334,7 @@ class Distribution
             $shi = $shop['shi'];
             $xian = $shop['xian'];
             $address_xq = $shop['address'];
-            $code = $shop['code'];
+            $code = $shop['code'] ?? '';
             $shop_status = $shop['shop_status'];
             $extraction_code = $shop['extraction_code'];
             $extraction_code_img = $shop['extraction_code_img'];
@@ -794,13 +794,18 @@ class Distribution
             $r0 = Db::query($sql0);
             if($r0)
             {
-                $level = $r0[0]['level'];
-                $sets = json_decode($r0[0]['sets'],true);
-                $direct_m_type = $sets['direct_m_type']; // 直推分销比例发放模式 0.百分比 1.固定金额
-                $direct_m = $sets['direct_m']; // 直推分销奖
-                if($sets['zhekou'] == 1)
+                $row0 = is_array($r0[0] ?? null) ? $r0[0] : array();
+                $level = (int)($row0['level'] ?? 0);
+                $sets = json_decode((string)($row0['sets'] ?? ''), true);
+                if(!is_array($sets))
                 {
-                    $discount = $r0[0]['discount'];
+                    $sets = array();
+                }
+                $direct_m_type = isset($sets['direct_m_type']) ? $sets['direct_m_type'] : 1; // 直推分销比例发放模式 0.百分比 1.固定金额
+                $direct_m = isset($sets['direct_m']) ? $sets['direct_m'] : 0; // 直推分销奖
+                if(isset($sets['zhekou']) && $sets['zhekou'] == 1)
+                {
+                    $discount = (float)($row0['discount'] ?? $discount);
                 }
             }
             else
@@ -808,10 +813,15 @@ class Distribution
                 $r0 = DistributionGradeModel::where('store_id',$store_id)->field('id,sets')->order('id','desc')->limit(0,1)->select()->toArray();
                 if($r0)
                 {
-                    $level = $r0[0]['id'];
-                    $sets = json_decode($r0[0]['sets'],true);
-                    $direct_m_type = $sets['direct_m_type'];
-                    $direct_m = $sets['direct_m'];
+                    $row0 = is_array($r0[0] ?? null) ? $r0[0] : array();
+                    $level = (int)($row0['id'] ?? 0);
+                    $sets = json_decode((string)($row0['sets'] ?? ''), true);
+                    if(!is_array($sets))
+                    {
+                        $sets = array();
+                    }
+                    $direct_m_type = isset($sets['direct_m_type']) ? $sets['direct_m_type'] : 1;
+                    $direct_m = isset($sets['direct_m']) ? $sets['direct_m'] : 0;
                 }
             }
         }
@@ -820,10 +830,15 @@ class Distribution
             $r0 = DistributionGradeModel::where('store_id',$store_id)->field('id,sets')->order('id','desc')->limit(0,1)->select()->toArray();
             if($r0)
             {
-                $level = $r0[0]['id'];
-                $sets = json_decode($r0[0]['sets'],true);
-                $direct_m_type = $sets['direct_m_type'];
-                $direct_m = $sets['direct_m'];
+                $row0 = is_array($r0[0] ?? null) ? $r0[0] : array();
+                $level = (int)($row0['id'] ?? 0);
+                $sets = json_decode((string)($row0['sets'] ?? ''), true);
+                if(!is_array($sets))
+                {
+                    $sets = array();
+                }
+                $direct_m_type = isset($sets['direct_m_type']) ? $sets['direct_m_type'] : 1;
+                $direct_m = isset($sets['direct_m']) ? $sets['direct_m'] : 0;
             }
         }
 
@@ -859,12 +874,20 @@ class Distribution
         else
         {
             $rules_set = json_decode($rules_set,true);
+            if(!is_array($rules_set))
+            {
+                $rules_set = array();
+            }
             foreach($rules_set as $k_1 => $v_1)
             {
-                if($v_1['id'] == $level)
+                if(!is_array($v_1))
                 {
-                    $direct_m = $v_1['direct_m'];
-                    if($v_1['direct_mode_type'] == 0)
+                    continue;
+                }
+                if(isset($v_1['id']) && $v_1['id'] == $level)
+                {
+                    $direct_m = isset($v_1['direct_m']) ? $v_1['direct_m'] : 0;
+                    if(isset($v_1['direct_mode_type']) && $v_1['direct_mode_type'] == 0)
                     { // 百分比
                         $fx_price = round($price * $direct_m * 0.01,2);
                     }
@@ -872,7 +895,7 @@ class Distribution
                     { // 固定值
                         $fx_price = $direct_m;
                     }
-                    $discount = $v_1['diy_discount'];
+                    $discount = isset($v_1['diy_discount']) ? $v_1['diy_discount'] : $discount;
                 }
             }
         }    

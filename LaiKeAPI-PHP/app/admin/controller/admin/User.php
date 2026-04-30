@@ -58,18 +58,18 @@ class User extends BaseController
     public function getUserInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
 
-        $vague = addslashes(trim($this->request->param('vague')));// 是否模糊查询 1=是 0=否
-        $key = addslashes(trim($this->request->param('key')));// 用户ID/用户昵称/用户账号
-        $uid = addslashes(trim($this->request->param('uid')));// 用户ID
-        $source = addslashes(trim($this->request->param('source'))); // 来源
-        $cpc = addslashes(trim($this->request->param('cpc'))); // 区号
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 国家代码
-        $tel = addslashes(trim($this->request->param('tel'))); // 联系电话
+        $vague = addslashes(safe_trim($this->request->param('vague')));// 是否模糊查询 1=是 0=否
+        $key = addslashes(safe_trim($this->request->param('key')));// 用户ID/用户昵称/用户账号
+        $uid = addslashes(safe_trim($this->request->param('uid')));// 用户ID
+        $source = addslashes(safe_trim($this->request->param('source'))); // 来源
+        $cpc = addslashes(safe_trim($this->request->param('cpc'))); // 区号
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 国家代码
+        $tel = addslashes(safe_trim($this->request->param('tel'))); // 联系电话
         $exportType = addslashes($this->request->param('exportType')); // 导出
         
         $pageto = $this->request->param('exportType'); // 每页显示多少条数据
@@ -162,7 +162,7 @@ class User extends BaseController
                     {
                         $return .=  $v['sNo']  . ',';
                     }
-                    $return = trim($return, ',');
+                    $return = safe_trim($return, ',');
                 }
                 $whe[] = ['status','>',0];
                 if ($return != '')
@@ -348,8 +348,8 @@ class User extends BaseController
     public function generateAccount()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
          
         $randomString = Tools::generateRandomString(8);
 
@@ -360,8 +360,8 @@ class User extends BaseController
     //添加会员页面
     public function getUserConfigInfo()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
         //默认头像 和 昵称
         $res = ConfigModel::where('store_id',$store_id)->field('wx_headimgurl,wx_name')->select()->toArray();
         if ($res)
@@ -381,19 +381,19 @@ class User extends BaseController
     // 添加会员
     public function saveUser()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $wx_headimgurl = addslashes(trim($this->request->param('headerUrl'))); //用户头像
-        $wx_name = addslashes(trim($this->request->param('userName'))); //用户名
-        $zhanghao = trim($this->request->param('zhanghao')); //账号
+        $wx_headimgurl = addslashes(safe_trim($this->request->param('headerUrl'))); //用户头像
+        $wx_name = addslashes(safe_trim($this->request->param('userName'))); //用户名
+        $zhanghao = safe_trim($this->request->param('zhanghao')); //账号
         $mima = $this->request->param('mima'); //密码
-        $cpc = addslashes(trim($this->request->param('cpc'))); // 区号
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 国家代码
-        $mobile = addslashes(trim($this->request->param('phone'))); //手机号
-        $e_mail = addslashes(trim($this->request->param('e_mail'))); // 邮箱
-        $source = addslashes(trim($this->request->param('source'))); //来源
+        $cpc = addslashes(safe_trim($this->request->param('cpc'))); // 区号
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 国家代码
+        $mobile = addslashes(safe_trim($this->request->param('phone'))); //手机号
+        $e_mail = addslashes(safe_trim($this->request->param('e_mail'))); // 邮箱
+        $source = addslashes(safe_trim($this->request->param('source'))); //来源
         $sex = $this->request->param('sex');//1:男 2:女
 
         $Jurisdiction = new Jurisdiction();
@@ -547,11 +547,11 @@ class User extends BaseController
     // 保存会员设置
     public function addUserRule()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
-        $wx_headimgurl = addslashes(trim($this->request->param('wxImgUrl'))); //用户头像
-        $wx_name = addslashes(trim($this->request->param('wxName'))); //用户名
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
+        $wx_headimgurl = addslashes(safe_trim($this->request->param('wxImgUrl'))); //用户头像
+        $wx_name = addslashes(safe_trim($this->request->param('wxName'))); //用户名
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -594,16 +594,16 @@ class User extends BaseController
     // 修改会员
     public function updateUserById()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
         //1.接受用户传来的修改数据
         $user_id = $this->request->param("userId");//会员ID
         $user_name = $this->request->param("uname");//会员名称
-        $cpc = addslashes(trim($this->request->param('cpc'))); // 区号
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 国家代码
-        $mobile = addslashes(trim($this->request->param('phone'))); //手机号
-        $e_mail = addslashes(trim($this->request->param('e_mail'))); // 邮箱
+        $cpc = addslashes(safe_trim($this->request->param('cpc'))); // 区号
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 国家代码
+        $mobile = addslashes(safe_trim($this->request->param('phone'))); //手机号
+        $e_mail = addslashes(safe_trim($this->request->param('e_mail'))); // 邮箱
         $mima = $this->request->param("pwd"); //登录密码
         $password = $this->request->param('paypwd'); //支付密码
         $headimgurl = $this->request->param('headerUrl');//头像
@@ -769,9 +769,9 @@ class User extends BaseController
     // 删除会员
     public function delUserById()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
         $id = $this->request->param("id");//会员主键ID
         $log = new LaiKeLogUtils();
         
@@ -883,14 +883,14 @@ class User extends BaseController
     //会员充值
     public function userRechargeMoney()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
         $log = new LaiKeLogUtils();
-        $id = trim($this->request->param('id'));
-        $price = trim($this->request->param('money'));//充值额
-        $type = trim($this->request->param('type'));//1充值余额3充值积分
-        $remake = trim($this->request->param('remake'));// 备注
+        $id = safe_trim($this->request->param('id'));
+        $price = safe_trim($this->request->param('money'));//充值额
+        $type = safe_trim($this->request->param('type'));//1充值余额3充值积分
+        $remake = safe_trim($this->request->param('remake'));// 备注
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1069,11 +1069,11 @@ class User extends BaseController
     public function getupInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10'; // 每页显示多少条数据
         
         $Jurisdiction = new Jurisdiction();
@@ -1081,8 +1081,8 @@ class User extends BaseController
         $operator = cache($access_id.'admin_name');
         // 接收参数
         $exportType = addslashes($this->request->param('exportType'));//是否导出
-        $name = addslashes(trim($this->request->param('key'))); // 用户名称、user_id、手机号码
-        $type = addslashes(trim($this->request->param('oType'))); // 类型
+        $name = addslashes(safe_trim($this->request->param('key'))); // 用户名称、user_id、手机号码
+        $type = addslashes(safe_trim($this->request->param('oType'))); // 类型
         $startdate = $this->request->param('startDate'); //开始时间
         $enddate = $this->request->param('endDate'); //结束时间
         $pageto = $this->request->param('pageto'); // 导出
@@ -1228,12 +1228,12 @@ class User extends BaseController
     public function getWithdrawalInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $name = addslashes(trim($this->request->param('userNameAndPhone'))); // 用户名/联系电话
-        $withdrawStatus = addslashes(trim($this->request->param('withdrawStatus'))); // 1.微信零钱 2.银行卡
+        $name = addslashes(safe_trim($this->request->param('userNameAndPhone'))); // 用户名/联系电话
+        $withdrawStatus = addslashes(safe_trim($this->request->param('withdrawStatus'))); // 1.微信零钱 2.银行卡
         $startdate = $this->request->param('startDate'); //开始时间
         $enddate = $this->request->param('endDate'); //结束时间
         $pageto = $this->request->param('pageto'); // 导出
@@ -1337,13 +1337,13 @@ class User extends BaseController
     {   
         $admin_list = $this->user_list;
         $admin_name = $this->user_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $id = intval($this->request->param('id')); // 提现id
         $m = intval($this->request->param('status')); // 参数 1.通过 2.拒绝
-        $refuse = trim($this->request->param('refuse')); // 拒绝原因
+        $refuse = safe_trim($this->request->param('refuse')); // 拒绝原因
         $log = new LaiKeLogUtils(); // 日志
         
         $Jurisdiction = new Jurisdiction();
@@ -1439,7 +1439,7 @@ class User extends BaseController
                 
                 $Tools = new Tools( $store_id, 1);
                 $res = $Tools->sendMoney($store_id,$total_amount,$wx_id,'提现');
-                
+                var_dump($res);die;
                 if(!isset($res['batch_id']) || !isset($res['out_batch_no']))
                 {
                     Db::rollback();
@@ -1534,14 +1534,14 @@ class User extends BaseController
     public function getWithdrawalRecord()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $name = addslashes(trim($this->request->param('userNameAndPhone'))); // 用户名/联系电话
-        $withdrawStatus = addslashes(trim($this->request->param('withdrawStatus'))); // 1.微信零钱 2.银行卡
-        $status = addslashes(trim($this->request->param('status'))); // 1.通过 2.拒绝
-        $wxStatus = addslashes(trim($this->request->param('wxStatus'))); // 1.进行中 2.已完成 3.提现失败
+        $name = addslashes(safe_trim($this->request->param('userNameAndPhone'))); // 用户名/联系电话
+        $withdrawStatus = addslashes(safe_trim($this->request->param('withdrawStatus'))); // 1.微信零钱 2.银行卡
+        $status = addslashes(safe_trim($this->request->param('status'))); // 1.通过 2.拒绝
+        $wxStatus = addslashes(safe_trim($this->request->param('wxStatus'))); // 1.进行中 2.已完成 3.提现失败
         
         $startdate = $this->request->param('startDate');
         $enddate = $this->request->param('endDate');
@@ -1721,8 +1721,8 @@ class User extends BaseController
     public function getWalletInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         // 查询钱包配置
         $r = FinanceConfigModel::where('store_id',$store_id)->select()->toArray();
@@ -1757,18 +1757,18 @@ class User extends BaseController
     public function setWalletInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $min_cz = addslashes(trim($this->request->param('minMoney'))); // 最小充值金额
-        $min_amount = addslashes(trim($this->request->param('minOutMoney'))); // 最小提现金额
+        $min_cz = addslashes(safe_trim($this->request->param('minMoney'))); // 最小充值金额
+        $min_amount = addslashes(safe_trim($this->request->param('minOutMoney'))); // 最小提现金额
         $max_amount = addslashes($this->request->param('maxOutMoney')); // 最大提现金额
         $service_charge = addslashes($this->request->param('serviceMoney')); // 手续费
         $unit = addslashes($this->request->param('unit')); // 单位
-        $multiple = trim($this->request->param('multiple'))?trim($this->request->param('multiple')):0; //提现倍数
-        $transfer_multiple = trim($this->request->param('transfer_multiple'))?trim($this->request->param('transfer_multiple')):0; //转账倍数
-        $cz_multiple = trim($this->request->param('cz_multiple'))?trim($this->request->param('cz_multiple')):0; //充值倍数
+        $multiple = safe_trim($this->request->param('multiple'))?safe_trim($this->request->param('multiple')):0; //提现倍数
+        $transfer_multiple = safe_trim($this->request->param('transfer_multiple'))?safe_trim($this->request->param('transfer_multiple')):0; //转账倍数
+        $cz_multiple = safe_trim($this->request->param('cz_multiple'))?safe_trim($this->request->param('cz_multiple')):0; //充值倍数
 
         $log = new LaiKeLogUtils();//日志
 
@@ -1926,15 +1926,15 @@ class User extends BaseController
     public function getUserMoneyInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10'; // 每页显示多少条数据
 
         // 接收数据
-        $name = addslashes(trim($this->request->param('userName'))); // 用户名称
-        $source = addslashes(trim($this->request->param('source'))); // 用户来源
+        $name = addslashes(safe_trim($this->request->param('userName'))); // 用户名称
+        $source = addslashes(safe_trim($this->request->param('source'))); // 用户来源
         $starttime = $this->request->param('startDate'); //开始时间
         $group_end_time = $this->request->param('endDate'); //结束时间
         $exportType = $this->request->param('exportType'); // 是否导出
@@ -2033,8 +2033,8 @@ class User extends BaseController
     public function getUserMoneyInfo_see()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         // 接收参数
         $user_id = $this->request->param('userid'); // 用户id
@@ -2044,8 +2044,8 @@ class User extends BaseController
         $group_end_time = $this->request->param('endDate'); // 结束时间
         $exportType = $this->request->param('exportType'); // 导出
         
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10'; // 每页显示多少条数据
         if ($page)
         {
@@ -2187,13 +2187,13 @@ class User extends BaseController
     public function getUserIntegralInfo()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10'; // 每页显示多少条数据
 
-        $user_name = addslashes(trim($this->request->param('userName'))); // 用户名/联系电话
+        $user_name = addslashes(safe_trim($this->request->param('userName'))); // 用户名/联系电话
         $startdate = $this->request->param('startDate');//开始时间
         $enddate = $this->request->param('endDate');//结束时间
         $exportType = $this->request->param('exportType');// 导出
@@ -2292,10 +2292,10 @@ class User extends BaseController
     public function getUserIntegralInfo_see()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10'; // 每页显示多少条数据
 
         // 接收参数
@@ -2428,8 +2428,8 @@ class User extends BaseController
     // 获取会员等级（功能弃用，但优惠券这边还是调用了这个接口）
     public function goodsStatus()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $message = Lang("Success");
         return output(200,$message,array());
@@ -2439,8 +2439,8 @@ class User extends BaseController
     public function saveAddress()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $user_id = $this->request->param('userId');
         $user_name = $this->request->param('userName');
@@ -2544,9 +2544,9 @@ class User extends BaseController
     // 批量上传
     public function uploadAddUser()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $time = date("Y-m-d H:i:s");
         $Tools = new Tools($store_id, 1);
@@ -2904,9 +2904,9 @@ class User extends BaseController
     // 批量上传记录
     public function uploadRecordList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $key = addslashes($this->request->param('key')); // 文件名称
         $status = addslashes($this->request->param('status')); // 文件状态 导入状态 1成功 2失败
@@ -2971,9 +2971,9 @@ class User extends BaseController
     // 删除批量上传记录
     public function delUploadRecord()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 上传记录ID
         
@@ -2991,9 +2991,9 @@ class User extends BaseController
     // 获取会员开通方式
     public function getUserGradeType()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $gradeType = array(
             array('value'=>'1','label'=>'包月'),
@@ -3008,12 +3008,12 @@ class User extends BaseController
     // 获取区号
     public function getItuList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         // 接收信息
-        $keyword = trim($this->request->param('keyword'));//区号
+        $keyword = safe_trim($this->request->param('keyword'));//区号
 
         $data = array();
 

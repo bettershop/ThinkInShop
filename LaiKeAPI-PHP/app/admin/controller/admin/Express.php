@@ -19,13 +19,13 @@ class Express extends BaseController
     public function index()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $keyWord = trim($this->request->param('keyWord')); // 物流公司名称、编码
-        $sortType = trim($this->request->param('sortType')); // 排序 1.降序 2.升序
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
-        $id = addslashes(trim($this->request->param('id'))); // 物流ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $keyWord = safe_trim($this->request->param('keyWord')); // 物流公司名称、编码
+        $sortType = safe_trim($this->request->param('sortType')); // 排序 1.降序 2.升序
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 物流ID
      
         if($pagesize == '')
         {
@@ -85,13 +85,13 @@ class Express extends BaseController
     public function expressSave()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $id = trim($this->request->param('id')); // 物流ID
-        $kuaidi_name = trim($this->request->param('name')); // 物流公司名称
-        $type = trim($this->request->param('code')); // 编码
-        $sort = addslashes(trim($this->request->param('sort'))); // 排序
-        $is_open = addslashes(trim($this->request->param('switchse'))); // 开关
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $id = safe_trim($this->request->param('id')); // 物流ID
+        $kuaidi_name = safe_trim($this->request->param('name')); // 物流公司名称
+        $type = safe_trim($this->request->param('code')); // 编码
+        $sort = addslashes(safe_trim($this->request->param('sort'))); // 排序
+        $is_open = addslashes(safe_trim($this->request->param('switchse'))); // 开关
 
         $admin_name = $admin_list['name'];
         if($kuaidi_name != '')
@@ -194,9 +194,9 @@ class Express extends BaseController
     public function expressSwitch()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $id = trim($this->request->param('id')); // 物流ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $id = safe_trim($this->request->param('id')); // 物流ID
 
         $admin_name = $admin_list['name'];
 
@@ -241,9 +241,9 @@ class Express extends BaseController
     public function expressDel()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $ids = trim($this->request->param('ids')); // 物流ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $ids = safe_trim($this->request->param('ids')); // 物流ID
         $id_list = explode(',',$ids);
 
         $admin_name = $admin_list['name'];
@@ -275,10 +275,10 @@ class Express extends BaseController
     // 物流列表
     public function logistics_list()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $name = addslashes(trim($this->request->param('name'))); // 物流公司名称、编码
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $store_id = safe_trim($this->request->param('storeId'));
+        $name = addslashes(safe_trim($this->request->param('name'))); // 物流公司名称、编码
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
 
         $SelfOperatedStore_id = PC_Tools::SelfOperatedStore($store_id); // 自营店ID
 
@@ -294,9 +294,9 @@ class Express extends BaseController
     // 获取物流主表数据
     public function get_logistics()
     {   
-        $store_id = trim($this->request->param('storeId'));
+        $store_id = safe_trim($this->request->param('storeId'));
 
-        $id = trim($this->request->param('id')); // id
+        $id = safe_trim($this->request->param('id')); // id
 
         $sql0 = "select shop_id from lkt_admin where store_id = '$store_id' and type = 1 ";
         $r0 = Db::query($sql0);
@@ -316,16 +316,16 @@ class Express extends BaseController
     // 添加/编辑快递公司子表
     public function add_logistics()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $id = addslashes(trim($this->request->param('id'))); // ID
-        $express_id = addslashes(trim($this->request->param('express_id'))); // 主表ID
-        $partnerId = addslashes(trim($this->request->param('partnerId'))); // 电子面单客户账户或月结账号
-        $partnerKey = addslashes(trim($this->request->param('partnerKey'))); // 电子面单密码
-        $partnerSecret = addslashes(trim($this->request->param('partnerSecret'))); // 电子面单密钥
-        $partnerName = addslashes(trim($this->request->param('partnerName'))); // 电子面单客户账户名称
-        $net = addslashes(trim($this->request->param('net'))); // 收件网点名称
-        $code = addslashes(trim($this->request->param('code'))); // 电子面单承载编号
-        $checkMan = addslashes(trim($this->request->param('checkMan'))); // 电子面单承载快递员名
+        $store_id = safe_trim($this->request->param('storeId'));
+        $id = addslashes(safe_trim($this->request->param('id'))); // ID
+        $express_id = addslashes(safe_trim($this->request->param('express_id'))); // 主表ID
+        $partnerId = addslashes(safe_trim($this->request->param('partnerId'))); // 电子面单客户账户或月结账号
+        $partnerKey = addslashes(safe_trim($this->request->param('partnerKey'))); // 电子面单密码
+        $partnerSecret = addslashes(safe_trim($this->request->param('partnerSecret'))); // 电子面单密钥
+        $partnerName = addslashes(safe_trim($this->request->param('partnerName'))); // 电子面单客户账户名称
+        $net = addslashes(safe_trim($this->request->param('net'))); // 收件网点名称
+        $code = addslashes(safe_trim($this->request->param('code'))); // 电子面单承载编号
+        $checkMan = addslashes(safe_trim($this->request->param('checkMan'))); // 电子面单承载快递员名
 
         $admin_name = $this->user_list['name'];
 
@@ -353,8 +353,8 @@ class Express extends BaseController
     // 编辑快递公司子表页面
     public function edit_logistics_page()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $id = addslashes(trim($this->request->param('id'))); // ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $id = addslashes(safe_trim($this->request->param('id'))); // ID
 
         $SelfOperatedStore_id = PC_Tools::SelfOperatedStore($store_id); // 自营店ID
 
@@ -370,8 +370,8 @@ class Express extends BaseController
     // 删除快递公司子表
     public function del_logistics()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $id = addslashes(trim($this->request->param('id'))); // ID
+        $store_id = safe_trim($this->request->param('storeId'));
+        $id = addslashes(safe_trim($this->request->param('id'))); // ID
         $admin_name = $this->user_list['name'];
 
         $SelfOperatedStore_id = PC_Tools::SelfOperatedStore($store_id); // 自营店ID

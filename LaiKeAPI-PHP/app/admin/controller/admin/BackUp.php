@@ -7,6 +7,7 @@ use think\facade\Db;
 use think\facade\Request;
 use app\common\BackupController;
 use app\common\RecoveryController;
+use app\common\LaiKeLogUtils;
 
 /**
  * 功能：数据备份
@@ -18,9 +19,9 @@ class BackUp extends BaseController
     // 获取备份设置
     public function queryConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $list = array();
         $sql = "select * from lkt_backup_config where store_id = 0 ";
@@ -37,9 +38,9 @@ class BackUp extends BaseController
     // 获取备份文件列表
     public function backUpRecord()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $page = (int)$this->request->param('page'); // 页码
         $pagesize = (int)$this->request->param('pageSize'); // 每页显示多少条数据
@@ -80,14 +81,14 @@ class BackUp extends BaseController
     // 保存备份设置
     public function addConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $is_open = addslashes(trim($this->request->param('is_open'))); // 是否开启自动备份,0关闭，1开启
-        $query_data = addslashes(trim($this->request->param('query_data'))); // 条件 1.每天 2.N天 3.每小时 4.N小时 5.N分钟 6.每周 7.每月
-        $execute_cycle = addslashes(trim($this->request->param('execute_cycle'))); // 执行周期
-        $url = addslashes(trim($this->request->param('url'))); // 保存路径
+        $is_open = addslashes(safe_trim($this->request->param('is_open'))); // 是否开启自动备份,0关闭，1开启
+        $query_data = addslashes(safe_trim($this->request->param('query_data'))); // 条件 1.每天 2.N天 3.每小时 4.N小时 5.N分钟 6.每周 7.每月
+        $execute_cycle = addslashes(safe_trim($this->request->param('execute_cycle'))); // 执行周期
+        $url = addslashes(safe_trim($this->request->param('url'))); // 保存路径
 
         $time = date("Y-m-d H:i:s");
 
@@ -107,7 +108,7 @@ class BackUp extends BaseController
         {
             $sql0 = "update lkt_backup_config set is_open = '$is_open',query_data = '$query_data',execute_cycle = '$execute_cycle',url = '$url' where store_id = 0 and recycle = 0 ";
             $r0 = Db::execute($sql0);
-            if($r0 < 1)
+            if($r0 === false)
             {
                 $this->log(__LINE__ . ':修改数据备份配置失败，sql0为：' . $sql0 );
                 $message = Lang("operation failed");
@@ -133,9 +134,9 @@ class BackUp extends BaseController
     // 立即备份
     public function immediately()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $array = array('store_id'=>0,'file_type'=>'人工');
         $res = new BackupController();
@@ -149,11 +150,11 @@ class BackUp extends BaseController
     // 还原
     public function reduction()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
         $array = array('store_id'=>0,'id'=>$id);
         $res = new RecoveryController();
@@ -166,11 +167,11 @@ class BackUp extends BaseController
     // 删除
     public function delBackUpRecord()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
         $sql = "update lkt_backup_record set recycle = 1 where store_id = 0 and id = '$id' ";
         $r = Db::execute($sql);
@@ -182,11 +183,11 @@ class BackUp extends BaseController
     // 取消备份
     public function cancelTask()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
         $sql = "update lkt_backup_record set recycle = 1 where store_id = 0 and id = '$id' ";
         $r = Db::execute($sql);

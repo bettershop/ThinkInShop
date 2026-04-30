@@ -19,12 +19,12 @@ class Comment
     // 评价列表
     public function getcomment()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $pid = addslashes(trim(Request::param('pid'))); // 商品id
-        $type = addslashes(trim(Request::param('type'))); // 类型
-        $page = addslashes(trim(Request::param('page'))); // 页码
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $pid = addslashes(safe_trim(Request::param('pid'))); // 商品id
+        $type = addslashes(safe_trim(Request::param('type'))); // 类型
+        $page = addslashes(safe_trim(Request::param('page'))); // 页码
 
         $start = 0;
         $end = 10;
@@ -229,13 +229,13 @@ class Comment
     // 获取回复数据
     public function getCommentReplyList()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
 
-        $commentId = addslashes(trim(Request::param('commentId'))); // 评论id
-        $page = addslashes(trim(Request::param('pageNo'))); // 页码
-        $pagesize = addslashes(trim(Request::param('pageSize'))); // 每页多少条数据
+        $commentId = addslashes(safe_trim(Request::param('commentId'))); // 评论id
+        $page = addslashes(safe_trim(Request::param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim(Request::param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : 10;
 
         $start = 0;
@@ -275,11 +275,11 @@ class Comment
     // 获取评论数据
     public function getCommentDetail()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
 
-        $commentId = addslashes(trim(Request::param('commentId'))); // 评论id
+        $commentId = addslashes(safe_trim(Request::param('commentId'))); // 评论id
         
         $commentImgList = array();
         $detailInfo = array();
@@ -353,12 +353,12 @@ class Comment
     // 回复
     public function sendComment()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
 
-        $commentId = addslashes(trim(Request::param('commentId'))); // 评论id
-        $text = addslashes(trim(Request::param('text'))); // 回复内容
+        $commentId = addslashes(safe_trim(Request::param('commentId'))); // 评论id
+        $text = addslashes(safe_trim(Request::param('text'))); // 回复内容
         
         $time = date('Y-m-d H:i:s');
         // 根据授权id,查询用户信息(被邀请人)

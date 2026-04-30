@@ -24,11 +24,17 @@ class ServerPath
         $res = FilesRecordModel::where(['store_id'=>$store_id,'image_name'=>$img,'recycle'=>0])->select()->toArray();
         if ($res)
         {
+            if (!is_array($res[0] ?? null))
+            {
+                return (string)$img;
+            }
             $store_type = $res[0]['store_type'];
             $upload_mode = $res[0]['upload_mode'];
             $add_time = date("Ymd",strtotime($res[0]['add_time']));
             if ($upload_mode == 1)
             {
+                $uploadImg_domain = '';
+                $uploadImg = '';
                 $r1 = UploadSetModel::where('upserver','=', '1')->field('attr,attrvalue')->select()->toArray();
                 foreach ($r1 as $k => $v)
                 {
@@ -40,6 +46,10 @@ class ServerPath
                     {
                         $uploadImg = $v['attrvalue']; // 图片上传位置
                     }
+                }
+                if ($uploadImg_domain === '' || $uploadImg === '')
+                {
+                    return (string)$img;
                 }
                 if ($store_id)
                 {
@@ -66,10 +76,21 @@ class ServerPath
             elseif ($upload_mode == 5) 
             {
                 $common = LKTConfigInfo::getOSSConfig('5');
-                $image = 'http://' . $common['endpoint'] .'/'. $common['bucket']. '/' . $store_id . '/' . $store_type . '/' . $add_time  . '/' . $img;               
-                if (strpos($common['endpoint'], "http") !== false) 
+                if (!is_array($common))
                 {
-                    $image = $common['endpoint'] .'/'. $common['bucket']. '/' . $store_id . '/' . $store_type . '/' . $add_time  . '/' . $img;
+                    return (string)$img;
+                }
+                $endpoint = (string)($common['endpoint'] ?? '');
+                $bucket = (string)($common['bucket'] ?? '');
+                if ($endpoint === '' || $bucket === '')
+                {
+                    return (string)$img;
+                }
+
+                $image = 'http://' . $endpoint .'/'. $bucket . '/' . $store_id . '/' . $store_type . '/' . $add_time  . '/' . $img;               
+                if (strpos($endpoint, "http") !== false) 
+                {
+                    $image = $endpoint .'/'. $bucket . '/' . $store_id . '/' . $store_type . '/' . $add_time  . '/' . $img;
                 }
             }
             else
@@ -81,6 +102,7 @@ class ServerPath
                 );
                 if (self::$serverURL == null)
                 {
+                    $OSS = array('Bucket'=>'','Endpoint'=>'','isopenzdy'=>0,'MyEndpoint'=>'');
                     $serverres = UploadSetModel::where('upserver','=', '2')->whereIn('attr','Bucket,Endpoint,isopenzdy,MyEndpoint')->select()->toArray();
 
                     if (!empty($serverres))
@@ -107,13 +129,21 @@ class ServerPath
                                 }
                             }
                         }
-                        if($OSS['isopenzdy'] == 0 )
+                        if((int)$OSS['isopenzdy'] == 0 )
                         {
+                            if ($OSS['Bucket'] === '' || $OSS['Endpoint'] === '')
+                            {
+                                return (string)$img;
+                            }
                             $serverURL['OSS'] .= $OSS['Bucket'] . '.' . $OSS['Endpoint'];
                         }
                         else
                         {
                             //自定义域名
+                            if ($OSS['MyEndpoint'] === '')
+                            {
+                                return (string)$img;
+                            }
                             $serverURL['OSS'] .= $OSS['MyEndpoint'];
                         }
                     }

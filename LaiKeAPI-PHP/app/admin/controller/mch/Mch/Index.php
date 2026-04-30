@@ -113,7 +113,7 @@ class Index extends BaseController
             $mchRecordList[0][0][$k] = $v;
             $mchRecordList[0][1][$k] = 0;
             $mchRecordList[0][2][$k] = 0;
-            $sql4_0 = "select ifnull(sum(order_number),0) as total,ifnull(sum(money),0) as money from lkt_mch_order_record where store_id = '$store_id' and mch_id = '$mch_id' and recycle = 0 and date_format(count_day,'%Y-%m-%d') = '$v' ";
+            $sql4_0 = "select ifnull(sum(order_num),0) as total,ifnull(sum(money),0) as money from lkt_mch_order_record where store_id = '$store_id' and mch_id = '$mch_id' and recycle = 0 and date_format(count_day,'%Y-%m-%d') = '$v' ";
             $r4_0 = Db::query($sql4_0);
             if($r4_0)
             {
@@ -127,7 +127,7 @@ class Index extends BaseController
             $mchRecordList[1][0][$k] = $v;
             $mchRecordList[1][1][$k] = 0;
             $mchRecordList[1][2][$k] = 0;
-            $sql4_0 = "select ifnull(sum(order_number),0) as total,ifnull(sum(money),0) as money from lkt_mch_order_record where store_id = '$store_id' and mch_id = '$mch_id' and recycle = 0 and date_format(count_day,'%Y-%m-%d') = '$v' ";
+            $sql4_0 = "select ifnull(sum(order_num),0) as total,ifnull(sum(money),0) as money from lkt_mch_order_record where store_id = '$store_id' and mch_id = '$mch_id' and recycle = 0 and date_format(count_day,'%Y-%m-%d') = '$v' ";
             $r4_0 = Db::query($sql4_0);
             if($r4_0)
             {
@@ -141,7 +141,7 @@ class Index extends BaseController
             $mchRecordList[2][0][$k] = $v;
             $mchRecordList[2][1][$k] = 0;
             $mchRecordList[2][2][$k] = 0;
-            $sql4_0 = "select ifnull(sum(order_number),0) as total,ifnull(sum(money),0) as money from lkt_mch_order_record where store_id = '$store_id' and mch_id = '$mch_id' and recycle = 0 and date_format(count_day,'%Y-%m') = '$v' ";
+            $sql4_0 = "select ifnull(sum(order_num),0) as total,ifnull(sum(money),0) as money from lkt_mch_order_record where store_id = '$store_id' and mch_id = '$mch_id' and recycle = 0 and date_format(count_day,'%Y-%m') = '$v' ";
             $r4_0 = Db::query($sql4_0);
             if($r4_0)
             {

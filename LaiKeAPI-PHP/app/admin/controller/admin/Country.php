@@ -16,11 +16,11 @@ class Country extends BaseController
     // 国家列表
     public function countryList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $keyword = addslashes(trim($this->request->param('keyword')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $keyword = addslashes(safe_trim($this->request->param('keyword')));
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
@@ -70,10 +70,10 @@ class Country extends BaseController
     // 添加/编辑国家
     public function saveOrEditCountry()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
         $name = addslashes($this->request->param('name')); // 国家名称
         $zh_name = addslashes($this->request->param('zh_name')); // 中文名称
         $code = addslashes($this->request->param('code')); //英文编码
@@ -255,10 +255,10 @@ class Country extends BaseController
     // 删除国家
     public function deleteCountry()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
         $sql = "delete from lkt_ds_country where id = '$id' ";
         $r = Db::execute($sql);

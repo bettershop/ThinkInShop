@@ -47,9 +47,9 @@ class Go_groupPublicMethod
         $store_id = $action->store_id;
         $store_type = $action->store_type;
 
-        $address_id = addslashes(trim(Request::param('address_id'))); // 地址ID
-        $productsInfo = addslashes(trim(Request::param('productsInfo'))); // 参数  {"pid":"4906","cid":1870,"num":2,"acId":"1674334035863666688"}
-        $order_type = addslashes(trim(Request::param('order_type'))); // 类型
+        $address_id = addslashes(safe_trim(Request::param('address_id'))); // 地址ID
+        $productsInfo = addslashes(safe_trim(Request::param('productsInfo'))); // 参数  {"pid":"4906","cid":1870,"num":2,"acId":"1674334035863666688"}
+        $order_type = addslashes(safe_trim(Request::param('order_type'))); // 类型
 
         $productsInfo1 = htmlspecialchars_decode($productsInfo);
         $productsInfo2 = json_decode(stripslashes(html_entity_decode($productsInfo1)),true); // 字符串打散为数组
@@ -172,10 +172,10 @@ class Go_groupPublicMethod
         $store_type = $action->store_type;
         $Is_it_temporary = $action->Is_it_temporary; // false：不是临时订单   true：是临时订单
 
-        $address_id = addslashes(trim(Request::param('address_id'))); // 地址ID
-        $productsInfo = addslashes(trim(Request::param('productsInfo'))); // 参数  {"pid":"4906","cid":1870,"num":2,"acId":"1674334035863666688"}
-        $remarks = addslashes(trim(Request::param('remarks'))); // 备注
-        $order_type = addslashes(trim(Request::param('pay_type'))); // 类型
+        $address_id = addslashes(safe_trim(Request::param('address_id'))); // 地址ID
+        $productsInfo = addslashes(safe_trim(Request::param('productsInfo'))); // 参数  {"pid":"4906","cid":1870,"num":2,"acId":"1674334035863666688"}
+        $remarks = addslashes(safe_trim(Request::param('remarks'))); // 备注
+        $order_type = addslashes(safe_trim(Request::param('pay_type'))); // 类型
 
         $productsInfo1 = htmlspecialchars_decode($productsInfo);
         $productsInfo2 = json_decode(stripslashes(html_entity_decode($productsInfo1)),true); // 字符串打散为数组
@@ -924,7 +924,7 @@ class Go_groupPublicMethod
         $min_inventory = $r4[0]['min_inventory']; // 预警值
 
         // 根据商品ID，修改商品库存
-        $r5 = Db::name('product_list')->where('id',$pid)->update(['num' => Db::raw('num - 1')]);
+        $r5 = Db::name('product_list')->where('id',$pid)->where('num','>',0)->update(['num' => Db::raw('num - 1')]);
         if ($r5 <= 0)
         {
             $this->Log(__METHOD__ . ":" . __LINE__ . "修改商品库存失败！pid:" . $pid);
@@ -935,7 +935,7 @@ class Go_groupPublicMethod
         }
 
         // 根据属性ID，修改属性库存
-        $r6 = Db::name('configure')->where('id',$cid)->update(['num' => Db::raw('num - 1')]);
+        $r6 = Db::name('configure')->where('id',$cid)->where('num','>',0)->update(['num' => Db::raw('num - 1')]);
         if ($r6 <= 0)
         {
             $this->Log(__METHOD__ . ":" . __LINE__ . "修改商品属性库存失败！cid:" . $cid);
@@ -3342,7 +3342,15 @@ class Go_groupPublicMethod
                 {
                     $sql_0 = "select team_rule from lkt_group_activity where store_id = '$store_id' and id = '$acId' ";
                     $r_0 = Db::query($sql_0);
-                    $team_rule = json_decode($r_0[0]['team_rule'],true);
+                    $team_rule = array();
+                    if ($r_0 && isset($r_0[0]['team_rule']))
+                    {
+                        $decoded = json_decode($r_0[0]['team_rule'], true);
+                        if (is_array($decoded))
+                        {
+                            $team_rule = $decoded;
+                        }
+                    }
                     foreach($team_rule as $k_rule => $v_rule)
                     {
                         $man = $v_rule['num'];

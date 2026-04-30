@@ -172,6 +172,7 @@
 
 <script>
 import { getSkuList } from "@/api/goods/goodsList";
+import Sortable from "sortablejs";
 export default {
   props: {
     // 控制弹窗显示
@@ -224,6 +225,8 @@ export default {
       //添加新属性弹窗参数 end
       zcList: [], //左侧数据暂存数组
       arr: [], //用来去重赋值给transferData
+      rightSortable: null,
+      skipZcListWatch: false,
     };
   },
   computed: {
@@ -244,6 +247,9 @@ export default {
     //   }
     // },
     zcList() {
+      if (this.skipZcListWatch) {
+        return;
+      }
       if (this.isLoading == false) {
         this.page += 1;
         this.getList();
@@ -276,13 +282,91 @@ export default {
         },
         true
       );
+
+      this.initRightSortable();
     });
     this.pop_lang_code = this.lang_code;
     this.pop_country_num = this.country_num;
     //数据初始化
     this.getList();
   },
+  beforeDestroy() {
+    this.destroyRightSortable();
+  },
   methods: {
+    initRightSortable() {
+      this.destroyRightSortable();
+
+      if (!this.$refs.transfer || !this.$refs.transfer.$el) {
+        return;
+      }
+
+      const panels = this.$refs.transfer.$el.querySelectorAll(
+        ".el-transfer-panel"
+      );
+      if (!panels || panels.length < 2) {
+        return;
+      }
+
+      const rightPanel = panels[1];
+      const listEl = rightPanel.querySelector(".el-transfer-panel__list");
+      if (!listEl) {
+        return;
+      }
+
+      rightPanel.classList.add("is-draggable-panel");
+
+      this.rightSortable = Sortable.create(listEl, {
+        animation: 160,
+        ghostClass: "transfer-sortable-ghost",
+        onEnd: ({ oldIndex, newIndex }) => {
+          if (
+            oldIndex === undefined ||
+            newIndex === undefined ||
+            oldIndex === newIndex
+          ) {
+            return;
+          }
+
+          const nextSelected = [...this.selectedList];
+          const moved = nextSelected.splice(oldIndex, 1)[0];
+          nextSelected.splice(newIndex, 0, moved);
+          this.selectedList = nextSelected;
+          this.skipZcListWatch = true;
+          this.syncSelectedToZcList();
+          this.$nextTick(() => {
+            this.skipZcListWatch = false;
+          });
+        },
+      });
+    },
+    destroyRightSortable() {
+      if (this.rightSortable) {
+        this.rightSortable.destroy();
+        this.rightSortable = null;
+      }
+    },
+    syncSelectedToZcList() {
+      this.zcList = [];
+      this.selectedList.forEach((sid) => {
+        const row = this.transferData.find((item) => item.sid == sid);
+        if (row) {
+          this.zcList.push(row);
+        }
+      });
+
+      //去重，防止sid重复
+      this.zcList = this.zcList.reduce((accumulator, current) => {
+        if (!current || !current.sid) {
+          return accumulator;
+        }
+        const existingItem = accumulator.find((item) => item.sid == current.sid);
+        if (!existingItem) {
+          return accumulator.concat([current]);
+        }
+        return accumulator;
+      }, []);
+    },
     //初始化数据
     async getList() {
       const res = await getSkuList({
@@ -325,6 +409,10 @@ export default {
 
       this.transferData = this.arr;
       this.loading = false;
+
+      this.$nextTick(() => {
+        this.initRightSortable();
+      });
     },
     //输入框搜索方法
     filterMethod() {
@@ -464,28 +552,11 @@ export default {
     },
     //穿梭框左右切换的change事件
     transferChange(row, item) {
-      this.zcList = []; //初始化zcList
-      row.forEach((itn) => {
-        var obj = this.transferData.find((item, index) => {
-          return item.sid == itn; //取出this.transferData里面符合条件的数据
-        });
-        this.zcList.push(obj);
+      this.syncSelectedToZcList();
+
+      this.$nextTick(() => {
+        this.initRightSortable();
       });
-      //去重，防止sid重复
-      this.zcList = this.zcList.reduce((accumulator, current) => {
-        // 非空判断
-        if(!current || !current.sid){
-          return accumulator
-        }
-        const existingItem = accumulator.find(
-          (item) => item.sid == current.sid
-        );
-        if (!existingItem) {
-          return accumulator.concat([current]);
-        } else {
-          return accumulator;
-        }
-      }, []);
     },
     //生成sid的随机数
     genNumber() {
@@ -626,9 +697,18 @@ export default {
         width: 38%;
         height: 350px;
       }
+      .is-draggable-panel {
+        .el-transfer-panel__item {
+          cursor: move;
+        }
+      }
       .el-transfer-panel__list {
         height: 300px;
         padding-bottom: 40px;
+      }
+      .transfer-sortable-ghost {
+        opacity: 0.65;
+        background: #ecf5ff;
       }
       .left-footer {
         display: flex;

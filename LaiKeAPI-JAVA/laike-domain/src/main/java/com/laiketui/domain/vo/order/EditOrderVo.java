@@ -38,6 +38,8 @@ public class EditOrderVo extends MainVo
     private Integer orderStatus = -1;
     @ApiModelProperty(value = "订单金额 (只有订单在未付款的情况下才能修改)", name = "orderAmt")
     private String  orderAmt;
+    @ApiModelProperty(value = "订单运费 (只有订单在未付款的情况下才能修改)", name = "freight")
+    private String  freight;
     /**
      * 商家自配选择的自配时间
      */
@@ -76,6 +78,16 @@ public class EditOrderVo extends MainVo
     public void setOrderAmt(String orderAmt)
     {
         this.orderAmt = orderAmt;
+    }
+
+    public String getFreight()
+    {
+        return freight;
+    }
+
+    public void setFreight(String freight)
+    {
+        this.freight = freight;
     }
 
     public String getOrderNo()

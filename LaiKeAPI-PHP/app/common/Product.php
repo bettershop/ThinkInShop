@@ -89,7 +89,14 @@ class Product
         }
 
         if (empty($array['is_lang_all'])) { // 默认只查主商品
-            $condition .= " and (a.lang_pid is null or a.lang_pid = 0) ";
+            static $hasLangPidColumn = null;
+            if ($hasLangPidColumn === null) {
+                $columnCheck = Db::query("SHOW COLUMNS FROM lkt_product_list LIKE 'lang_pid'");
+                $hasLangPidColumn = !empty($columnCheck);
+            }
+            if ($hasLangPidColumn) {
+                $condition .= " and (a.lang_pid is null or a.lang_pid = 0) ";
+            }
         }
 
         if($source == 'mch')
@@ -1558,6 +1565,37 @@ class Product
         $imgurls = $imgurls0;
        
 
+        $safeUnserialize = function ($value) {
+            if ($value === null) {
+                return null;
+            }
+            if (!is_string($value)) {
+                return $value;
+            }
+            $value = trim($value);
+            if ($value === '') {
+                return null;
+            }
+            $result = @unserialize($value, ['allowed_classes' => false]);
+            if ($result !== false || $value === 'b:0;') {
+                return $result;
+            }
+            $json = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $json;
+            }
+            $fixed = preg_replace_callback('/s:(\d+):"(.*?)";/s', function ($m) {
+                return 's:' . strlen($m[2]) . ':"' . $m[2] . '";';
+            }, $value);
+            if ($fixed !== $value) {
+                $result = @unserialize($fixed, ['allowed_classes' => false]);
+                if ($result !== false || $fixed === 'b:0;') {
+                    return $result;
+                }
+            }
+            return null;
+        };
+
         $attr_group_list = array();
         $checked_attr_list = array();
         $strArr = array();
@@ -1567,7 +1605,10 @@ class Product
         {
             if ($res_size[0]['attribute'] != '')
             {
-                $arrar_t = unserialize($res_size[0]['attribute']);
+                $arrar_t = $safeUnserialize($res_size[0]['attribute']);
+                if (!is_array($arrar_t)) {
+                    $arrar_t = array();
+                }
                 foreach ($arrar_t as $key => $value)
                 {
                     if (strpos($key, '_LKT_') !== false)
@@ -1584,7 +1625,10 @@ class Product
                 {
                     foreach ($res_size as $k => $v)
                     {
-                        $attribute = unserialize($v['attribute']); // 属性
+                        $attribute = $safeUnserialize($v['attribute']); // 属性
+                        if (!is_array($attribute)) {
+                            $attribute = array();
+                        }
                         $attr_lists = array();
                         //列出属性名
                         foreach ($attribute as $key => $value)
@@ -1715,14 +1759,19 @@ class Product
 
         if ($initial != '')
         {
-            $initial = unserialize($initial);
-            $initial['cbj']= (float)$initial['cbj'];
-            $initial['sj']= (float)$initial['sj'];
-            $initial['yj']= (float)$initial['yj'];
-            if(!isset($initial['stockWarn']))
+            $initial0 = $safeUnserialize($initial);
+            if(!is_array($initial0))
             {
-                $initial['stockWarn'] = $min_inventory;
+                $initial0 = array();
             }
+            $initial0['cbj']= (float)($initial0['cbj'] ?? 0);
+            $initial0['sj']= (float)($initial0['sj'] ?? 0);
+            $initial0['yj']= (float)($initial0['yj'] ?? 0);
+            if(!isset($initial0['stockWarn']))
+            {
+                $initial0['stockWarn'] = $min_inventory;
+            }
+            $initial = $initial0;
         }
         else
         {
@@ -6228,7 +6277,7 @@ class Product
             }
         }
 
-        $sql_show_adr = "select a.value,a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '商品展示位置' and a.status = 1";
+        $sql_show_adr = "select a.value,a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '商品展示位置' and a.status = 1";
         $r_show_adr = Db::query($sql_show_adr);
         if ($r_show_adr)
         {
@@ -6259,7 +6308,7 @@ class Product
         }
 
         $unit = array();
-        $sql_unit = "select a.text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '单位' and a.status = 1";
+        $sql_unit = "select a.ctext as text from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.recycle = 0 and b.name = '单位' and a.status = 1";
         $r_unit = Db::query($sql_unit);
         if ($r_unit)
         {
@@ -7178,7 +7227,7 @@ class Product
             if($r)
             {
                 $mch_id = $r[0]['mch_id'];
-                $product_title = $r[0]['product_title'];
+                $product_title = (string)($r[0]['product_title'] ?? '');
                 $min_inventory = $r[0]['min_inventory'];
                 if(strlen($product_title) > 10)
                 {

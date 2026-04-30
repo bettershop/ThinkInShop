@@ -4,7 +4,74 @@ if (!function_exists('dbConfigEnv')) {
     function dbConfigEnv($name, $default)
     {
         $value = getenv($name);
-        return ($value === false || $value === '') ? $default : $value;
+        if ($value !== false && $value !== '') {
+            return $value;
+        }
+
+        if (isset($_ENV[$name]) && $_ENV[$name] !== '') {
+            return $_ENV[$name];
+        }
+
+        if (isset($_SERVER[$name]) && $_SERVER[$name] !== '') {
+            return $_SERVER[$name];
+        }
+
+        $alias = [
+            'MYSQL_SERVER' => 'HOSTNAME',
+            'MYSQL_USER' => 'USERNAME',
+            'MYSQL_PASSWORD' => 'PASSWORD',
+            'MYSQL_DATABASE' => 'DATABASE',
+            'MYSQL_PORT' => 'HOSTPORT',
+        ];
+        if (isset($alias[$name])) {
+            $aliasKey = $alias[$name];
+            $aliasVal = getenv($aliasKey);
+            if ($aliasVal !== false && $aliasVal !== '') {
+                return $aliasVal;
+            }
+            if (isset($_ENV[$aliasKey]) && $_ENV[$aliasKey] !== '') {
+                return $_ENV[$aliasKey];
+            }
+            if (isset($_SERVER[$aliasKey]) && $_SERVER[$aliasKey] !== '') {
+                return $_SERVER[$aliasKey];
+            }
+        }
+
+        $envFile = dirname(__DIR__) . '/.env';
+        if (is_file($envFile)) {
+            $lines = @file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            if (is_array($lines)) {
+                $envMap = [];
+                foreach ($lines as $line) {
+                    $line = trim($line);
+                    if ($line === '' || strpos($line, '#') === 0) {
+                        continue;
+                    }
+                    $pos = strpos($line, '=');
+                    if ($pos === false) {
+                        continue;
+                    }
+                    $k = trim(substr($line, 0, $pos));
+                    $v = trim(substr($line, $pos + 1));
+                    $v = trim($v, " \t\n\r\0\x0B\"'");
+                    if ($k !== '') {
+                        $envMap[$k] = $v;
+                    }
+                }
+
+                if (isset($envMap[$name]) && $envMap[$name] !== '') {
+                    return $envMap[$name];
+                }
+                if (isset($alias[$name])) {
+                    $aliasKey = $alias[$name];
+                    if (isset($envMap[$aliasKey]) && $envMap[$aliasKey] !== '') {
+                        return $envMap[$aliasKey];
+                    }
+                }
+            }
+        }
+
+        return $default;
     }
 }
 

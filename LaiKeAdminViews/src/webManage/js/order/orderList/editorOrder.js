@@ -25,6 +25,7 @@ export default {
                 r_address: '',
                 remarks: '',
                 pay_price: '',
+                freight: '',
                 sjpsData: '',
                 sjpsTime: '',
                 sjpsTimeId: 1,
@@ -178,8 +179,9 @@ export default {
             this.ruleForm.shi = res.data.data.data.shi
             this.ruleForm.xian = res.data.data.data.xian
             this.ruleForm.r_address = res.data.data.data.r_address
-            this.ruleForm.remarks = Object.keys(res.data.data.data.remarks).length === 0 ? '' : ''
+            this.ruleForm.remarks = res.data.data.data.remarks || ''
             this.ruleForm.pay_price = this.totleInfo.pay_price
+            this.ruleForm.freight = this.totleInfo.z_freight
             if(this.dataInfo.status == '待付款') {
                 // this.ruleForm.pay_price = this.totleInfo.pay_price
                 this.ruleForm.status = '0'
@@ -262,6 +264,7 @@ export default {
                         remarks: this.ruleForm.remarks,
                         order_status:  this.orderStatus,
                         orderAmt: this.dataInfo.status == '待付款' ? this.ruleForm.pay_price :null,
+                        freight: this.dataInfo.status == '待付款' ? this.ruleForm.freight : null,
                         deliveryTime: this.ruleForm.sjpsData,
                         deliveryPeriod: this.ruleForm.sjpsTimeId,
                         cpc:this.code2
@@ -293,5 +296,22 @@ export default {
               }
             });
         },
+        getRealtimePayPrice() {
+            if (!this.totleInfo) {
+                return '0.00'
+            }
+            if (this.dataInfo && this.dataInfo.status !== '待付款') {
+                return Number(this.totleInfo.old_total || 0).toFixed(2)
+            }
+            const oldTotal = Number(this.totleInfo.old_total || 0)
+            const oldFreight = Number(this.totleInfo.old_freight || this.totleInfo.z_freight || 0)
+            const orderAmtBase = this.ruleForm.pay_price !== '' && this.ruleForm.pay_price !== null
+                ? Number(this.ruleForm.pay_price || 0)
+                : oldTotal
+            const freightCurrent = this.ruleForm.freight !== '' && this.ruleForm.freight !== null
+                ? Number(this.ruleForm.freight || 0)
+                : oldFreight
+            return (orderAmtBase - oldFreight + freightCurrent).toFixed(2)
+        }
     }
 }

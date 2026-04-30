@@ -20,15 +20,15 @@ class Label extends BaseController
     // 分类标签列表
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 分类标签ID
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $name = addslashes(trim($this->request->param('name'))); // 标题
-        $pageNo = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pageSize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 分类标签ID
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $name = addslashes(safe_trim($this->request->param('name'))); // 标题
+        $pageNo = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pageSize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         $lang_code = Tools::get_lang($lang_code);
 
@@ -73,15 +73,15 @@ class Label extends BaseController
     // 添加/编辑分类标签
     public function addGoodsLabel()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 分类标签ID
-        $name = addslashes(trim($this->request->param('name'))); // 标题
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语言
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 国家代码
-        $color = addslashes(trim($this->request->param('color'))); // 颜色 1.红色 2.橘色 3.黄色 4.绿色 5.蓝色
+        $id = addslashes(safe_trim($this->request->param('id'))); // 分类标签ID
+        $name = addslashes(safe_trim($this->request->param('name'))); // 标题
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语言
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 国家代码
+        $color = addslashes(safe_trim($this->request->param('color'))); // 颜色 1.红色 2.橘色 3.黄色 4.绿色 5.蓝色
 
         Tools::National_Language($lang_code,$country_num);
 
@@ -161,11 +161,11 @@ class Label extends BaseController
     // 删除分类标签
     public function delGoodsLabel()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 分类标签ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 分类标签ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');

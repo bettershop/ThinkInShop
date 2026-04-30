@@ -14,10 +14,9 @@ This is a multi-module Maven project for the Laike (来客) e-commerce platform 
 | Spring Boot | 2.3.12.RELEASE | - |
 | Spring Cloud Alibaba | 2.2.7.RELEASE | - |
 | Spring Cloud | Hoxton.SR12 | - |
-| Nacos | 2.1.1 | Config & Service Discovery |
-| Dubbo | 3.0.8 | RPC (partially deprecated, newer code uses OpenFeign) |
+| Nacos | 2.1.1 | Config & Service Discovery | 
 | MyBatis/Tk-MyBatis | 2.1.5 | Persistence layer |
-| MySQL | 5.6-5.7 | Config: `sql_mode=NO_ZERO_DATE` |
+| MySQL | 8.0 | Config: `sql_mode=NO_ZERO_DATE` |
 | Redis | 7 | - |
 | Maven | 3.6.1 | 3.8+ has issues |
 | Tomcat | 9.0.55 | For WAR deployment |
@@ -221,7 +220,7 @@ return ret == null ? Result.exportFile() : Result.success(ret);
 ### Required Services
 
 - **Nacos 2.1.1**: Configuration and service discovery ( standalone mode )
-- **MySQL 5.6-5.7**: Database
+- **MySQL 8.0**: Database
 - **Redis 7**: Caching and session
 - **MinIO 8.5.4**: Object storage (optional, can use Aliyun OSS)
 - **XXL-JOB**: Scheduled task management (for `laike-comps/task`)

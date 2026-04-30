@@ -4,6 +4,7 @@
   "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
+    "setup": "bash skill/setup.sh",
     "dev": "vue-cli-service serve",
     "java:dev": "vue-cli-service build --mode java_dev_production",
     "java:prod": "vue-cli-service build --mode java_prod_production",

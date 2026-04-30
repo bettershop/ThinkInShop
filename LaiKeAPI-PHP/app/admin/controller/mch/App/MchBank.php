@@ -15,9 +15,9 @@ class MchBank extends BaseController
     // 银行卡管理
     public function BankList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
 
         $user_id = $this->user_list['user_id'];
 
@@ -50,15 +50,15 @@ class MchBank extends BaseController
     // 添加银行卡
     public function AddBank()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
 
-        $Cardholder = trim($this->request->post('Cardholder')); // 持卡人
-        $Bank_name = trim($this->request->post('Bank_name')); // 银行名称
-        $branch = trim($this->request->post('branch')); // 支行名称
-        $Bank_card_number = trim($this->request->post('Bank_card_number')); // 银行卡号
-        $is_default = trim($this->request->post('is_default')); // 是否默认
+        $Cardholder = safe_trim($this->request->post('Cardholder')); // 持卡人
+        $Bank_name = safe_trim($this->request->post('Bank_name')); // 银行名称
+        $branch = safe_trim($this->request->post('branch')); // 支行名称
+        $Bank_card_number = safe_trim($this->request->post('Bank_card_number')); // 银行卡号
+        $is_default = safe_trim($this->request->post('is_default')); // 是否默认
         
         $user_id = $this->user_list['user_id'];
         Db::startTrans();
@@ -158,10 +158,10 @@ class MchBank extends BaseController
     // 编辑银行卡页面
     public function BankPage()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
-        $id = trim($this->request->post('id')); // 银行卡ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
+        $id = safe_trim($this->request->post('id')); // 银行卡ID
 
         $user_id = $this->user_list['user_id'];
 
@@ -188,16 +188,16 @@ class MchBank extends BaseController
     // 编辑银行卡
     public function EditBank()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
 
-        $id = trim($this->request->post('id')); // 银行卡ID
-        $Cardholder = trim($this->request->post('Cardholder')); // 持卡人
-        $Bank_name = trim($this->request->post('Bank_name')); // 银行名称
-        $branch = trim($this->request->post('branch')); // 支行名称
-        $Bank_card_number = trim($this->request->post('Bank_card_number')); // 银行卡号
-        $is_default = trim($this->request->post('is_default')); // 是否默认
+        $id = safe_trim($this->request->post('id')); // 银行卡ID
+        $Cardholder = safe_trim($this->request->post('Cardholder')); // 持卡人
+        $Bank_name = safe_trim($this->request->post('Bank_name')); // 银行名称
+        $branch = safe_trim($this->request->post('branch')); // 支行名称
+        $Bank_card_number = safe_trim($this->request->post('Bank_card_number')); // 银行卡号
+        $is_default = safe_trim($this->request->post('is_default')); // 是否默认
         
         $user_id = $this->user_list['user_id'];
         Db::startTrans();
@@ -299,11 +299,11 @@ class MchBank extends BaseController
     // 解绑银行卡
     public function DelBank()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
 
-        $id = trim($this->request->param('id')); // 银行卡ID
+        $id = safe_trim($this->request->param('id')); // 银行卡ID
         
         $user_id = $this->user_list['user_id'];
 

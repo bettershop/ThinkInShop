@@ -45,20 +45,20 @@ class Mch
     // 店铺主页
     public function storeHomepage()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
-        $shop_id = addslashes(trim(Request::param('shop_id'))); // 店铺ID
-        $cid = addslashes(trim(Request::param('cid'))); // 分类ID
-        $keyword = addslashes(trim(Request::param('keyword'))); // 关键字
-        $class_id = addslashes(trim(Request::param('class_id'))); // 选择的分类ID(71,74)
-        $amount = addslashes(trim(Request::param('amount'))); // 金额
-        $sort_type = addslashes(trim(Request::param('sortType'))); // 排序类型(price 或 volume)
-        $sort = addslashes(trim(Request::param('sort'))); // 排序(asc 或 desc)  0.asc  1.desc  
-        $page = addslashes(trim(Request::param('page'))); // 加载次数
-        $end = addslashes(trim(Request::param('pageSize'))); // 加载次数
+        $shop_id = addslashes(safe_trim(Request::param('shop_id'))); // 店铺ID
+        $cid = addslashes(safe_trim(Request::param('cid'))); // 分类ID
+        $keyword = addslashes(safe_trim(Request::param('keyword'))); // 关键字
+        $class_id = addslashes(safe_trim(Request::param('class_id'))); // 选择的分类ID(71,74)
+        $amount = addslashes(safe_trim(Request::param('amount'))); // 金额
+        $sort_type = addslashes(safe_trim(Request::param('sortType'))); // 排序类型(price 或 volume)
+        $sort = addslashes(safe_trim(Request::param('sort'))); // 排序(asc 或 desc)  0.asc  1.desc  
+        $page = addslashes(safe_trim(Request::param('page'))); // 加载次数
+        $end = addslashes(safe_trim(Request::param('pageSize'))); // 加载次数
 
         $time = date("Y-m-d H:i:s");
         $lang_code = Tools::get_lang($language);
@@ -342,12 +342,12 @@ class Mch
     // 店铺点击收藏按钮
     public function collectionShop()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
-        $shop_id = addslashes(trim(Request::param('shopId'))); // 店铺ID
+        $shop_id = addslashes(safe_trim(Request::param('shopId'))); // 店铺ID
         Db::startTrans();
         $thme = date("Y-m-d H:i:s");
         $user_id = '';
@@ -433,7 +433,7 @@ class Mch
     // 获取店铺分类
     public function mchClass()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
 
         $list = array();
         $total = 0;
@@ -458,10 +458,10 @@ class Mch
     // 我的店铺
     public function index()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
         $user_id = '';
         if (!empty($access_id))
@@ -519,11 +519,11 @@ class Mch
     // 验证店铺名称
     public function verifyStoreName()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
-        $name = addslashes(trim(Request::param('name'))); // 店铺名称
+        $name = addslashes(safe_trim(Request::param('name'))); // 店铺名称
 
         $user_id = '';
         if (!empty($access_id))
@@ -567,9 +567,9 @@ class Mch
     // 入驻协议
     public function agreement()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
         $name = '申请入驻协议';
         $agreement = '';
@@ -587,21 +587,21 @@ class Mch
     // 申请开通店铺
     public function apply()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
 
-        $name = addslashes(trim(Request::param('name'))); // 店铺名称
-        $shop_information = addslashes(trim(Request::param('shop_information'))); // 店铺信息
-        $cid = trim(Request::param('cid')); // 店铺分类
-        $shop_range = addslashes(trim(Request::param('shop_range'))); // 经营范围
-        $realname = addslashes(trim(Request::param('realname'))); // 真实姓名
-        $ID_number = addslashes(trim(Request::param('ID_number'))); // 身份证号码
-        $tel = addslashes(trim(Request::param('tel'))); // 联系电话
-        $city_all = addslashes(trim(Request::param('city_all'))); // 联系地址
-        $address = addslashes(trim(Request::param('address'))); // 联系地址
-        $shop_nature = addslashes(trim(Request::param('shop_nature'))); // 店铺性质
-        $imgUrls = trim(Request::param('imgUrls')); // 身份证证件照
+        $name = addslashes(safe_trim(Request::param('name'))); // 店铺名称
+        $shop_information = addslashes(safe_trim(Request::param('shop_information'))); // 店铺信息
+        $cid = safe_trim(Request::param('cid')); // 店铺分类
+        $shop_range = addslashes(safe_trim(Request::param('shop_range'))); // 经营范围
+        $realname = addslashes(safe_trim(Request::param('realname'))); // 真实姓名
+        $ID_number = addslashes(safe_trim(Request::param('ID_number'))); // 身份证号码
+        $tel = addslashes(safe_trim(Request::param('tel'))); // 联系电话
+        $city_all = addslashes(safe_trim(Request::param('city_all'))); // 联系地址
+        $address = addslashes(safe_trim(Request::param('address'))); // 联系地址
+        $shop_nature = addslashes(safe_trim(Request::param('shop_nature'))); // 店铺性质
+        $imgUrls = safe_trim(Request::param('imgUrls')); // 身份证证件照
 
         $time = date("Y-m-d H:i:s");
 
@@ -745,10 +745,10 @@ class Mch
     // 继续开通店铺
     public function continueApply()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $language = addslashes(trim(Request::param('language'))); // 语言
-        $shop_id = addslashes(trim(Request::param('shop_id'))); // 店铺ID
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
+        $shop_id = addslashes(safe_trim(Request::param('shop_id'))); // 店铺ID
         $user_id = '';
         if (!empty($access_id))
         {
@@ -791,7 +791,7 @@ class Mch
     // // 获取地址（前端没有调用）
     // public function mchAddress()
     // {
-    //     $GroupID = addslashes(trim(Request::param('GroupID')));
+    //     $GroupID = addslashes(safe_trim(Request::param('GroupID')));
 
     //     $r = AdminCgGroupModel::where('district_pid',$GroupID)->select()->toArray();
 
@@ -872,10 +872,10 @@ class Mch
     //获取门店列表
     public function seeMyStore()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
-        $shop_id = trim(Request::param('shop_id'));//店铺id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
+        $shop_id = safe_trim(Request::param('shop_id'));//店铺id
 
         $list = array();
         $res = MchStoreModel::where(['store_id'=>$store_id,'mch_id'=>$shop_id])->order('is_default','desc')->order('add_date','desc')->select()->toArray();

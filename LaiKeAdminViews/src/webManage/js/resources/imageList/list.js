@@ -31,6 +31,9 @@ export default {
   },
   //组装模板
   created() {
+    this.pageSize = 30
+    this.current_num = 30
+    this.pagesizes = [10, 30, 50, 100]
     this.loadData()
     this.getButtons()
   },

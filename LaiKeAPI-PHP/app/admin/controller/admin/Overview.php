@@ -23,10 +23,10 @@ class Overview extends BaseController
     // 功能导览
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
-        $language = addslashes(trim($this->request->param('language')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $language = addslashes(safe_trim($this->request->param('language')));
 
         $isAdmin = $this->user_list['type']; // 类型 0:系统管理员 1：客户 2:商城管理员 3:店主
 
@@ -107,15 +107,15 @@ class Overview extends BaseController
     // 编辑导览
     public function functionList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
-        $language = addslashes(trim($this->request->param('language')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $language = addslashes(safe_trim($this->request->param('language')));
 
-        $sid = addslashes(trim($this->request->param('sid'))); // 上级菜单ID
-        $title = addslashes(trim($this->request->param('name'))); // 菜单ID/菜单名称
-        $pageNo = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $sid = addslashes(safe_trim($this->request->param('sid'))); // 上级菜单ID
+        $title = addslashes(safe_trim($this->request->param('name'))); // 菜单ID/菜单名称
+        $pageNo = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
         $start = 0;
         if ($pageNo)
@@ -184,11 +184,11 @@ class Overview extends BaseController
     // 是否显示
     public function isDisplaySwitch()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 菜单ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 菜单ID
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -248,12 +248,12 @@ class Overview extends BaseController
     // 上移、下移
     public function move()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 菜单ID
-        $id2 = addslashes(trim($this->request->param('id2'))); // 更换排序的菜单ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 菜单ID
+        $id2 = addslashes(safe_trim($this->request->param('id2'))); // 更换排序的菜单ID
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -326,11 +326,11 @@ class Overview extends BaseController
     // 置顶
     public function sortTop()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 菜单ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 菜单ID
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -363,7 +363,7 @@ class Overview extends BaseController
                     $id_str .= $v1['id'] . ',';
                 }
                 
-                $id_str = trim($id_str,',');
+                $id_str = safe_trim($id_str,',');
             }
         }
 

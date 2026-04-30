@@ -23,11 +23,11 @@ class Msg extends BaseController
         $store_type = addslashes($this->request->param('storeType'));
         $access_id = addslashes($this->request->param('accessId'));
 
-        $send_id = trim($this->request->param('send_id')); // 发送人id
-        $receive_id = trim($this->request->param('receive_id'));//接收客服id
+        $send_id = safe_trim($this->request->param('send_id')); // 发送人id
+        $receive_id = safe_trim($this->request->param('receive_id'));//接收客服id
         $content = $this->request->param('content');//发送内容
-        $img_list = trim($this->request->param('img_list'));//发送图片
-        $is_mch_send = trim($this->request->param('is_mch_send'));//是否店铺0否1是
+        $img_list = safe_trim($this->request->param('img_list'));//发送图片
+        $is_mch_send = safe_trim($this->request->param('is_mch_send'));//是否店铺0否1是
         
         $user_id = cache($access_id.'_uid'); // 用户user_id
 
@@ -105,9 +105,9 @@ class Msg extends BaseController
         $store_type = addslashes($this->request->param('storeType'));
         $access_id = addslashes($this->request->param('accessId'));
 
-        $user_id = trim($this->request->param('userId')); // 用户id
-        $mch_id = trim($this->request->param('mchId'));//店铺id
-        $type = trim($this->request->param('type'));//0用户端1店铺端
+        $user_id = safe_trim($this->request->param('userId')); // 用户id
+        $mch_id = safe_trim($this->request->param('mchId'));//店铺id
+        $type = safe_trim($this->request->param('type'));//0用户端1店铺端
 
         if($type)
         {
@@ -181,8 +181,8 @@ class Msg extends BaseController
         $store_id = addslashes($this->request->param('storeId'));
         $store_type = addslashes($this->request->param('storeType'));
         $access_id = addslashes($this->request->param('accessId'));
-        $mch_id = trim($this->request->param('mchId'));
-        $userName = trim($this->request->param('userName'));
+        $mch_id = safe_trim($this->request->param('mchId'));
+        $userName = safe_trim($this->request->param('userName'));
         
         $list0 = array();
         $list = array();

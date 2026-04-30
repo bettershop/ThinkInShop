@@ -30,18 +30,18 @@ class Finance extends BaseController
     // 入账/出账记录
     public function RevenueRecords()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $status = addslashes(trim($this->request->param('status'))); // 状态：1.入账 2.出账
-        $type = addslashes(trim($this->request->param('type'))); // 类型：1.订单 2.退款 3.提现
-        $search = addslashes(trim($this->request->param('oid'))); // 开始时间
-        $startdate = addslashes(trim($this->request->param('startDate'))); // 开始时间
-        $enddate = addslashes(trim($this->request->param('endDate'))); // 结束时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $status = addslashes(safe_trim($this->request->param('status'))); // 状态：1.入账 2.出账
+        $type = addslashes(safe_trim($this->request->param('type'))); // 类型：1.订单 2.退款 3.提现
+        $search = addslashes(safe_trim($this->request->param('oid'))); // 开始时间
+        $startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+        $enddate = addslashes(safe_trim($this->request->param('endDate'))); // 结束时间
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = cache($access_id.'_uid'); // 用户user_id
@@ -195,16 +195,16 @@ class Finance extends BaseController
     // 提现记录
     public function WithdrawList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-        $status = addslashes(trim($this->request->param('status'))); // 提现状态 0.提现未审核 1.提现已通过 2提现已拒绝
-        $startdate = addslashes(trim($this->request->param('startDate'))); // 开始时间
-        $enddate = addslashes(trim($this->request->param('endDate'))); // 结束时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $status = addslashes(safe_trim($this->request->param('status'))); // 提现状态 0.提现未审核 1.提现已通过 2提现已拒绝
+        $startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+        $enddate = addslashes(safe_trim($this->request->param('endDate'))); // 结束时间
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = cache($access_id.'_uid'); // 用户user_id
@@ -404,14 +404,14 @@ class Finance extends BaseController
     // 售后明细
     public function ReturnDetail()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $startdate = addslashes(trim($this->request->param('startDate'))); // 开始时间
-        $enddate = addslashes(trim($this->request->param('endDate'))); // 结束时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+        $enddate = addslashes(safe_trim($this->request->param('endDate'))); // 结束时间
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = cache($access_id.'_uid'); // 用户user_id
@@ -479,9 +479,9 @@ class Finance extends BaseController
     // 申请提现页面
     public function WithdrawPage()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $user_id = cache($access_id.'_uid'); // 用户user_id
 
@@ -556,9 +556,9 @@ class Finance extends BaseController
     // 获取验证码
     public function WithdrawalsSms()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $user_id = cache($access_id.'_uid'); // 用户user_id
        
@@ -587,15 +587,15 @@ class Finance extends BaseController
     // 申请提现
     public function Withdrawals()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $withdraw_status = addslashes(trim($this->request->param('withdrawStatus'))); // 提现类型 1银行卡 2微信余额
-        $bank_id = addslashes(trim($this->request->param('bankId'))); // 银行卡ID
-        $amoney = addslashes(trim($this->request->param('amoney'))); // 提现金额
-        $mobile = addslashes(trim($this->request->param('mobile'))); // 联系电话
-        $keyCode = addslashes(trim($this->request->param('keyCode'))); // 验证码
+        $withdraw_status = addslashes(safe_trim($this->request->param('withdrawStatus'))); // 提现类型 1银行卡 2微信余额
+        $bank_id = addslashes(safe_trim($this->request->param('bankId'))); // 银行卡ID
+        $amoney = addslashes(safe_trim($this->request->param('amoney'))); // 提现金额
+        $mobile = addslashes(safe_trim($this->request->param('mobile'))); // 联系电话
+        $keyCode = addslashes(safe_trim($this->request->param('keyCode'))); // 验证码
 
         $Jurisdiction = new Jurisdiction();
         $shop_id = cache($access_id.'_'.$store_type);
@@ -814,15 +814,15 @@ class Finance extends BaseController
     // 银行卡列表
     public function BankList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 开始时间
-        $startdate = addslashes(trim($this->request->param('startDate'))); // 开始时间
-        $enddate = addslashes(trim($this->request->param('endDate'))); // 结束时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 开始时间
+        $startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+        $enddate = addslashes(safe_trim($this->request->param('endDate'))); // 结束时间
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = cache($access_id.'_uid');
@@ -892,11 +892,11 @@ class Finance extends BaseController
     // 验证卡号与银行名是否匹配
     public function Verification()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
-        $Bank_name = trim(Request::param('Bank_name')); // 银行名称
-        $Bank_card_number = trim(Request::param('Bank_card_number')); // 银行卡号
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
+        $Bank_name = safe_trim(Request::param('Bank_name')); // 银行名称
+        $Bank_card_number = safe_trim(Request::param('Bank_card_number')); // 银行卡号
         // 银行卡号不为数字
         if (is_numeric($Bank_card_number) == false)
         {
@@ -944,15 +944,15 @@ class Finance extends BaseController
     // 添加/编辑银行卡
     public function AddBank()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 银行卡ID
-        $Cardholder = addslashes(trim($this->request->param('cardholder'))); // 开户人
-        $Bank_name = addslashes(trim($this->request->param('bankName'))); // 银行名称
-        $branch = addslashes(trim($this->request->param('branchName'))); // 支行名称
-        $Bank_card_number = addslashes(trim($this->request->param('bankCardNumber'))); // 卡号
+        $id = addslashes(safe_trim($this->request->param('id'))); // 银行卡ID
+        $Cardholder = addslashes(safe_trim($this->request->param('cardholder'))); // 开户人
+        $Bank_name = addslashes(safe_trim($this->request->param('bankName'))); // 银行名称
+        $branch = addslashes(safe_trim($this->request->param('branchName'))); // 支行名称
+        $Bank_card_number = addslashes(safe_trim($this->request->param('bankCardNumber'))); // 卡号
 
         $Jurisdiction = new Jurisdiction();
         $shop_id = cache($access_id.'_'.$store_type);
@@ -1072,9 +1072,9 @@ class Finance extends BaseController
     // 设为默认
     public function SetDefault()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('bankId')); // 银行卡ID
         
@@ -1141,9 +1141,9 @@ class Finance extends BaseController
     // 删除银行卡
     public function DelBank()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 银行卡ID
 

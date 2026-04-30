@@ -51,6 +51,7 @@ return [
         '22'=> 'Email number already exists',
         '23'=> 'Email has been registered',
         '24'=> 'The email is the same as the currently bound email',
+        '25'=> 'Verification code already sent, please try again later!',
     ],
     'favorites' =>[
     	'0' => 'Collected!',
@@ -328,6 +329,7 @@ return [
         '100' => 'The number of attribute write offs cannot be empty',
         '101' => 'The product title cannot exceed 20 characters',
         '102' => 'There are unfinished orders that cannot be deleted',
+        '103' => 'The product introduction title must be 1-60 characters long!',
     ],
     'coupon' => [
         '0' => 'The activity has ended!',
@@ -906,6 +908,8 @@ return [
         '8' => 'Failed to delete the record!',
         '9' => 'The activity has ended!',
         '10'=> 'Your purchase quantity exceeds the purchase limit!',
+        '11'=> 'The seckill title must be 1-30 characters long!',
+        'title' => 'Flash Sale',
     ],
     'image' => [
         '0' => 'Please fill in the storage space name!',

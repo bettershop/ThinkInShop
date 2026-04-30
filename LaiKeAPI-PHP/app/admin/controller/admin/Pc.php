@@ -20,13 +20,13 @@ class Pc extends BaseController
     // 获取PC端轮播图
     public function getBannerInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 轮播图ID
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 轮播图ID
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $page = $page ? $page : 1;
         $pagesize = $pagesize ? $pagesize : 10;
 
@@ -62,13 +62,13 @@ class Pc extends BaseController
     // 添加/编辑轮播图
     public function addBannerInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-    	$id = addslashes(trim($this->request->param('id'))); // 轮播图ID
-    	$image = addslashes(trim($this->request->param('imageUrl'))); // 图片
-    	$url = addslashes(trim($this->request->param('path'))); // 路径
+    	$id = addslashes(safe_trim($this->request->param('id'))); // 轮播图ID
+    	$image = addslashes(safe_trim($this->request->param('imageUrl'))); // 图片
+    	$url = addslashes(safe_trim($this->request->param('path'))); // 路径
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -140,11 +140,11 @@ class Pc extends BaseController
     // 置顶轮播图
     public function topBannerById()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id'))); // 轮播图ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 轮播图ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -181,11 +181,11 @@ class Pc extends BaseController
     // 删除轮播图
     public function delBannerById()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$store_type = addslashes(trim($this->request->param('storeType')));
-    	$access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$store_type = addslashes(safe_trim($this->request->param('storeType')));
+    	$access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id'))); // 轮播图ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 轮播图ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -216,13 +216,13 @@ class Pc extends BaseController
     // 获取PC商城配置
     public function getConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 轮播图ID
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 轮播图ID
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $page = $page ? $page : 1;
         $pagesize = $pagesize ? $pagesize : 10;
 
@@ -251,25 +251,25 @@ class Pc extends BaseController
     // 添加/编辑PC商城配置（原）
     public function addConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id'))); // 轮播图ID
-        $mallIcon = addslashes(trim($this->request->param('mallIcon'))); // 浏览器标签-图标
-        $mallName = addslashes(trim($this->request->param('mallName'))); // 浏览器标签-名称
+        $id = addslashes(safe_trim($this->request->param('id'))); // 轮播图ID
+        $mallIcon = addslashes(safe_trim($this->request->param('mallIcon'))); // 浏览器标签-图标
+        $mallName = addslashes(safe_trim($this->request->param('mallName'))); // 浏览器标签-名称
         
-        $mallLogo = addslashes(trim($this->request->param('mallLogo'))); // 商城logo
-        $shortcutMenu2 = addslashes(trim($this->request->param('shortcutMenu2'))); // 快捷菜单-登录页
-        $archival = addslashes(trim($this->request->param('archival'))); // 版权信息
-        $copyright = addslashes(trim($this->request->param('copyright'))); // 备案信息
-        $authority = addslashes(trim($this->request->param('authority'))); // 官网网站
-        $list = trim($this->request->param('list')); // 底部链接
+        $mallLogo = addslashes(safe_trim($this->request->param('mallLogo'))); // 商城logo
+        $shortcutMenu2 = addslashes(safe_trim($this->request->param('shortcutMenu2'))); // 快捷菜单-登录页
+        $archival = addslashes(safe_trim($this->request->param('archival'))); // 版权信息
+        $copyright = addslashes(safe_trim($this->request->param('copyright'))); // 备案信息
+        $authority = addslashes(safe_trim($this->request->param('authority'))); // 官网网站
+        $list = safe_trim($this->request->param('list')); // 底部链接
 
-        $welcomeTerm = addslashes(trim($this->request->param('welcomeTerm'))); // 欢迎术语
-        $shortcutMenu3 = addslashes(trim($this->request->param('shortcutMenu3'))); // 快捷菜单-首页
-        $APPUrl = addslashes(trim($this->request->param('APPUrl'))); // 下载APP二维码
-        $APPExplain = addslashes(trim($this->request->param('APPExplain'))); // 下载APP说明
+        $welcomeTerm = addslashes(safe_trim($this->request->param('welcomeTerm'))); // 欢迎术语
+        $shortcutMenu3 = addslashes(safe_trim($this->request->param('shortcutMenu3'))); // 快捷菜单-首页
+        $APPUrl = addslashes(safe_trim($this->request->param('APPUrl'))); // 下载APP二维码
+        $APPExplain = addslashes(safe_trim($this->request->param('APPExplain'))); // 下载APP说明
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -355,13 +355,13 @@ class Pc extends BaseController
     // 获取PC端底部栏配置
     public function getBottomInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 底部栏ID
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 底部栏ID
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $page = $page ? $page : 1;
         $pagesize = $pagesize ? $pagesize : 10;
 
@@ -391,9 +391,9 @@ class Pc extends BaseController
     // 添加/编辑PC商城底部栏配置
     public function addBottomInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $id = addslashes($this->request->post('id')); // id
         $images = addslashes($this->request->post('images')); // 图标
@@ -473,11 +473,11 @@ class Pc extends BaseController
     // 删除底部栏配置
     public function delBottomById()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $id = addslashes(trim($this->request->param('id'))); // 配置ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 配置ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');

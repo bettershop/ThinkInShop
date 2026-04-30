@@ -353,6 +353,7 @@
 			// 跳转
 			goBack() {
 				const pages = getCurrentPages();
+                console.log(pages) 
 				try {
 					// 未登录 预览直播中心时
 					if (pages[pages.length - 2].route === 'pagesD/liveStreaming/liveRecommended') {
@@ -363,6 +364,15 @@
 					}
 					// 判断页面栈深度
 					if (pages.length >= 1) {
+                        console.log(pages[pages.length - 2].route)
+                        if (pages[pages.length - 2].route == 'pagesE/forumPost/my/index') {
+                        	 uni.navigateTo({
+                                 url:'/pagesE/forumPost/home/index?language=ft'
+                             })
+                          
+                        	return
+                        }
+                        
 						// 正常返回上一页
 						uni.navigateBack({
 							delta: 1

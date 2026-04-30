@@ -66,15 +66,12 @@
             v-enter="demand"
             >{{ $t('DemoPage.tableExamplePage.demand') }}</el-button
           >
-          <span v-for="(item, index) in button_list" :key="index">
-            <el-button
-              v-if="item.title == '导出'"
-              class="bgColor export"
-              type="primary"
-              @click="dialogShow"
-              >{{ $t('DemoPage.tableExamplePage.export') }}</el-button
-            >
-          </span>
+          <el-button
+            class="bgColor export"
+            type="primary"
+            @click="dialogShow"
+            >{{ $t('DemoPage.tableExamplePage.export') }}</el-button
+          >
         </div>
       </div>
     </div>
@@ -178,10 +175,6 @@
           <template slot-scope="scope">
             <div class="OP-button">
               <div class="OP-button-top">
-                <!-- <template v-if="scope.row.r_type == 3">
-                  <el-button v-if="scope.row.re_type<3 && detectionBtn(button_list, '通过')" icon="el-icon-circle-check" @click="dialogShow2(scope.row,1)">通过</el-button>
-                    <el-button v-if="scope.row.re_type==3 && detectionBtn(button_list, '回寄')" icon="el-icon-document-checked" @click="View(scope.row,3)">回寄</el-button>
-                </template> -->
                 <!-- <template v-if="scope.row.r_type == 3">
                   <el-button icon="el-icon-document-checked" @click="View(scope.row,3)">回寄</el-button>
                 </template> -->

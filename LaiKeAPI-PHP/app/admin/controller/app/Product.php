@@ -48,19 +48,32 @@ class Product
     // 获取产品详情
     public function index()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::post('access_id'))); // 授权id
-        $language = addslashes(trim(Request::post('language'))); // 语言
-        $id = addslashes(trim(Request::post('pro_id'))); // 商品id
-        $vipSource = addslashes(trim(Request::post('vipSource'))); // 是否是会员商品 0.普通商品  1.会员商品
-        $pro_type = trim(Request::post('type'));//商品类型IN，FX
-        $active_id = trim(Request::post('id'));;//活动商品id
-        $integralNum = trim(Request::post('integralNum'));//兑换积分
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::post('access_id'))); // 授权id
+        $language = addslashes(safe_trim(Request::post('language'))); // 语言
+        $id = addslashes(safe_trim(Request::post('pro_id'))); // 商品id
+        $vipSource = addslashes(safe_trim(Request::post('vipSource'))); // 是否是会员商品 0.普通商品  1.会员商品
+        $pro_type = safe_trim(Request::post('type'));//商品类型IN，FX
+        $active_id = safe_trim(Request::post('id'));;//活动商品id
+        $integralNum = safe_trim(Request::post('integralNum'));//兑换积分
 
         $time = time();
         $current_time = date("Y-m-d :H:i:s");
         $currency_id = cache($access_id . '_currency'); // 获取用户默认币种
+        $safeStrToTime = function ($value) {
+            if ($value === null) {
+                return false;
+            }
+            if (!is_string($value)) {
+                $value = (string)$value;
+            }
+            $value = trim($value);
+            if ($value === '' || $value === '0000-00-00 00:00:00' || $value === '0000-00-00') {
+                return false;
+            }
+            return strtotime($value);
+        };
 
         if ($access_id != '')
         {
@@ -446,7 +459,7 @@ class Product
         }
         elseif($pro_type == 'MS')
         {
-            $pro_id = trim(Request::post('id')); // 活动商品id
+            $pro_id = safe_trim(Request::post('id')); // 活动商品id
             $seckill_pro_res = SecondsActivityModel::where(['store_id'=>$store_id,'id'=>$pro_id,'isshow'=>1,'is_delete'=>0])->select()->toArray();
             if(empty($seckill_pro_res))
             {
@@ -458,7 +471,7 @@ class Product
         }
         elseif($pro_type == 'FS')
         {
-            $pro_id = trim(Request::post('id')); // 活动商品id
+            $pro_id = safe_trim(Request::post('id')); // 活动商品id
             $fs_pro_res = FlashsaleActivityModel::where(['store_id'=>$store_id,'id'=>$pro_id,'is_delete'=>0])->select()->toArray();
             if(empty($fs_pro_res))
             {
@@ -471,7 +484,7 @@ class Product
         }
         elseif($pro_type == 'IN')
         {
-            $pro_id = trim(Request::post('id')); // 积分商品ID
+            $pro_id = safe_trim(Request::post('id')); // 积分商品ID
             $sql_i = "select c.*,a.num as sec_num,a.integral from lkt_integral_goods as a left join lkt_configure as c on a.attr_id = c.id where a.id = '$pro_id' ";
             $r_size = Db::query($sql_i);
         }
@@ -888,7 +901,12 @@ class Product
                 $v_c['review_day'] = '';
                 if($review_time != '0000-00-00 00:00:00')
                 {
-                    $v_c['review_day'] = strtotime($add_time) - strtotime($review_time);
+                    $add_ts = $safeStrToTime($add_time);
+                    $review_ts = $safeStrToTime($review_time);
+                    if ($add_ts !== false && $review_ts !== false)
+                    {
+                        $v_c['review_day'] = $add_ts - $review_ts;
+                    }
                 }
 
                 $v_c['images'] = array();
@@ -1077,13 +1095,16 @@ class Product
                     $r_pre_sell[0]['deposit'] = round($r_pre_sell[0]['deposit'],2);
                     $r_pre_sell[0]['balance'] = round($r_pre_sell[0]['deposit'],2);
                     $r_pre_sell[0]['startTime'] = $r_pre_sell[0]['balance_pay_time'];
-                    $r_pre_sell[0]['endTime'] = date("Y-m-d 23:59:59",strtotime($r_pre_sell[0]['balance_pay_time']));
+                    $balance_pay_ts = $safeStrToTime($r_pre_sell[0]['balance_pay_time'] ?? '');
+                    $r_pre_sell[0]['endTime'] = $balance_pay_ts === false ? '' : date("Y-m-d 23:59:59", $balance_pay_ts);
                     $sellGoodInfo = array('sellType'=>$r_pre_sell[0]['sellType'],'deposit'=>$r_pre_sell[0]['deposit'],'depositType'=>$r_pre_sell[0]['depositType'],'depositStart'=>$r_pre_sell[0]['depositStart'],'depositEnd'=>$r_pre_sell[0]['depositEnd'],'balance_pay_time'=>$r_pre_sell[0]['balance_pay_time'],'deliveryTime'=>$r_pre_sell[0]['deliveryTime'],'balance'=>$r_pre_sell[0]['balance'],'startTime'=>$r_pre_sell[0]['startTime'],'endTime'=>$r_pre_sell[0]['endTime']);
                 }
                 else
                 {
                     $end_day = $r_pre_sell[0]['end_day'];
-                    $endTime = date("Y-m-d H:i:s",strtotime("+$end_day day",strtotime($upper_shelf_time)));
+                    $upper_shelf_ts = $safeStrToTime($upper_shelf_time);
+                    $endTimeTs = ($upper_shelf_ts === false) ? false : strtotime("+" . intval($end_day) . " day", $upper_shelf_ts);
+                    $endTime = $endTimeTs === false ? '' : date("Y-m-d H:i:s", $endTimeTs);
                     $sellGoodInfo = array('sellType'=>$r_pre_sell[0]['sellType'],'sellNum'=>$r_pre_sell[0]['sellNum'],'surplusNum'=>$r_pre_sell[0]['surplusNum'],'deliveryTime'=>$r_pre_sell[0]['deliveryTime'],'endTime'=>$endTime);
                 }
                 
@@ -1095,7 +1116,7 @@ class Product
         }
         if($pro_type == 'MS')
         {   
-            $navType = trim(Request::post('navType')); // 0已结束1进行中2未开始
+            $navType = safe_trim(Request::post('navType')); // 0已结束1进行中2未开始
             $seckill_pro_res = SecondsActivityModel::where(['store_id'=>$store_id,'id'=>$pro_id,'isshow'=>1,'is_delete'=>0])->select()->toArray();
             if(empty($seckill_pro_res))
             {
@@ -1140,11 +1161,13 @@ class Product
             }
             if ($navType == 2)
             {
-                $product['remainingTime'] = strtotime($starttime)* 1000;
+                $start_ts = $safeStrToTime($starttime);
+                $product['remainingTime'] = $start_ts === false ? 0 : ($start_ts * 1000);
             }
             else
             {
-                $product['remainingTime'] = strtotime($endtime)* 1000;
+                $end_ts = $safeStrToTime($endtime);
+                $product['remainingTime'] = $end_ts === false ? 0 : ($end_ts * 1000);
             }
             $product['secStatus'] = $seckill_pro_res[0]['status'];//秒杀状态
             $mch_id = $labelres[0]['mch_id'];//店铺id
@@ -1159,7 +1182,8 @@ class Product
                 //是否开启预估
                 if($seckill_config[0]['is_herald'] == 1) 
                 {
-                    if ($seckill_pro_res[0]['status'] == 1 && strtotime($starttime)-time() <= $seckill_config[0]['heraldTime']) 
+                    $start_ts = $safeStrToTime($starttime);
+                    if ($seckill_pro_res[0]['status'] == 1 && $start_ts !== false && $start_ts - time() <= $seckill_config[0]['heraldTime']) 
                     {
                         $product['secStatus'] = 4; //预告秒杀
                     }
@@ -1191,7 +1215,7 @@ class Product
         }
         if($pro_type == 'FS')
         {   
-            $navType = trim(Request::post('navType')); // 0已结束1进行中2未开始
+            $navType = safe_trim(Request::post('navType')); // 0已结束1进行中2未开始
             $fs_pro_res = FlashsaleActivityModel::where(['store_id'=>$store_id,'id'=>$pro_id,'is_delete'=>0])->select()->toArray();
             if(empty($fs_pro_res))
             {
@@ -1218,11 +1242,13 @@ class Product
             
             if ($navType == 2)
             {
-                $product['remainingTime'] = strtotime($starttime)* 1000;
+                $start_ts = $safeStrToTime($starttime);
+                $product['remainingTime'] = $start_ts === false ? 0 : ($start_ts * 1000);
             }
             else
             {
-                $product['remainingTime'] = strtotime($endtime)* 1000;
+                $end_ts = $safeStrToTime($endtime);
+                $product['remainingTime'] = $end_ts === false ? 0 : ($end_ts * 1000);
             }
             $product['fsStatus'] = $fs_label_res[0]['status'];//秒杀状态
 
@@ -1252,13 +1278,13 @@ class Product
     // 添加购物车
     public function add_cart()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id'));
-        $Goods_id = trim(Request::param('pro_id')); // 商品id
-        $attribute_id = trim(Request::param('attribute_id')); // 商品属性id
-        $Goods_num = trim(Request::param('num')); // 数量
-        $type = trim(Request::param('type')); // 类型
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id'));
+        $Goods_id = safe_trim(Request::param('pro_id')); // 商品id
+        $attribute_id = safe_trim(Request::param('attribute_id')); // 商品属性id
+        $Goods_num = safe_trim(Request::param('num')); // 数量
+        $type = safe_trim(Request::param('type')); // 类型
         
         $time = date("Y-m-d H:i:s");
         $user_id = '';
@@ -1292,6 +1318,8 @@ class Product
                     $access_id = Tools::getToken($store_id, $store_type);
                 }
             }
+
+            $cart_token = Tools::fitDbString('lkt_cart', 'token', $access_id);
             //判断商品是否已下架
             $res_s = ProductListModel::where(['store_id'=>$store_id,'id'=>$Goods_id])->field('commodity_type,status')->select()->toArray();
             if ($res_s)
@@ -1323,13 +1351,13 @@ class Product
                 if (empty($user_id))
                 { // 当用户ID不存在时
                     // 根据商城ID、token、商品ID、属性ID，查询购物车信息
-                    $r0 = CartModel::where(['store_id'=>$store_id,'token'=>$access_id,'Goods_id'=>$Goods_id,'Size_id'=>$attribute_id,'pro_type'=>$pro_type])->field('id,Goods_num')->select()->toArray();
+                    $r0 = CartModel::where(['store_id'=>$store_id,'token'=>$cart_token,'Goods_id'=>$Goods_id,'Size_id'=>$attribute_id,'pro_type'=>$pro_type])->field('id,Goods_num')->select()->toArray();
                     if ($r0)
                     { // 存在
                         $cart_id = $r0[0]['id']; // 购物车ID
                         $Goods_num1 = $r0[0]['Goods_num']; // 目前购物车商品数量
                         
-                        $sql_where = array('store_id'=>$store_id,'token'=>$access_id,'Goods_id'=>$Goods_id,'Size_id'=>$attribute_id,'pro_type'=>$pro_type);
+                        $sql_where = array('store_id'=>$store_id,'token'=>$cart_token,'Goods_id'=>$Goods_id,'Size_id'=>$attribute_id,'pro_type'=>$pro_type);
                         if ($Goods_num + $Goods_num1 > $num)
                         { // 添加数量 + 当前数量 > 剩余库存
                             $sql_update = array('Goods_num'=>$num);
@@ -1357,7 +1385,7 @@ class Product
                     }
                     else
                     {
-                        $data = array('store_id' => $store_id, 'token' => $access_id, 'user_id' => '', 'Goods_id' => $Goods_id, 'Goods_num' => $Goods_num, 'Create_time' => $time, 'Size_id' => $attribute_id, 'pro_type' => $pro_type);
+                        $data = array('store_id' => $store_id, 'token' => $cart_token, 'user_id' => '', 'Goods_id' => $Goods_id, 'Goods_num' => $Goods_num, 'Create_time' => $time, 'Size_id' => $attribute_id, 'pro_type' => $pro_type);
                         $r = Db::name('cart')->insertGetId($data);
                         if ($r > 0)
                         {
@@ -1420,7 +1448,7 @@ class Product
                     }
                     else
                     {
-                        $data = array('store_id' => $store_id, 'token' => $access_id, 'user_id' => $user_id, 'Goods_id' => $Goods_id, 'Goods_num' => $Goods_num, 'Create_time' => $time, 'Size_id' => $attribute_id, 'pro_type' => $pro_type);
+                        $data = array('store_id' => $store_id, 'token' => $cart_token, 'user_id' => $user_id, 'Goods_id' => $Goods_id, 'Goods_num' => $Goods_num, 'Create_time' => $time, 'Size_id' => $attribute_id, 'pro_type' => $pro_type);
                         $r = Db::name('cart')->insertGetId($data);
                         if ($r)
                         {
@@ -1454,11 +1482,11 @@ class Product
     // 立即购买
     public function immediately_cart()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $product1 = trim(Request::param('product')); // 商品数组--------['pid'=>66,'cid'=>88]
-        $orderType = trim(Request::param('orderType'));
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $product1 = safe_trim(Request::param('product')); // 商品数组--------['pid'=>66,'cid'=>88]
+        $orderType = safe_trim(Request::param('orderType'));
         
         $product = '';
         $cart_id = '';
@@ -1598,17 +1626,17 @@ class Product
     // 追加评论
     public function t_comment()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::post('access_id'))); // 授权id
-        $anonymous = addslashes(trim(Request::post('anonymous'))); // 是否匿名
-        $order_details_id = addslashes(trim(Request::post('order_details_id'))); // 订单详情id
-        $start = addslashes(trim(Request::post('start'))); // 星级
-        $comment = addslashes(trim(Request::post('comment'))); // 内容
-        $goodsId = addslashes(trim(Request::post('goodsId'))); // 产品id
-        $attribute_id = addslashes(trim(Request::post('attributeId'))); // 属性id
-        $call_num = addslashes(trim(Request::post('upload_num'))); // 接口调用次数
-        $for_num = addslashes(trim(Request::post('upload_z_num'))); // 接口调用总次数
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::post('access_id'))); // 授权id
+        $anonymous = addslashes(safe_trim(Request::post('anonymous'))); // 是否匿名
+        $order_details_id = addslashes(safe_trim(Request::post('order_details_id'))); // 订单详情id
+        $start = addslashes(safe_trim(Request::post('start'))); // 星级
+        $comment = addslashes(safe_trim(Request::post('comment'))); // 内容
+        $goodsId = addslashes(safe_trim(Request::post('goodsId'))); // 产品id
+        $attribute_id = addslashes(safe_trim(Request::post('attributeId'))); // 属性id
+        $call_num = addslashes(safe_trim(Request::post('upload_num'))); // 接口调用次数
+        $for_num = addslashes(safe_trim(Request::post('upload_z_num'))); // 接口调用总次数
 
         if (empty($access_id))
         {
@@ -1932,13 +1960,13 @@ class Product
     // 获取未评论数据
     public function commentList()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
 
-        $order_details_id = addslashes(trim(Request::param('order_details_id'))); // 订单详情ID
-        $orderNo = addslashes(trim(Request::param('orderNo'))); // 订单号
-        $type = addslashes(trim(Request::param('type')));
+        $order_details_id = addslashes(safe_trim(Request::param('order_details_id'))); // 订单详情ID
+        $orderNo = addslashes(safe_trim(Request::param('orderNo'))); // 订单号
+        $type = addslashes(safe_trim(Request::param('type')));
 
         $list = array();
         // 根据微信id,查询用户id
@@ -2019,11 +2047,11 @@ class Product
     // 添加评论
     public function addBatch_comment()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
 
-        $commentList = trim(Request::param('commentList')); // 评论数据
+        $commentList = safe_trim(Request::param('commentList')); // 评论数据
 
         $comment_list = json_decode($commentList,true);
         $time = date("Y-m-d H:i:s");
@@ -2222,4 +2250,3 @@ class Product
 }
 
 ?>
-

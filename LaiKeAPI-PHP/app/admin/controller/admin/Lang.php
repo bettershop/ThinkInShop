@@ -43,12 +43,12 @@ class Lang extends BaseController
     public function index()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id'))); // 语种ID
-        $lang_name = addslashes(trim($this->request->param('lang_name'))); // 语种名称
-        $type = addslashes(trim($this->request->param('type')));// 
+        $id = addslashes(safe_trim($this->request->param('id'))); // 语种ID
+        $lang_name = addslashes(safe_trim($this->request->param('lang_name'))); // 语种名称
+        $type = addslashes(safe_trim($this->request->param('type')));// 
         $page = (int)$this->request->param('pageNo'); // 页码
         $pagesize = (int)$this->request->param('pageSize');
         $pagesize = $pagesize ? $pagesize : '10';
@@ -95,12 +95,12 @@ class Lang extends BaseController
     public function addOrEditLang()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id'))); // 语种ID
-        $lang_name = addslashes(trim($this->request->param('lang_name'))); // 语种名称
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语言编码
+        $id = addslashes(safe_trim($this->request->param('id'))); // 语种ID
+        $lang_name = addslashes(safe_trim($this->request->param('lang_name'))); // 语种名称
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语言编码
 
         $time = date('Y-m-d H:i:s');
         
@@ -165,10 +165,10 @@ class Lang extends BaseController
     public function delLang()
     {
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id'))); // 语种ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 语种ID
 
         $time = date('Y-m-d H:i:s');
         

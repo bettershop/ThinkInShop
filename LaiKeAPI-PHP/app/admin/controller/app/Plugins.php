@@ -11,9 +11,9 @@ class Plugins
     // 获取移动端店铺里面插件数据
     public function getPluginAll()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
 
         $Plugin_arr = array('auction' => false,'coupon' => false,'distribution' => false,'diy' => false,'integral' => false,'mch' => false,'member' => false,'presell' => false,'seconds' => false,'sigin' => false,'wallet' => false,'go_group' => false,'living'=>false,'mch_is_open'=>0,'flashsale'=>false);
 

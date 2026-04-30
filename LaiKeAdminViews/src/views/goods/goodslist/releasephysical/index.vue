@@ -147,6 +147,7 @@
             <l-upload
               :limit="5"
               :mainImg="true"
+              :dragSort="true"
               v-model="ruleForm.goodsShow"
               :text="$t('releasephysical.spzxtbz')"
             >
@@ -322,6 +323,7 @@
               ref="table"
               style="width: 100%"
               max-height="340"
+              :row-style="getSkuTableRowStyle"
               >
               <el-table-column
                 v-for="(item, index) of attrTitle"
@@ -389,7 +391,6 @@
                 <template slot-scope="scope">
                   <div>
                     <el-input
-                      :disabled="$route.query.name == 'editor'"
                       v-model="scope.row.kucun"
                       maxlength="9"
                       style="width: 140px"
@@ -428,11 +429,14 @@
                 width="140"
               >
                 <template slot-scope="scope">
-                  <div @click="clickImage">
+                  <div @click="clickImage" class="setAttrImg">
                     <l-upload
+                      :key="`sku-img-${scope.$index}-${scope.row.img || ''}`"
                       :limit="1"
                       :is_small_img="true"
                       v-model="scope.row.img"
+                      @input="handleSkuImageInput(scope.row, $event)"
+                      @remove="handleSkuImageRemove(scope.row)"
                       text=""
                       :size="40"
                       :heightSize="40"
@@ -628,8 +632,7 @@
               <el-form-item>
                 <vue-editor
                   v-model="item.content"
-                  useCustomImageHandler
-                  @image-added="handleImageAdded"
+                  :editorOptions="introEditorOptions"
                 ></vue-editor>
               </el-form-item>
             </div>
@@ -677,7 +680,7 @@
               :placeholder="$t('releasephysical.qxzssgj')"
             >
               <el-option
-                v-for="(item, index) in countriesList"
+                v-for="item in countriesList"
                 :key="item.id"
                 :label="item.zh_name"
                 :value="item.num3"
@@ -847,7 +850,7 @@
               :placeholder="$t('releasephysical.qxzssgj')"
             >
               <el-option
-                v-for="(item, index) in countriesList"
+                v-for="item in countriesList"
                 :key="item.id"
                 :label="item.zh_name"
                 :value="item.num3"
@@ -1136,7 +1139,7 @@
       :data-source="dataSource"
       :attr-key="attrKey"
       :lang_code="ruleForm.lang_code"
-      :country_num="ruleForm.country_num"
+      :country_num="Number(ruleForm.country_num || 156)"
       @submit="handleSubmit"
     />
     <div class="model" v-show="dialogVisible1 || dialogVisible2"></div>
@@ -1200,6 +1203,7 @@ export default {
       fangdou: true,
       //是否编辑编辑的时候国家和语种禁止选择
       edit_disabled:false,
+      introEditorOptions: null,
       // 添加介绍弹窗
       dialogVisible: false,
       ruleForm7: {
@@ -1529,6 +1533,8 @@ export default {
       imgArr: [],
       attrTitle: JSON.parse("[]", true), //可选规格数据
       strArr: JSON.parse("[]", true), //已选规格数据
+      skuImageManualMap: {},
+      isSyncingAttrImgToSku: false,
       // strArr: [{"cbj":"11","yj":"1","sj":"1","unit":"根","kucun":"1","image":"https://laikeds.oss-cn-shenzhen.aliyuncs.com/1/0/1624863705554.jpg","bar_code":"","attr_list":[{"attr_id":"","attr_name":"银灰色","attr_group_name":"颜色"}],"cid":""}],
       unitList: [],
 
@@ -1636,6 +1642,7 @@ export default {
   },
 
   created() {
+    this.introEditorOptions = this.buildIntroEditorOptions();
 
     let langCode = null;
 
@@ -1643,7 +1650,7 @@ export default {
 
     if (this.$route.query.name && this.$route.query.name == "editor")
     {
-      this.edit_disabled = true;
+      this.edit_disabled = false;
       this.ruleForm.lang_code = this.$route.query.lang_code
       langCode = this.ruleForm.lang_code
       this.$router.currentRoute.matched[2].meta.title = "编辑商品";
@@ -1663,7 +1670,7 @@ export default {
     }
     else if (this.$route.query.name && this.$route.query.name == "copy")
     {
-      this.edit_disabled = true;
+      this.edit_disabled = false;
       let title =  " L-" + this.$route.query.lang_name ;
       this.$router.currentRoute.matched[2].meta.title = title ;
       document.title = getPageTitle(title);
@@ -1831,6 +1838,9 @@ export default {
           this.ruleForm.attrImg = res.data.data.initial.attrImg;
           this.attrTitle = res.data.data.attr_group_list;
           this.strArr = res.data.data.checked_attr_list;
+          this.normalizeSkuImageField();
+          this.syncAllSkuImageByFirstAttr();
+          this.initSkuImageManualMapFromCurrentData();
           //给穿梭框组件传参所用
           this.dataSource = res.data.data.strArr;
           if (this.dataSource && this.dataSource.length > 0) {
@@ -1980,13 +1990,7 @@ export default {
         // && this.attrNum == 0
         if (newName && newName.length > 0) {
           this.ruleForm.attr = 1;
-          if (this.ruleForm.attrImg) {
-            this.strArr.forEach((item) => {
-              if (  item.img.length <=0) {
-                item.img = this.ruleForm.attrImg;
-              }
-            });
-          }
+          this.normalizeSkuImageField();
         } else {
           this.ruleForm.attr = "";
         }
@@ -2083,18 +2087,10 @@ export default {
     },
 
     "ruleForm.attrImg"(val, oldVal) {
-      // if(this.attrNum == 0){
-      if (this.strArr && this.strArr.length > 0) {
-        this.strArr.filter((item) => {
-          if (!item.img) {
-            item.img = val;
-          }
-          // if(item.img == '' || item.img == undefined){
-          // item.img = val
-          // }
-        });
-        // }
+      if (this.isSyncingAttrImgToSku) {
+        return;
       }
+      this.syncAttrImgToSkuRows(val);
     },
 
     checkAll() {
@@ -2247,6 +2243,8 @@ export default {
     },
     // 添加至草稿箱
     async addDrafts(){
+      this.normalizeSkuImageField();
+      this.syncAllSkuImageByFirstAttr();
       let attrList =[]
       let strList =[]
       if (this.strArr.length <= 0) {
@@ -2366,6 +2364,8 @@ export default {
               this.ruleForm = JSON.parse(data.ruleForm)
               this.attrTitle = JSON.parse(data.attrGroup)
               this.strArr = JSON.parse(data.attrArr)
+              this.normalizeSkuImageField()
+              this.syncAllSkuImageByFirstAttr()
               //todo 这行去掉了？ this.classList = JSON.parse(data.lassList)
 
               if(data.dataSource){
@@ -2507,17 +2507,20 @@ export default {
         //如果strarr原本有数据
 
         if (this.strArr[i]) {
+          const oldSkuRow = this.strArr[i];
+          const oldSkuImage = oldSkuRow.img || oldSkuRow.image || "";
       
           lodArr.push({
-            cbj: this.strArr[i].cbj,
-            yj: this.strArr[i].yj,
-            sj: this.strArr[i].sj,
-            unit: this.strArr[i].unit,
-            kucun: this.strArr[i].kucun,
-            img: this.strArr[i].image, //图片
+            cbj: oldSkuRow.cbj,
+            yj: oldSkuRow.yj,
+            sj: oldSkuRow.sj,
+            unit: oldSkuRow.unit,
+            kucun: oldSkuRow.kucun,
+            img: oldSkuImage, //图片
+            image: oldSkuImage, //兼容历史字段
             bar_code: "", // 条形码
             attr_list: [],
-            cid: this.strArr[i].cid,
+            cid: oldSkuRow.cid,
           });
         } else {
           //没有数据的时候新增商品属性值
@@ -2527,7 +2530,8 @@ export default {
             sj: this.ruleForm.sj,
             unit: this.ruleForm.unit,
             kucun: this.ruleForm.kucun,
-            img: "", //图片
+            img: this.ruleForm.attrImg || "", //图片
+            image: this.ruleForm.attrImg || "", //兼容历史字段
             bar_code: "", // 条形码
             attr_list: [],
             cid: "",
@@ -2538,6 +2542,9 @@ export default {
 
       this.listX = listX;
       this.recursion(this.attrTitle, 0, listX);
+      this.normalizeSkuImageField();
+      this.syncAllSkuImageByFirstAttr();
+      this.initSkuImageManualMapFromCurrentData();
       console.log("this.strArr", this.strArr);
     },
     recursion(th_title, i, _listX) {
@@ -2961,6 +2968,154 @@ export default {
       });
       return flag;
     },
+    getVisibleSkuRows() {
+      const tableRef = this.$refs.table;
+      const visibleRows =
+        tableRef &&
+        tableRef.store &&
+        tableRef.store.states &&
+        Array.isArray(tableRef.store.states.data)
+          ? tableRef.store.states.data
+          : null;
+      return Array.isArray(visibleRows) ? visibleRows : this.strArr || [];
+    },
+    getFirstAttrKey(row) {
+      if (!row || !Array.isArray(row.attr_list) || row.attr_list.length === 0) {
+        return "";
+      }
+      const firstAttr = row.attr_list[0] || {};
+      return `${firstAttr.attr_group_name || ""}__${firstAttr.attr_name || ""}`;
+    },
+    normalizeSkuImageField() {
+      if (!Array.isArray(this.strArr) || this.strArr.length === 0) {
+        return;
+      }
+      this.strArr.forEach((item) => {
+        if ((item.img === undefined || item.img === null) && item.image) {
+          item.img = item.image;
+        }
+        if (item.image === undefined) {
+          item.image = item.img || "";
+        }
+      });
+    },
+    syncAllSkuImageByFirstAttr() {
+      if (!Array.isArray(this.strArr) || this.strArr.length === 0) {
+        return;
+      }
+      const imageMap = {};
+      this.strArr.forEach((item) => {
+        const key = this.getFirstAttrKey(item);
+        if (!key) {
+          return;
+        }
+        const img = item.img || item.image || "";
+        if (img && !imageMap[key]) {
+          imageMap[key] = img;
+        }
+      });
+      this.strArr.forEach((item) => {
+        const key = this.getFirstAttrKey(item);
+        if (!key || imageMap[key] === undefined) {
+          return;
+        }
+        item.img = imageMap[key];
+        item.image = imageMap[key];
+      });
+    },
+    normalizeSkuImageInputValue(value) {
+      if (Array.isArray(value)) {
+        return value[0] || "";
+      }
+      if (typeof value === "string") {
+        return value;
+      }
+      return "";
+    },
+    initSkuImageManualMapFromCurrentData() {
+      if (!Array.isArray(this.strArr) || this.strArr.length === 0) {
+        this.skuImageManualMap = {};
+        return;
+      }
+      const baseAttrImg = this.ruleForm.attrImg || "";
+      const imageMap = {};
+      this.strArr.forEach((item) => {
+        const key = this.getFirstAttrKey(item);
+        if (!key) {
+          return;
+        }
+        if (imageMap[key] !== undefined) {
+          return;
+        }
+        imageMap[key] = item.img || item.image || "";
+      });
+      const nextManualMap = {};
+      Object.keys(imageMap).forEach((key) => {
+        const currentImage = imageMap[key] || "";
+        nextManualMap[key] = !!currentImage && currentImage !== baseAttrImg;
+      });
+      this.skuImageManualMap = nextManualMap;
+    },
+    syncAttrImgToSkuRows(imageUrl) {
+      if (!Array.isArray(this.strArr) || this.strArr.length === 0) {
+        return;
+      }
+      const nextImageUrl = this.normalizeSkuImageInputValue(imageUrl);
+      this.isSyncingAttrImgToSku = true;
+      this.getVisibleSkuRows().forEach((item) => {
+        const key = this.getFirstAttrKey(item);
+        if (!key) {
+          item.img = nextImageUrl;
+          item.image = nextImageUrl;
+          return;
+        }
+        if (this.skuImageManualMap[key]) {
+          return;
+        }
+        item.img = nextImageUrl;
+        item.image = nextImageUrl;
+      });
+      this.$nextTick(() => {
+        this.isSyncingAttrImgToSku = false;
+      });
+    },
+    markSkuImageManualByRow(row) {
+      const key = this.getFirstAttrKey(row);
+      if (!key) {
+        return;
+      }
+      this.$set(this.skuImageManualMap, key, true);
+    },
+    syncSkuImageByFirstAttrKey(firstAttrKey, imageUrl) {
+      const nextImageUrl = this.normalizeSkuImageInputValue(imageUrl);
+      this.strArr.forEach((item) => {
+        if (this.getFirstAttrKey(item) === firstAttrKey) {
+          item.img = nextImageUrl;
+          item.image = nextImageUrl;
+        }
+      });
+    },
+    handleSkuImageInput(row, imageUrl) {
+      const key = this.getFirstAttrKey(row);
+      const nextImageUrl = this.normalizeSkuImageInputValue(imageUrl);
+      this.markSkuImageManualByRow(row);
+      if (!key) {
+        row.img = nextImageUrl;
+        row.image = nextImageUrl;
+        return;
+      }
+      this.syncSkuImageByFirstAttrKey(key, nextImageUrl);
+    },
+    handleSkuImageRemove(row) {
+      const key = this.getFirstAttrKey(row);
+      this.markSkuImageManualByRow(row);
+      if (!key) {
+        row.img = "";
+        row.image = "";
+        return;
+      }
+      this.syncSkuImageByFirstAttrKey(key, "");
+    },
 
     clickImage() {
       this.attrNum = 1;
@@ -2972,6 +3127,11 @@ export default {
             // $(".el-table__body-wrapper").css("height", "300px");
           });
       }, 1000);
+    },
+    getSkuTableRowStyle() {
+      return {
+        height: "64px",
+      };
     },
 
     // 获取商品类别
@@ -3109,33 +3269,95 @@ export default {
 
     // 商品详情
     handleImageAdded(file, Editor, cursorLocation, resetUploader) {
-       const timestamp = new Date().getTime();
-       const newFileName = `${timestamp}_${file.name}`;
-
-      var formData = new FormData();
-      formData.append("file", file,newFileName); //第一个file 后台接收的参数名
-      axios({
-        url: this.actionUrl, //上传路径
-        method: "POST",
-        params: {
-          api: "resources.file.uploadFiles",
-          storeType: 8,
-          storeId: getStorage("laike_admin_userInfo").storeId,
-          groupId: -1,
-          uploadType: 2,
-          accessId: this.$store.getters.token,
-        },
-        data: formData,
-      })
-        .then((result) => {
-          let url = result.data.data.imgUrls[0]; // 返回给你的图片路径
+      this.uploadEditorImageFile(file)
+        .then((url) => {
+          if (!url) {
+            return;
+          }
           Editor.insertEmbed(cursorLocation + 1, "image", url);
-          // Editor.setSelection(length + 1)
           resetUploader();
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    buildIntroEditorOptions() {
+      const vm = this;
+      return {
+        modules: {
+          toolbar: {
+            container: [
+              [{ font: [] }],
+              [{ size: ["small", false, "large", "huge"] }],
+              ["bold", "italic", "underline", "strike"],
+              [{ color: [] }, { background: [] }],
+              [{ script: "super" }, { script: "sub" }],
+              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+              ["blockquote", "code-block"],
+              [{ list: "ordered" }, { list: "bullet" }],
+              [{ indent: "-1" }, { indent: "+1" }],
+              [{ direction: "rtl" }],
+              [{ align: [] }],
+              ["link", "image", "video"],
+              ["clean"],
+            ],
+            handlers: {
+              image: function () {
+                vm.pickAndInsertEditorImages(this.quill);
+              },
+            },
+          },
+        },
+      };
+    },
+    pickAndInsertEditorImages(quill) {
+      const input = document.createElement("input");
+      input.setAttribute("type", "file");
+      input.setAttribute("accept", "image/*");
+      input.setAttribute("multiple", "multiple");
+      input.click();
+      input.onchange = async () => {
+        const files = Array.from(input.files || []);
+        if (!files.length) return;
+        let insertIndex = (quill.getSelection() || {}).index;
+        if (typeof insertIndex !== "number") {
+          insertIndex = quill.getLength();
+        }
+        for (const file of files) {
+          const url = await this.uploadEditorImageFile(file);
+          if (!url) continue;
+          quill.insertEmbed(insertIndex, "image", url);
+          quill.insertText(insertIndex + 1, "\n");
+          insertIndex += 2;
+        }
+        quill.setSelection(insertIndex, 0);
+      };
+    },
+    async uploadEditorImageFile(file) {
+      const timestamp = new Date().getTime();
+      const newFileName = `${timestamp}_${file.name}`;
+      const formData = new FormData();
+      formData.append("file", file, newFileName);
+      try {
+        const result = await axios({
+          url: this.actionUrl,
+          method: "POST",
+          params: {
+            api: "resources.file.uploadFiles",
+            storeType: 8,
+            storeId: getStorage("laike_admin_userInfo").storeId,
+            groupId: -1,
+            uploadType: 2,
+            accessId: this.$store.getters.token,
+          },
+          data: formData,
+        });
+        const imgUrls = (((result || {}).data || {}).data || {}).imgUrls || [];
+        return imgUrls[0] || "";
+      } catch (e) {
+        console.log(e);
+        return "";
+      }
     },
 
     // 添加分类弹框方法 //
@@ -3398,8 +3620,8 @@ export default {
       console.log(res);
       this.languages = res.data.data;
       const currentLang =
-        this.LaiKeCommon.getUserLangVal() ||
         this.ruleForm.lang_code ||
+        this.LaiKeCommon.getUserLangVal() ||
         this.$i18n.locale ||
         "";
       const hasCurrent = this.languages.some(
@@ -3675,6 +3897,8 @@ export default {
       this.$validateAndScroll(formName).then((valid) => {
         if (valid) {
           try {
+            this.normalizeSkuImageField();
+            this.syncAllSkuImageByFirstAttr();
             if (this.ruleForm.goodsTitle && this.ruleForm.goodsTitle.length > 100) {
               this.$message({
                 message: this.$t("releasephysical.text1"),
@@ -5393,6 +5617,24 @@ export default {
     vertical-align: middle;
     position: relative;
     text-align: center;
+  }
+  /deep/.el-table__body tr {
+    height: 64px;
+  }
+  /deep/.el-table__fixed-right .el-table__body tr {
+    height: 64px;
+  }
+  /deep/.el-table__fixed-right .el-table__body .cell {
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .setAttrImg {
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   thead th {
     padding: 0 !important;

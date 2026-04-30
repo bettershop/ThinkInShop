@@ -530,8 +530,11 @@ class pinyin
             if (ord($string[$i]) > 128) 
             {
                 $char = $this->asi2py(ord($string[$i]) + ord($string[$i + 1]) * 256);
-                $py .= $char[0];//取拼音的第一个字符
-                // break;
+                if (!is_string($char) || $char === '') {
+                    $i++;
+                    continue;
+                }
+                $py .= $char[0];
                 $i++;
             } 
             else 
@@ -558,7 +561,11 @@ class pinyin
             if (ord($string[$i]) > 128) 
             {
                 $char = $this->asi2py(ord($string[$i]) + ord($string[$i + 1]) * 256);
-                $py .= $char;//取拼音的全部字符
+                if (!is_string($char) || $char === '') {
+                    $i++;
+                    continue;
+                }
+                $py .= $char;
                 $i++;
             } 
             else 

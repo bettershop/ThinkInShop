@@ -25,11 +25,11 @@ class UserReturn extends BaseController
     // 关闭订单 并退款
     public function return_bond()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
 
-        $id = trim($this->request->post('id')); // 
+        $id = safe_trim($this->request->post('id')); // 
 
         $user_id = $this->user_list['user_id'];
 
@@ -179,11 +179,11 @@ class UserReturn extends BaseController
     //售后确认收货
     public function confirm_receipt()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->post('access_id')); // 授权id
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->post('access_id')); // 授权id
 
-        $id = trim($this->request->post('id')); // 售后订单ID
+        $id = safe_trim($this->request->post('id')); // 售后订单ID
 
         Db::startTrans();
 

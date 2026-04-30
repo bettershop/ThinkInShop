@@ -74,14 +74,14 @@ class SecondsPublic
         $user = $action->user;
         $user_id = $user['user_id'];
         $store_id = $action->store_id;
-        $product1 = addslashes(Request::param('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim(Request::param('cart_id')));  //购物车id-- 12,13,123,
+        $product1 = addslashes((string)Request::param('product'));//  商品数组--------['pid'=>66,'cid'=>88]
+        $cart_id = addslashes(safe_trim(Request::param('cart_id')));  //购物车id-- 12,13,123,
         $address_id = Request::param('address_id'); //  地址id
         $shop_address_id = Request::param('shop_address_id'); //  门店地址id
-        $product_type = addslashes(Request::param('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
-        $grade_l = addslashes(Request::param('grade_l'));//会员特惠 兑换券级别
+        $product_type = addslashes((string)Request::param('product_type'));//产品类型，JP-竞拍商品,KJ-砍价商品
+        $grade_l = addslashes((string)Request::param('grade_l'));//会员特惠 兑换券级别
 
-        $canshu = addslashes(Request::param('canshu'));//参数
+        $canshu = addslashes((string)Request::param('canshu'));//参数
         $lktlog = new LaiKeLogUtils();
         list($product, $shop_list, $cart_id) = Tools::productHandle($product1, $cart_id);
         $products_total = 0;
@@ -91,7 +91,7 @@ class SecondsPublic
         //用户基本信息
         list($user_money, $enterless, $password_status) = Tools::userInfo($user, $store_id, $user_id,$lktlog);
         //2.区分购物车结算和立即购买---列出选购商品
-        $sec_id = addslashes(Request::param('sec_id'));
+        $sec_id = addslashes((string)Request::param('sec_id'));
 
 
         $products = Tools::products_list($store_id,$cart_id, $product, $product_type);
@@ -153,7 +153,8 @@ class SecondsPublic
             {
                 $products_total = round($seconds_price * $price * 0.01 * $num,2);
             }
-            $remainingTime = strtotime($price_res[0]['endtime'])* 1000;
+            $end_ts = strtotime((string)$price_res[0]['endtime']);
+            $remainingTime = $end_ts === false ? 0 : ($end_ts * 1000);
             //判断购买条件
             
             //查询用户已经购买数量
@@ -248,19 +249,19 @@ class SecondsPublic
         $product = '';
         $lktlog = new LaiKeLogUtils();
         $products_total = 0;
-        $type = trim(Request::param('type')) ? Request::param('type') : 'MS'; // 订单类型
-        $cart_id = addslashes(trim(Request::param('cart_id')));  //购物车id-- 12,13,123,
-        $grade_l = addslashes(Request::param('grade_l'));//会员特惠 兑换券级别
-        $coupon_id = trim(Request::param('coupon_id')); // 优惠券id
-        $allow = trim(Request::param('allow'))?trim(Request::param('allow')):0; // 用户使用积分
+        $type = safe_trim(Request::param('type')) ? Request::param('type') : 'MS'; // 订单类型
+        $cart_id = addslashes(safe_trim(Request::param('cart_id')));  //购物车id-- 12,13,123,
+        $grade_l = addslashes((string)Request::param('grade_l'));//会员特惠 兑换券级别
+        $coupon_id = safe_trim(Request::param('coupon_id')); // 优惠券id
+        $allow = safe_trim(Request::param('allow'))?safe_trim(Request::param('allow')):0; // 用户使用积分
         $address_id = Request::param('address_id'); //  地址id
-        $shop_address_id = Request::param('shop_address_id')?trim(Request::param('shop_address_id')):0; //  门店地址id
-        $fullName = Request::param('fullName')?trim(Request::param('fullName')):''; //  门店地址id
-        $fullPhone = Request::param('fullPhone')?trim(Request::param('fullPhone')):''; //  门店地址id
-        $remarks = trim(Request::param('remarks')); //  订单备注
-        $store_type = addslashes(trim(Request::param('store_type')));
-        $pay_type = addslashes(trim(Request::param('pay_type')));//
-        $sec_id = addslashes(trim(Request::param('sec_id')));//
+        $shop_address_id = Request::param('shop_address_id')?safe_trim(Request::param('shop_address_id')):0; //  门店地址id
+        $fullName = Request::param('fullName')?safe_trim(Request::param('fullName')):''; //  门店地址id
+        $fullPhone = Request::param('fullPhone')?safe_trim(Request::param('fullPhone')):''; //  门店地址id
+        $remarks = safe_trim(Request::param('remarks')); //  订单备注
+        $store_type = addslashes(safe_trim(Request::param('store_type')));
+        $pay_type = addslashes(safe_trim(Request::param('pay_type')));//
+        $sec_id = addslashes(safe_trim(Request::param('sec_id')));//
 
         // $remarks = htmlspecialchars_decode($remarks); // 将特殊的 HTML 实体转换回普通字符
         // $remarks = json_decode($remarks, true);
@@ -325,7 +326,7 @@ class SecondsPublic
             $shi = $address['city'];
             $xian = $address['quyu'];
             $address_xq = $address['address'];  
-            $code = $address['code'];
+            $code = $address['code'] ?? '';
         }
 
         // 6.计算运费
@@ -353,7 +354,7 @@ class SecondsPublic
             $yunfei = $freight['yunfei'];
         }
         // 因为秒杀商品只有一个商品
-        $sec_id = addslashes(trim(Request::param('sec_id')));
+        $sec_id = addslashes(safe_trim(Request::param('sec_id')));
         //如果为0元订单，则订单状态为 1-已发货
         if ($grade_l && ($yunfei == 0))
         {
@@ -438,7 +439,7 @@ class SecondsPublic
             $shi = $shop['shi'];
             $xian = $shop['xian'];
             $address_xq = $shop['address'];
-            $code = $shop['code'];
+            $code = $shop['code'] ?? '';
             $shop_status = $shop['shop_status'];
             $extraction_code = $shop['extraction_code'];
             $extraction_code_img = $shop['extraction_code_img'];
@@ -2124,7 +2125,8 @@ class SecondsPublic
             $label_name = $r[0]['name'];
         }
 
-        if(strtotime($endtime) < time())
+        $endtime_ts = strtotime((string)$endtime);
+        if($endtime_ts !== false && $endtime_ts < time())
         {
             $message = Lang("sec.4");
             echo json_encode(array('code' => ERROR_CODE_JSSJBNXYDQSJ,'message' => $message));

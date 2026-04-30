@@ -21,11 +21,11 @@ class District extends BaseController
     // 地区列表
     public function districtList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $keyword = addslashes(trim($this->request->param('district_name')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $keyword = addslashes(safe_trim($this->request->param('district_name')));
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
@@ -81,11 +81,11 @@ class District extends BaseController
     // 获取省、市
     public function allDistrict()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $keyword = addslashes(trim($this->request->param('keyword')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $keyword = addslashes(safe_trim($this->request->param('keyword')));
         $page = addslashes($this->request->param('pageNo'));
         $pagesize = addslashes($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
@@ -112,11 +112,11 @@ class District extends BaseController
     // 添加地区
     public function saveOrEditCountry()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $district_pid = addslashes(trim($this->request->param('district_pid'))); // 上级地区ID
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $district_pid = addslashes(safe_trim($this->request->param('district_pid'))); // 上级地区ID
         $district_country_num = addslashes($this->request->param('district_country_num')); // 国家代码
         $district_name = addslashes($this->request->param('district_name')); // 地区名称
 
@@ -207,10 +207,10 @@ class District extends BaseController
     // 删除添加地区
     public function deleteDistrict()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
         $sql = "delete from lkt_map where id = '$id' ";
         $r = Db::execute($sql);

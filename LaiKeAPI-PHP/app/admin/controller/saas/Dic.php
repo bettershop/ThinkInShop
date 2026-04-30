@@ -30,7 +30,7 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $name = addslashes(trim(Request::param('name'))); // 数据名称
+        $name = addslashes(safe_trim(Request::param('name'))); // 数据名称
         $page = addslashes(Request::param('pageNo'));
         $pagesize = addslashes(Request::param('pageSize'));
 
@@ -81,9 +81,9 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('id'))); // 数据名称ID
-        $name = addslashes(trim(Request::param('name'))); // 数据名称
-        $status = addslashes(trim(Request::param('isOpen'))); // 是否生效 0:不是 1:是
+        $id = addslashes(safe_trim(Request::param('id'))); // 数据名称ID
+        $name = addslashes(safe_trim(Request::param('name'))); // 数据名称
+        $status = addslashes(safe_trim(Request::param('isOpen'))); // 是否生效 0:不是 1:是
 
         $admin_name = '';
         $r_admin = AdminModel::where(['recycle'=>0,'token'=>$accessId])->field('name')->select()->toArray();
@@ -176,7 +176,7 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('id'))); // 数据名称ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 数据名称ID
 
         $r0 = DataDictionaryNameModel::where(['id'=>$id])->select()->toArray();
         if($r0)
@@ -238,7 +238,7 @@ class Dic
 
         $id = addslashes(Request::param('idList')); // 数据名称ID
 
-        $id = trim($id,','); // 移除两侧的逗号
+        $id = safe_trim($id,','); // 移除两侧的逗号
         $id = explode(',',$id);
         Db::startTrans();
 
@@ -267,18 +267,19 @@ class Dic
     // 获取字典信息
     public function getDictionaryInfo()
     {	
-        $store_id = addslashes(Request::param('storeId'));
-        $storeType = addslashes(Request::param('storeType'));
-        $accessId = addslashes(Request::param('accessId'));
-        $language = addslashes(Request::param('language')); // 语言
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $storeType = addslashes(safe_trim(Request::param('storeType')));
+        $accessId = addslashes(safe_trim(Request::param('accessId')));
+        $language = addslashes(safe_trim(Request::param('language'))); // 语言
         $language = Tools::get_lang($language);
 
-        $dicNo = addslashes(trim(Request::param('dicNo'))); // 数据编码
-        $key = addslashes(trim(Request::param('key'))); // 数据名称
-        $text = addslashes(trim(Request::param('text'))); // 数据值
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语言
-        $page = addslashes(trim(Request::param('pageNo'))); // 页码
-        $pagesize = addslashes(trim(Request::param('pageSize'))); // 每页显示多少条数据
+        $dicNo = addslashes(safe_trim(Request::param('dicNo'))); // 数据编码
+        $key = addslashes(safe_trim(Request::param('key'))); // 数据名称
+        $text = addslashes(safe_trim(Request::param('text'))); // 数据值
+        $status = addslashes(safe_trim(Request::param('status'))); // 是否生效
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语言
+        $page = addslashes(safe_trim(Request::param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim(Request::param('pageSize'))); // 每页显示多少条数据
         if($pagesize == '')
         {
             $pagesize = 10;
@@ -314,7 +315,11 @@ class Dic
         if($text != '')
         {
             $text_0 = Tools::FuzzyQueryConcatenation($text);
-            $con .= " and a.text like $text_0 ";
+            $con .= " and a.ctext like $text_0 ";
+        }
+        if($status !== '')
+        {
+            $con .= " and a.status = '$status' ";
         }
 
         $sql0 = "select count(a.id) as total from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where $con ";
@@ -331,6 +336,10 @@ class Dic
             foreach ($r1 as $k => $v)
             {
                 $v['lang_name'] = langCode2Name($v['lang_code']);
+                if (!isset($v['text']))
+                {
+                    $v['text'] = $v['ctext'] ?? $v['value'];
+                }
                 $list[] = $v;
             }
         }
@@ -362,7 +371,7 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('id'))); // 数据名称ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 数据名称ID
 
         $r0 = DataDictionaryNameModel::where(['id'=> $id])->field('dic_code')->select()->toArray();
         if($r0)
@@ -402,7 +411,7 @@ class Dic
         if($r0)
         {
             $sid = $r_0[0]['id'];
-            $sql_1 = "select id,text as ctext from lkt_data_dictionary_list where status = 1 and recycle = 0 and sid = '$sid' ";
+            $sql_1 = "select id,ctext from lkt_data_dictionary_list where status = 1 and recycle = 0 and sid = '$sid' ";
             $r_1 = Db::query($sql_1);
             if($r_1)
             {
@@ -422,14 +431,20 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('id'))); // 数据ID
-        $code = addslashes(trim(Request::param('dataCode'))); // 数据编码
-        $data_dictionary_id = addslashes(trim(Request::param('sid'))); // 数据名称ID
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语言
-        $country_num = addslashes(trim(Request::param('country_num'))); // 国家代码
-        $value = addslashes(trim(Request::param('valueName'))); // value
-        $text = addslashes(trim(Request::param('valueCode'))); // 值
-        $status = addslashes(trim(Request::param('isOpen'))); // 是否生效
+        $id = addslashes(safe_trim(Request::param('id'))); // 数据ID
+        $code = addslashes(safe_trim(Request::param('dataCode'))); // 数据编码
+        $data_dictionary_id = addslashes(safe_trim(Request::param('sid'))); // 数据名称ID
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语言
+        $country_num = addslashes(safe_trim(Request::param('country_num'))); // 国家代码
+        $value = addslashes(safe_trim(Request::param('valueName'))); // value
+        $text = addslashes(safe_trim(Request::param('valueCode'))); // 值
+        $status = addslashes(safe_trim(Request::param('isOpen'))); // 是否生效
+        $subordinate_name = safe_trim(Request::param('subordinate_name'));
+        if ($subordinate_name === '')
+        {
+            $subordinate_name = safe_trim(Request::param('subordinateName'));
+        }
+        $subordinate_name = addslashes($subordinate_name);
 
         Tools::National_Language($lang_code,$country_num);
 
@@ -525,18 +540,33 @@ class Dic
         {
             if($name == '短信模板类别')
             {
-                $r2_0 = DataDictionaryListModel::where(['id'=>$subordinate_name])->field('text')->select()->toArray();
-                $s_name = $r2_0[0]['text'];
+                if ($subordinate_name === '' || $subordinate_name === '0')
+                {
+                    $Log_content = __METHOD__ . '->' . __LINE__ . ' 参数错误 subordinate_name为空 ';
+                    $this->Log($Log_content);
+                    $message = Lang('Parameter error');
+                    return output(109,$message);
+                }
+
+                $r2_0 = DataDictionaryListModel::where(['id'=>$subordinate_name])->field('ctext')->select()->toArray();
+                $s_name = $r2_0 ? $r2_0[0]['ctext'] : '';
+                if ($s_name === '')
+                {
+                    $Log_content = __METHOD__ . '->' . __LINE__ . ' 参数错误 subordinate_name不存在 id:'.$subordinate_name;
+                    $this->Log($Log_content);
+                    $message = Lang('Parameter error');
+                    return output(109,$message);
+                }
 
                 if($id != 0 && $id != '')
                 {
-                    $r2 = DataDictionaryListModel::where(['sid'=>$data_dictionary_id,'s_name'=>$s_name,'text'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->where('id','<>',$id)->select()->toArray();
+                    $r2 = DataDictionaryListModel::where(['sid'=>$data_dictionary_id,'s_name'=>$s_name,'ctext'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->where('id','<>',$id)->select()->toArray();
                 }
                 else
                 {
-                    $r2 = DataDictionaryListModel::where(['id'=>$subordinate_name,'s_name'=>$s_name,'text'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->select()->toArray();
+                    $r2 = DataDictionaryListModel::where(['id'=>$subordinate_name,'s_name'=>$s_name,'ctext'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->select()->toArray();
 
-                    $sql3 = array('code'=>$code,'sid'=>$data_dictionary_id,'s_name'=>$s_name,'value'=>$value,'text'=>$text,'lang_code'=>$lang_code,'country_num'=>$country_num,'status'=>$status,'admin_name'=>$admin_name,'add_date'=>$time);
+                    $sql3 = array('code'=>$code,'sid'=>$data_dictionary_id,'s_name'=>$s_name,'value'=>$value,'ctext'=>$text,'lang_code'=>$lang_code,'country_num'=>$country_num,'status'=>$status,'admin_name'=>$admin_name,'add_date'=>$time);
                 }
                 if($r2)
                 {
@@ -550,13 +580,13 @@ class Dic
             {
                 if($id != 0 && $id != '')
                 {
-                    $r2 = DataDictionaryListModel::where(['sid'=>$data_dictionary_id,'text'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->where('id','<>',$id)->select()->toArray();
+                    $r2 = DataDictionaryListModel::where(['sid'=>$data_dictionary_id,'ctext'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->where('id','<>',$id)->select()->toArray();
                 }
                 else
                 {
-                    $r2 = DataDictionaryListModel::where(['sid'=>$data_dictionary_id,'text'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->select()->toArray();
+                    $r2 = DataDictionaryListModel::where(['sid'=>$data_dictionary_id,'ctext'=>$text,'lang_code'=>$lang_code,'recycle'=>0])->select()->toArray();
 
-                    $sql3 = array('code'=>$code,'sid'=>$data_dictionary_id,'value'=>$value,'text'=>$text,'lang_code'=>$lang_code,'country_num'=>$country_num,'status'=>$status,'admin_name'=>$admin_name,'add_date'=>$time);
+                    $sql3 = array('code'=>$code,'sid'=>$data_dictionary_id,'s_name'=>'','value'=>$value,'ctext'=>$text,'lang_code'=>$lang_code,'country_num'=>$country_num,'status'=>$status,'admin_name'=>$admin_name,'add_date'=>$time);
                 }
                 if($r2)
                 {
@@ -569,7 +599,7 @@ class Dic
         }
         if($id != 0 && $id != '')
         {
-            $data3_update = array('text'=>$text,'status'=>$status,'admin_name'=>$admin_name,'add_date'=>$time);
+            $data3_update = array('ctext'=>$text,'status'=>$status,'admin_name'=>$admin_name,'add_date'=>$time);
             $data3_where = array('id'=>$id);
             $r3 = Db::name('data_dictionary_list')->where($data3_where)->update($data3_update);
             if($r3 == -1)
@@ -614,7 +644,7 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('id'))); // 数据ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 数据ID
 
         $sql0 = "select a.*,b.name from lkt_data_dictionary_list as a left join lkt_data_dictionary_name as b on a.sid = b.id where a.id = '$id'";
         $r0 = Db::query($sql0);
@@ -683,7 +713,7 @@ class Dic
 
         $id = addslashes(Request::param('idList')); // 数据名称ID
 
-        $id = trim($id,','); // 移除两侧的逗号
+        $id = safe_trim($id,','); // 移除两侧的逗号
         $id = explode(',',$id);
         Db::startTrans();
 
@@ -736,7 +766,7 @@ class Dic
         $sid = addslashes(Request::param('sid')); // 属性编码
         $code = addslashes(Request::param('dataCode')); // 属性编码
         $name = addslashes(Request::param('dataName')); // 属性名称
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语言
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语言
         $page = addslashes(Request::param('pageNo')); // 页码
         $pagesize = addslashes(Request::param('pageSize')); // 每页显示多少条数据
         
@@ -898,11 +928,11 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $pagesize = addslashes(trim(Request::param('pageSize'))); // 每页显示多少条数据
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语种
+        $pagesize = addslashes(safe_trim(Request::param('pageSize'))); // 每页显示多少条数据
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语种
         if(!$lang_code)
         {
-            $lang_code = addslashes(trim(Request::param('language'))); // 语种
+            $lang_code = addslashes(safe_trim(Request::param('language'))); // 语种
         }
         $page = 1;
 
@@ -937,10 +967,10 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语言
-        $country_num = addslashes(trim(Request::param('country_num'))); // 国家代码
-        $name = addslashes(trim(Request::param('skuName'))); // 属性名
-        $status = addslashes(trim(Request::param('isOpen'))); // 是否生效
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语言
+        $country_num = addslashes(safe_trim(Request::param('country_num'))); // 国家代码
+        $name = addslashes(safe_trim(Request::param('skuName'))); // 属性名
+        $status = addslashes(safe_trim(Request::param('isOpen'))); // 是否生效
 
         Tools::National_Language($lang_code,$country_num);
 
@@ -1001,11 +1031,11 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $type = addslashes(trim(Request::param('type'))); // 0.添加 1.编辑
-        $attribute_id = addslashes(trim(Request::param('sid'))); // 属性名ID
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语言
-        $country_num = addslashes(trim(Request::param('country_num'))); // 国家代码
-        $attribute_value = addslashes(trim(Request::param('attributeList'))); // 属性值
+        $type = addslashes(safe_trim(Request::param('type'))); // 0.添加 1.编辑
+        $attribute_id = addslashes(safe_trim(Request::param('sid'))); // 属性名ID
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语言
+        $country_num = addslashes(safe_trim(Request::param('country_num'))); // 国家代码
+        $attribute_value = addslashes(safe_trim(Request::param('attributeList'))); // 属性值
 
         Tools::National_Language($lang_code,$country_num);
 
@@ -1053,7 +1083,7 @@ class Dic
             if($r1)
             {
                 $code = $r1[0]['code'];
-                $num = trim(strrchr($code, '_'),'_');
+                $num = safe_trim(strrchr($code, '_'),'_');
                 $num = $num + 1;
                 if($type == 1)
                 {
@@ -1190,7 +1220,7 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('id'))); // 属性ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 属性ID
 
         $time = date("Y-m-d H:i:s");
         // 1.开启事务
@@ -1307,13 +1337,13 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $id = addslashes(trim(Request::param('idList'))); // 属性ID
+        $id = addslashes(safe_trim(Request::param('idList'))); // 属性ID
 
         $time = date("Y-m-d H:i:s");
         // 1.开启事务
         Db::startTrans();
 
-        $id = trim($id,',');
+        $id = safe_trim($id,',');
         $id_list = explode(',',$id);
         $list = array();
 
@@ -1378,10 +1408,10 @@ class Dic
     	$storeType = addslashes(Request::param('storeType'));
     	$accessId = addslashes(Request::param('accessId'));
 
-        $page = addslashes(trim(Request::param('pageNo')));
-        $keyword = addslashes(trim(Request::param('keyword')));
+        $page = addslashes(safe_trim(Request::param('pageNo')));
+        $keyword = addslashes(safe_trim(Request::param('keyword')));
         $strArr = Request::param('strArr');
-        $lang_code = addslashes(trim(Request::param('lang_code'))); // 语种
+        $lang_code = addslashes(safe_trim(Request::param('lang_code'))); // 语种
         $lang_code = Tools::get_lang($lang_code);
 
         if($strArr == '')

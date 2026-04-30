@@ -19,17 +19,17 @@ class Freight extends BaseController
     // 运费列表
     public function GetFreightInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-        $fid = addslashes(trim($this->request->param('fid'))); // 店铺ID
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $status = addslashes(trim($this->request->param('status'))); // 状态  0.未使用  1.已使用
-        $type = addslashes(trim($this->request->param('type'))); // 类型 0.件 1.重量 2.默认
-        $name = addslashes(trim($this->request->param('name'))); // 名称
-        $pageNo = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pageSize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $fid = addslashes(safe_trim($this->request->param('fid'))); // 店铺ID
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $status = addslashes(safe_trim($this->request->param('status'))); // 状态  0.未使用  1.已使用
+        $type = addslashes(safe_trim($this->request->param('type'))); // 类型 0.件 1.重量 2.默认
+        $name = addslashes(safe_trim($this->request->param('name'))); // 名称
+        $pageNo = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pageSize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         $res = cache($access_id);
         $user_id = $res['user_id'];
@@ -59,9 +59,9 @@ class Freight extends BaseController
     // 获取城市信息
     public function CityInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
  
         $freight = new FreightPublicMethod();
         $freight_list = $freight->cityInfo();
@@ -71,18 +71,18 @@ class Freight extends BaseController
     // 添加/编辑运费
     public function AddFreight()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $fid = addslashes(trim($this->request->post('fid'))); // 运费ID
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $country_num = addslashes(trim($this->request->param('country_num'))); // 所属国家
-        $name = addslashes(trim($this->request->post('name'))); // 模板名称
-        $type = addslashes(trim($this->request->post('type'))); // 类型 0:件 1:重量
-        $is_package_settings = addslashes(trim($this->request->post('isPackageSettings'))); // 是否是包邮设置 0.未开启 1.开启
-        $package_settings = addslashes(trim($this->request->post('packageSettings'))); // 包邮设置
-        $is_no_delivery = addslashes(trim($this->request->post('isNoDelivery'))); // 是否不配送 0.未开启 1.开启
+        $fid = addslashes(safe_trim($this->request->post('fid'))); // 运费ID
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $country_num = addslashes(safe_trim($this->request->param('country_num'))); // 所属国家
+        $name = addslashes(safe_trim($this->request->post('name'))); // 模板名称
+        $type = addslashes(safe_trim($this->request->post('type'))); // 类型 0:件 1:重量
+        $is_package_settings = addslashes(safe_trim($this->request->post('isPackageSettings'))); // 是否是包邮设置 0.未开启 1.开启
+        $package_settings = addslashes(safe_trim($this->request->post('packageSettings'))); // 包邮设置
+        $is_no_delivery = addslashes(safe_trim($this->request->post('isNoDelivery'))); // 是否不配送 0.未开启 1.开启
         $default_freight = $this->request->post('defaultFreight'); // 默认运费
         $hidden_freight = $this->request->post('hiddenFreight'); // 指定运费
         $no_delivery = $this->request->post('noDelivery'); // 不配送地区
@@ -107,9 +107,9 @@ class Freight extends BaseController
     // 设为默认运费
     public function FreightSetDefault()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = intval($this->request->param('id'));
 
@@ -131,16 +131,16 @@ class Freight extends BaseController
     // 删除运费
     public function DelFreight()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         // 接收信息
-        $id = addslashes(trim($this->request->param('idList'))); // 单运费id
+        $id = addslashes(safe_trim($this->request->param('idList'))); // 单运费id
 
         if($id == '' || $id == 0)
         {
-            $id = addslashes(trim($this->request->param('freightIds'))); // 多运费id
+            $id = addslashes(safe_trim($this->request->param('freightIds'))); // 多运费id
         }
 
         $admin_name = $this->user_list['name'];
@@ -162,12 +162,12 @@ class Freight extends BaseController
     // 获取运费
     public function Index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $pageSize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $pageSize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         $res = cache($access_id);
         $user_id = $res['user_id'];
@@ -187,14 +187,14 @@ class Freight extends BaseController
     // 关联商品
     public function RelatedProducts()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         // 接收信息
-        $id = addslashes(trim($this->request->param('id'))); // 运费id
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $id = addslashes(safe_trim($this->request->param('id'))); // 运费id
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
 
         $user_id = $this->user_list['user_id'];
         $operator_id = cache($access_id.'admin_id');

@@ -21,11 +21,11 @@ class Data extends BaseController
     //新增用户折线图
     public function getAddUserInfo()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $startdate = addslashes(trim($this->request->param('startDate')));
-        $enddate = addslashes(trim($this->request->param('endDate')));
+        $startdate = addslashes(safe_trim($this->request->param('startDate')));
+        $enddate = addslashes(safe_trim($this->request->param('endDate')));
 
         //没有时间参数，默认返回七天的数据
         if (empty($startdate) || empty($enddate))
@@ -149,11 +149,11 @@ class Data extends BaseController
     //新增用户列表
     public function getAddUserList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $startdate = addslashes(trim($this->request->param('startDate')));
-        $enddate = addslashes(trim($this->request->param('endDate')));
+        $startdate = addslashes(safe_trim($this->request->param('startDate')));
+        $enddate = addslashes(safe_trim($this->request->param('endDate')));
         $page = $this->request->param('pageNo');
         $pagesize = $this->request->param('pageSize');
         $pagesize = $pagesize ? $pagesize:'10';
@@ -234,11 +234,11 @@ class Data extends BaseController
     //用户消费报表
     public function getUserConsumptionInfo()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $startdate = addslashes(trim($this->request->param('startDate')));
-        $enddate = addslashes(trim($this->request->param('endDate')));
+        $startdate = addslashes(safe_trim($this->request->param('startDate')));
+        $enddate = addslashes(safe_trim($this->request->param('endDate')));
         $page = $this->request->param('pageNo');
         $pagesize = $this->request->param('pageSize');
         $pagesize = $pagesize ? $pagesize:'10';
@@ -323,12 +323,12 @@ class Data extends BaseController
     //用户比例报表
     public function getUserDistributionInfo()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         //接受参数
-        $startdate = addslashes(trim($this->request->param('startDate')));
-        $enddate = addslashes(trim($this->request->param('endDate')));
+        $startdate = addslashes(safe_trim($this->request->param('startDate')));
+        $enddate = addslashes(safe_trim($this->request->param('endDate')));
 
         //没有时间参数则设置为七天
         if (empty($startdate) || empty($enddate))
@@ -369,8 +369,8 @@ class Data extends BaseController
     //订单报表
     public function getOrderReport()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         //接受参数
         $startdate = addslashes($this->request->param('startDate'));
@@ -441,8 +441,8 @@ class Data extends BaseController
     //商品报表图表
     public function getGoodsReport()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         //1.平台所有上架商品数量
         $sql = "select ifnull(count(a.id),0) as num from lkt_product_list as a left join lkt_mch as b on a.mch_id = b.id where a.store_id = '$store_id' and a.recycle = 0 and a.mch_status = 2 and a.status = 2";
@@ -605,8 +605,8 @@ class Data extends BaseController
     //商品预警
     public function getGoodsReportGoodsList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $page = $this->request->param('pageNo');
         $pagesize = $this->request->param('pageSize');
@@ -646,7 +646,7 @@ class Data extends BaseController
                             $va = substr($va, 0, strrpos($va, "_LKT"));
                             $specifications .= $ke . ':' . $va . ',';
                         }
-                        $res_stock[$k]['attribute'] = rtrim($specifications, ",");
+                        $res_stock[$k]['attribute'] = rsafe_trim($specifications, ",");
                     }
                     else
                     {

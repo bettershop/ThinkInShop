@@ -18,7 +18,7 @@ class PublicTools
     {
         $store_id = addslashes(Request::param('storeId'));
 
-        $keyword = addslashes(trim(Request::param('keyword'))); // 数据名称
+        $keyword = addslashes(safe_trim(Request::param('keyword'))); // 数据名称
 
         $array = array('store_id'=>$store_id,'keyword'=>$keyword);
         Tools::is_sensitive_words($array);

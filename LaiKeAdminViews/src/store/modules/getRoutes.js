@@ -18,6 +18,25 @@ function hasPermission(roles, route) {
   }
 }
 
+function loadView(url) {
+  const viewPath = url.replace(/\.vue$/, '')
+  return resolve => {
+    require(
+      [`@/views${viewPath}.vue`],
+      resolve,
+      () => {
+        require(
+          [`@/views${viewPath}/index.vue`],
+          resolve,
+          err => {
+            console.error(`[getRoutes] load view failed: ${url}`, err)
+          }
+        )
+      }
+    )
+  }
+}
+
 /**
  * 通过递归过滤异步路由表
  * @param routes asyncRoutes
@@ -82,7 +101,7 @@ const actions = {
         id:currentMenu.id,
       }
       if (childrenMenu.children.length == 0) {
-        childrenMenu.component = resolve => require([`@/views${currentMenu.url}`], resolve)
+        childrenMenu.component = loadView(currentMenu.url)
       } else {
         childrenMenu.redirect = currentMenu.url
         childrenMenu.component = {

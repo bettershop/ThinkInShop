@@ -32,13 +32,13 @@
         <div class="btn-list">
           <el-button class="fontColor" @click="reset">{{$t('DemoPage.tableExamplePage.reset')}}</el-button>
           <el-button class="bgColor" type="primary" v-enter="demand" @click="demand">{{$t('DemoPage.tableExamplePage.demand')}}</el-button>
-          <el-button v-has-permi="'export'" class="bgColor export" type="primary" @click="isExportBox=!isExportBox">{{$t('DemoPage.tableExamplePage.export')}}</el-button>
+          <el-button  class="bgColor export" type="primary" @click="isExportBox=!isExportBox">{{$t('DemoPage.tableExamplePage.export')}}</el-button>
         </div>
       </div>
     </div>
 
     <div class="jump-list">
-        <el-button v-has-permi="'batchDel'"  class="fontColor" @click="Del" icon="el-icon-delete">
+        <el-button    class="fontColor" @click="Del" icon="el-icon-delete">
           {{$t('DemoPage.tableExamplePage.Batch_delete')}}
         </el-button>
     </div>

@@ -79,7 +79,9 @@
         <if test="sourceId!=null and sourceId!='' and sourceType=='isSupplier'"> and c.gongyingshang=#{sourceId}</if>
         <if test="sourceType=='isSupplier'"> and c.gongyingshang !=''</if>
         <if test="id != null">and a.id = #{id}</if>
-        <if test="language != null and language != ''">and c.lang_code = #{language}</if>
+        <if test="langCode != null and langCode != ''">
+            and ((ifnull(b.lang_code,'') = '' and c.lang_code = #{langCode}) or b.lang_code = #{langCode})
+        </if>
         <if test="store_id != null">and a.store_id = #{store_id}</if>
         <if test="recycle != null">and a.recycle = #{recycle}</if>
         <if test="commodity_type != null">and c.commodity_type = #{commodity_type}</if>

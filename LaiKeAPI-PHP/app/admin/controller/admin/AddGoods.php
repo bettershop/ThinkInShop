@@ -17,9 +17,9 @@ class AddGoods extends BaseController
     // 获取店铺门店
     public function getMchStore()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $SelfOperatedStore_id = PC_Tools::SelfOperatedStore($store_id); // 自营店ID
 

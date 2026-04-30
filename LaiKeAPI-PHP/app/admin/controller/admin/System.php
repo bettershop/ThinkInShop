@@ -35,23 +35,23 @@ class System  extends BaseController
     {
         try
         {
-            $storeId = trim(Request::param('storeId'));
-            $mailConfig = trim(Request::param('mail_config'));
-            $logo = trim(Request::param('logo'));
+            $storeId = safe_trim(Request::param('storeId'));
+            $mailConfig = safe_trim(Request::param('mail_config'));
+            $logo = safe_trim(Request::param('logo'));
             //店铺名称
-            $name = trim(Request::param('name'));
-            $cpc = trim(Request::param('cpc'));
-            $tel = trim(Request::param('tel'));
-            $sheng = trim(Request::param('sheng'));
-            $shi = trim(Request::param('shi'));
-            $xian = trim(Request::param('xian'));
-            $address = trim(Request::param('address'));
-            $code = trim(Request::param('code'));
-            $wx_name = trim(Request::param('wx_name'));
-            $wx_headimgurl = trim(Request::param('wx_headimgurl'));
-            $default_currency = trim(Request::param('default_currency'));
-            $default_lang = trim(Request::param('default_lang'));
-            $h_Address = trim(Request::param('h_Address'));
+            $name = safe_trim(Request::param('name'));
+            $cpc = safe_trim(Request::param('cpc'));
+            $tel = safe_trim(Request::param('tel'));
+            $sheng = safe_trim(Request::param('sheng'));
+            $shi = safe_trim(Request::param('shi'));
+            $xian = safe_trim(Request::param('xian'));
+            $address = safe_trim(Request::param('address'));
+            $code = safe_trim(Request::param('code'));
+            $wx_name = safe_trim(Request::param('wx_name'));
+            $wx_headimgurl = safe_trim(Request::param('wx_headimgurl'));
+            $default_currency = safe_trim(Request::param('default_currency'));
+            $default_lang = safe_trim(Request::param('default_lang'));
+            $h_Address = safe_trim(Request::param('h_Address'));
 
             if ($mailConfig !== '')
             {
@@ -181,8 +181,8 @@ class System  extends BaseController
     {
         try
         {
-            $storeId = trim(Request::param('storeId'));
-            $mailConfig = trim(Request::param('mail_config'));
+            $storeId = safe_trim(Request::param('storeId'));
+            $mailConfig = safe_trim(Request::param('mail_config'));
 
             if ($mailConfig !== '')
             {
@@ -209,7 +209,7 @@ class System  extends BaseController
     {
         try
         {
-            $storeId = addslashes(trim(Request::param('storeId')));
+            $storeId = addslashes(safe_trim(Request::param('storeId')));
 
             $sql = "select mail_config,id from lkt_config where store_id = ? ";
             $result = Db::query($sql, [$storeId]);
@@ -246,7 +246,7 @@ class System  extends BaseController
     {
         try
         {
-            $storeId = addslashes(trim(Request::param('storeId')));
+            $storeId = addslashes(safe_trim(Request::param('storeId')));
 
             $sql = "SELECT b.shop_id 
             FROM lkt_customer AS a 
@@ -271,9 +271,9 @@ class System  extends BaseController
     // 获取基础配置（准备弃用）
     public function getSystemIndex()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $list = array();
         // 查询配置信息
@@ -355,9 +355,9 @@ class System  extends BaseController
     // 设置基础配置（准备弃用）
     public function addSystemConfig()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
     	$is_register = addslashes(Request::param('isRegister')); // 是否需要注册 1.注册 2.免注册
     	$image = addslashes(Request::param('logoUrl')); // 公司logo
@@ -378,6 +378,10 @@ class System  extends BaseController
         $express_tel = addslashes(Request::param('expressTel'));//顺丰用查询电话
         $express_secret = addslashes(Request::param('express_secret'));// secret
         $express_tempId = addslashes(Request::param('express_tempId'));// tempId
+        if($express_tempId === '')
+        {
+            $express_tempId = addslashes(Request::param('express_temp_id'));
+        }
     	$is_Kicking = addslashes(Request::param('isKicking')); // 是否登录踢人  0.不开启 1.开启
     	$watermark_name = addslashes(Request::param('watermarkName')); // 水印名称
     	$watermark_url = addslashes(Request::param('watermarkUrl')); // 水印网址
@@ -390,11 +394,11 @@ class System  extends BaseController
     	$address = addslashes(Request::param('address')); // 地址
     	$phone = addslashes(Request::param('phone')); // 联系电话
         
-        $is_open = addslashes(trim(Request::param('isOpen'))); // 是否开启
-        $num = addslashes(trim(Request::param('limitNum'))); // 关键词上限
-        $keyword = addslashes(trim(Request::param('keyword'))); // 关键词
-        $is_accounts = addslashes(trim(Request::param('isAccounts'))); // 是否分账
-        $accounts_set = addslashes(trim(Request::param('accountsSet'))); // 分账账号
+        $is_open = addslashes(safe_trim(Request::param('isOpen'))); // 是否开启
+        $num = addslashes(safe_trim(Request::param('limitNum'))); // 关键词上限
+        $keyword = addslashes(safe_trim(Request::param('keyword'))); // 关键词
+        $is_accounts = addslashes(safe_trim(Request::param('isAccounts'))); // 是否分账
+        $accounts_set = addslashes(safe_trim(Request::param('accountsSet'))); // 分账账号
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -558,11 +562,11 @@ class System  extends BaseController
             //是否需要注册   第一次保存后不能更改,请谨慎选择
             if ($r0[0]['is_register'] == 0)
             {
-                $sql_update = array('is_register'=>$is_register,'wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_tempId'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
+                $sql_update = array('is_register'=>$is_register,'wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_temp_id'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
             }
             else
             {
-                $sql_update = array('wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_tempId'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
+                $sql_update = array('wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_temp_id'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
             }
             $sql_where = array('store_id'=>$store_id);
             $r = Db::name('config')->where($sql_where)->update($sql_update);
@@ -595,7 +599,7 @@ class System  extends BaseController
         else
         {
             // $sql1 = array('store_id'=>$store_id,'is_register'=>$is_register,'logo'=>$image,'wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_tempId'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
-            $sql1 = array('store_id'=>$store_id,'is_register'=>$is_register,'wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_tempId'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
+            $sql1 = array('store_id'=>$store_id,'is_register'=>$is_register,'wx_headimgurl'=>$wx_headimg,'H5_domain'=>$H5_domain,'wx_name'=>$wx_name,'message_day'=>$message_day,'customer_service'=>$customer_service,'tencent_key'=>$tencent_key,'exp_time'=>$exp_time,'modify_date'=>$time,'push_Appkey'=>$push_Appkey,'push_Appid'=>$push_Appid,'push_MasterECRET'=>$push_MasterECRET,'express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_tel'=>$express_tel,'express_secret'=>$express_secret,'express_temp_id'=>$express_tempId,'is_Kicking'=>$is_Kicking,'pc_mch_path'=>$pc_mch_path,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'is_accounts'=>$is_accounts,'accounts_set'=>$accounts_set);
             $r1 = Db::name('config')->insert($sql1);
             if ($r1 > 0)
             {
@@ -628,9 +632,9 @@ class System  extends BaseController
     // 编辑关于我们（准备弃用）
     public function updateAboutMe()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
     	$aboutus = Request::param('auboutMe'); // 关于我们
 
@@ -662,11 +666,11 @@ class System  extends BaseController
     // 获取协议配置
     public function getAgreementIndex()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-    	$id = addslashes(trim(Request::param('id'))); // 协议ID
+    	$id = addslashes(safe_trim(Request::param('id'))); // 协议ID
 
         $list = array('store_id'=>$store_id);
         if($id)
@@ -683,13 +687,13 @@ class System  extends BaseController
     // 添加/编辑协议
     public function addAgreement()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
-    	$id = addslashes(trim(Request::param('id'))); // 协议ID
-        $name = addslashes(trim(Request::param('title'))); // 标题
-        $type = addslashes(trim(Request::param('type'))); // 类型
+    	$id = addslashes(safe_trim(Request::param('id'))); // 协议ID
+        $name = addslashes(safe_trim(Request::param('title'))); // 标题
+        $type = addslashes(safe_trim(Request::param('type'))); // 类型
     	$content = Request::param('content'); // 内容
 
         $Jurisdiction = new Jurisdiction();
@@ -768,11 +772,11 @@ class System  extends BaseController
     // 删除协议
     public function delAgreement()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $id = addslashes(trim(Request::param('id'))); // 协议ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 协议ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -831,15 +835,15 @@ class System  extends BaseController
     // 获取售后地址
     public function getAddressInfo()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
         
-        $id = addslashes(trim(Request::param('id'))); // 地址ID
-        $type = addslashes(trim(Request::param('type'))); // 类型（1发货地址 2售后地址）
-        $name = addslashes(trim(Request::param('name'))); // 联系人
-        $page = addslashes(trim(Request::param('pageNo')));
-        $pagesize = addslashes(trim(Request::param('pageSize')));
+        $id = addslashes(safe_trim(Request::param('id'))); // 地址ID
+        $type = addslashes(safe_trim(Request::param('type'))); // 类型（1发货地址 2售后地址）
+        $name = addslashes(safe_trim(Request::param('name'))); // 联系人
+        $page = addslashes(safe_trim(Request::param('pageNo')));
+        $pagesize = addslashes(safe_trim(Request::param('pageSize')));
         $pagesize = $pagesize ? $pagesize : 10;
         $start = 0;
         if ($page)
@@ -875,7 +879,7 @@ class System  extends BaseController
         }
 
         $list = array();
-        $sql1 = "select id,store_id,name,tel,sheng,shi,sheng as province,shi as city,xian,address,address_xq,code,uid,type,is_default,cpc,country_num from lkt_service_address where $condition order by is_default desc,id limit $start,$pagesize";
+        $sql1 = "select id,store_id,name,tel,sheng,shi,sheng as province,shi as city,xian,address,address_xq,code,uid,type,is_default from lkt_service_address where $condition order by is_default desc,id limit $start,$pagesize";
         $r1 = Db::query($sql1);
         if($r1)
         {
@@ -890,29 +894,28 @@ class System  extends BaseController
     // 添加/编辑售后地址
     public function addAddressInfo()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $id = addslashes(trim(Request::param('id'))); // 售后地址ID
-        $country_num = addslashes(trim(Request::param('country_num'))); // 国家代码
-        $type = addslashes(trim(Request::param('type'))); // 类型（1发货地址 2售后地址）
-        $name = addslashes(trim(Request::param('name'))); // 联系人
-        $cpc = addslashes(trim(Request::param('cpc'))); // 区号
-        $tel = addslashes(trim(Request::param('tel'))); // 联系电话
-        $sheng = addslashes(trim(Request::param('shen'))); // 省
-        $shi = addslashes(trim(Request::param('shi'))); // 市
+        $id = addslashes(safe_trim(Request::param('id'))); // 售后地址ID
+        $type = addslashes(safe_trim(Request::param('type'))); // 类型（1发货地址 2售后地址）
+        $name = addslashes(safe_trim(Request::param('name'))); // 联系人
+        $cpc = addslashes(safe_trim(Request::param('cpc'))); // 区号
+        $tel = addslashes(safe_trim(Request::param('tel'))); // 联系电话
+        $sheng = addslashes(safe_trim(Request::param('shen'))); // 省
+        $shi = addslashes(safe_trim(Request::param('shi'))); // 市
         
         if(!is_china_calling_code($cpc)){
-            $sheng = addslashes(trim(Request::param('province'))); // 省
-            $shi = addslashes(trim(Request::param('city'))); // 市
+            $sheng = addslashes(safe_trim(Request::param('province'))); // 省
+            $shi = addslashes(safe_trim(Request::param('city'))); // 市
         }
         
         // var_dump($sheng,$shi);
-        $xian = addslashes(trim(Request::param('xian'))); // 县
-        $address = addslashes(trim(Request::param('address'))); // 详细地址
-        $code = addslashes(trim(Request::param('code'))); // 邮政编码
-        $is_default = addslashes(trim(Request::param('isDefault'))); // 是否为默认收货地址 1.是  0.不是
+        $xian = addslashes(safe_trim(Request::param('xian'))); // 县
+        $address = addslashes(safe_trim(Request::param('address'))); // 详细地址
+        $code = addslashes(safe_trim(Request::param('code'))); // 邮政编码
+        $is_default = addslashes(safe_trim(Request::param('isDefault'))); // 是否为默认收货地址 1.是  0.不是
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -942,11 +945,11 @@ class System  extends BaseController
         {   
             if($id != '' && $id != 0)
             {
-                $r0 = ServiceAddressModel::where(['store_id'=>$store_id,'cpc'=>$cpc,'tel'=>$tel,'uid'=>'admin','type'=>$type])->where('id','<>',$id)->select()->toArray();
+                $r0 = ServiceAddressModel::where(['store_id'=>$store_id,'tel'=>$tel,'uid'=>'admin','type'=>$type])->where('id','<>',$id)->select()->toArray();
             }
             else
             {
-                $r0 = ServiceAddressModel::where(['store_id'=>$store_id,'cpc'=>$cpc,'tel'=>$tel,'uid'=>'admin','type'=>$type])->select()->toArray();
+                $r0 = ServiceAddressModel::where(['store_id'=>$store_id,'tel'=>$tel,'uid'=>'admin','type'=>$type])->select()->toArray();
             }
             if ($r0)
             {
@@ -1005,7 +1008,7 @@ class System  extends BaseController
         if($id != '' && $id != 0)
         {
             $sql_where = array('store_id'=>$store_id,'id'=>$id);
-            $sql_update = array('name'=>$name,'cpc'=>$cpc,'tel'=>$tel,'code'=>$code,'sheng'=>$sheng,'shi'=>$shi,'xian'=>$xian,'address'=>$address,'address_xq'=>$address_xq,'is_default'=>$is_default,'country_num'=>$country_num);
+            $sql_update = array('name'=>$name,'tel'=>$tel,'code'=>$code,'sheng'=>$sheng,'shi'=>$shi,'xian'=>$xian,'address'=>$address,'address_xq'=>$address_xq,'is_default'=>$is_default);
             $r = Db::name('service_address')->where($sql_where)->update($sql_update);
             if ($r == -1)
             {
@@ -1022,7 +1025,7 @@ class System  extends BaseController
         }
         else
         {
-            $sqll = array('store_id'=>$store_id,'name'=>$name,'cpc'=>$cpc,'tel'=>$tel,'code'=>$code,'sheng'=>$sheng,'shi'=>$shi,'shi'=>$shi,'xian'=>$xian,'address'=>$address,'address_xq'=>$address_xq,'uid'=>'admin','type'=>$type,'is_default'=>$is_default,'country_num'=>$country_num);
+            $sqll = array('store_id'=>$store_id,'name'=>$name,'tel'=>$tel,'code'=>$code,'sheng'=>$sheng,'shi'=>$shi,'xian'=>$xian,'address'=>$address,'address_xq'=>$address_xq,'uid'=>'admin','type'=>$type,'is_default'=>$is_default);
             $r = Db::name('service_address')->insert($sqll);
             if ($r == -1)
             {
@@ -1042,11 +1045,11 @@ class System  extends BaseController
     // 设置默认售后地址
     public function setDefaultAddress()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $id = addslashes(trim(Request::param('id'))); // 售后地址ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 售后地址ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1082,12 +1085,12 @@ class System  extends BaseController
     // 删除售后地址
     public function delAddress()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $id = addslashes(trim(Request::param('id'))); // 售后地址ID
-        $type = addslashes(trim(Request::param('type'))); // 类型（1发货地址 2售后地址）
+        $id = addslashes(safe_trim(Request::param('id'))); // 售后地址ID
+        $type = addslashes(safe_trim(Request::param('type'))); // 类型（1发货地址 2售后地址）
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1113,9 +1116,9 @@ class System  extends BaseController
     // 获取短信核心配置
     public function getTemplateConfigInfo()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $list = array();
         $r0 = MessageConfigModel::where(['store_id'=>$store_id])->select()->toArray();
@@ -1139,9 +1142,9 @@ class System  extends BaseController
     // 设置短信核心配置
     public function addTemplateConfig()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $accessKeyId = addslashes(Request::param('key')); // accessKeyId
         $accessKeySecret = addslashes(Request::param('secret')); // accessKeyId
@@ -1229,12 +1232,11 @@ class System  extends BaseController
     // 短信模板列表
     public function getSmsTemplateInfo()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $id = addslashes(Request::param('id')); // 短信模板ID
-        $international = addslashes(Request::param('international')); // 是否是国际化 0.国内 1.国际
         $page = addslashes(Request::param('pageNo')); // 页码
         $pagesize = addslashes(Request::param('pageSize')); // 每页显示多少条数据
         $pagesize = $pagesize ? $pagesize : '10';// 每页显示多少条数据
@@ -1242,15 +1244,15 @@ class System  extends BaseController
         $total = 0;
         if($id != 0 && $id != '')
         {
-            $r = MessageModel::where(['store_id'=>$store_id,'international'=>$international,'id'=>$id])->field('count(id) as num')->select()->toArray();
+            $r = MessageModel::where(['store_id'=>$store_id,'id'=>$id])->field('count(id) as num')->select()->toArray();
 
-            $rr = MessageModel::where(['store_id'=>$store_id,'international'=>$international,'id'=>$id])->page((int)$page,(int)$pagesize)->order('add_time','desc')->select()->toArray();
+            $rr = MessageModel::where(['store_id'=>$store_id,'id'=>$id])->page((int)$page,(int)$pagesize)->order('add_time','desc')->select()->toArray();
         }
         else
         {
-            $r = MessageModel::where(['store_id'=>$store_id,'international'=>$international])->field('count(id) as num')->select()->toArray();
+            $r = MessageModel::where(['store_id'=>$store_id])->field('count(id) as num')->select()->toArray();
 
-            $rr = MessageModel::where(['store_id'=>$store_id,'international'=>$international])->page((int)$page,(int)$pagesize)->order('add_time','desc')->select()->toArray();
+            $rr = MessageModel::where(['store_id'=>$store_id])->page((int)$page,(int)$pagesize)->order('add_time','desc')->select()->toArray();
         }
         if($r)
         {
@@ -1265,11 +1267,11 @@ class System  extends BaseController
     // 获取短信类型、获取短信类别
     public function getSmsTypeList()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $superName = addslashes(trim(Request::param('superName')));
+        $superName = addslashes(safe_trim(Request::param('superName')));
 
         if ($superName != '')
         {
@@ -1288,9 +1290,9 @@ class System  extends BaseController
     // 添加、编辑短信模板
     public function addMessage()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $id = addslashes(Request::param('id')); // 短信模板ID
         $SignName = addslashes(Request::param('SignName')); // 短信签名
@@ -1300,7 +1302,6 @@ class System  extends BaseController
         $TemplateCode = addslashes(Request::param('code')); // 短信模板Code
         $PhoneNumbers = addslashes(Request::param('phone')); // 短信接收号码
         $content = addslashes(Request::param('content')); // 发送内容
-        $international = addslashes(Request::param('international')); // 是否是国际化 0.国内 1.国际
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1323,11 +1324,11 @@ class System  extends BaseController
         {
             if($id != 0 && $id != '')
             {
-                $r = MessageModel::where(['store_id'=>$store_id,'name'=>$name,'international'=>$international])->where('id','<>',$id)->select()->toArray();
+                $r = MessageModel::where(['store_id'=>$store_id,'name'=>$name])->where('id','<>',$id)->select()->toArray();
             }
             else
             {
-                $r = MessageModel::where(['store_id'=>$store_id,'name'=>$name,'international'=>$international])->select()->toArray();
+                $r = MessageModel::where(['store_id'=>$store_id,'name'=>$name])->select()->toArray();
             }
             if ($r)
             {
@@ -1406,7 +1407,7 @@ class System  extends BaseController
         //     {
                 if($id != 0 && $id != '')
                 {
-                    $sql_update = array('SignName'=>$SignName,'name'=>$name,'type'=>$type,'type1'=>$type1,'TemplateCode'=>$TemplateCode,'content'=>$content,'add_time'=>$time,'international'=>$international);
+                    $sql_update = array('SignName'=>$SignName,'name'=>$name,'type'=>$type,'type1'=>$type1,'TemplateCode'=>$TemplateCode,'content'=>$content,'add_time'=>$time);
                     $sql_where = array('store_id'=>$store_id,'id'=>$id);
                     $rr = Db::name('message')->where($sql_where)->update($sql_update);
                     if ($rr == -1)
@@ -1426,7 +1427,7 @@ class System  extends BaseController
                 }
                 else
                 {
-                    $sql = array('store_id'=>$store_id,'SignName'=>$SignName,'name'=>$name,'type'=>$type,'type1'=>$type1,'TemplateCode'=>$TemplateCode,'content'=>$content,'add_time'=>$time,'international'=>$international);
+                    $sql = array('store_id'=>$store_id,'SignName'=>$SignName,'name'=>$name,'type'=>$type,'type1'=>$type1,'TemplateCode'=>$TemplateCode,'content'=>$content,'add_time'=>$time);
                     $rr = Db::name('message')->insert($sql);
                     if ($rr == -1)
                     {
@@ -1463,11 +1464,11 @@ class System  extends BaseController
     // 删除短信模板
     public function delMessage()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        $id = addslashes(trim(Request::param('id'))); // 短信模板ID
+        $id = addslashes(safe_trim(Request::param('id'))); // 短信模板ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1495,9 +1496,9 @@ class System  extends BaseController
     // 获取短信模板
     public function getSmsTemplateList()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $type = addslashes(Request::param('type')); // 类型
         $type1 = addslashes(Request::param('id')); // 类别
@@ -1540,9 +1541,9 @@ class System  extends BaseController
     // 短信列表
     public function getSmsInfo()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $page = addslashes(Request::param('pageNo')); // 页码
         $pagesize = addslashes(Request::param('pageSize')); // 每页显示多少条数据
@@ -1594,9 +1595,9 @@ class System  extends BaseController
     // 添加、编辑短信
     public function addMessageList()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $id = addslashes(Request::param('id')); // 短信ID
         $type = addslashes(Request::param('type')); // 类型
@@ -1698,9 +1699,9 @@ class System  extends BaseController
     // 删除短信
     public function delMessageList()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-        $store_type = addslashes(trim(Request::param('storeType')));
-        $access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+        $store_type = addslashes(safe_trim(Request::param('storeType')));
+        $access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $id = addslashes(Request::param('id')); // 短信ID
 
@@ -1865,15 +1866,20 @@ class System  extends BaseController
     // 获取基础配置（新）
     public function GetBasicConfiguration()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $list = array();
-        $r = ConfigModel::where(['store_id'=>$store_id])->field('H5_domain as h5_domain,message_day as messageSaveDay,exp_time as appLoginValid,watermark_name,watermark_url,logon_logo,copyright_information,record_information,link_to_landing_page,admin_default_portrait,store_name,app_logo,html_icon')->select()->toArray();
+        $r = ConfigModel::where(['store_id'=>$store_id])->field('H5_domain as h5_domain,message_day as messageSaveDay,exp_time as appLoginValid,watermark_name,watermark_url,logo as logon_logo,copyright_information,record_information,link_to_landing_page,company as store_name,app_logo,logo1 as html_icon')->select()->toArray();
         if($r)
         {
             $list = $r[0];
+        }
+
+        $rsc = Db::name('system_configuration')->field('admin_default_portrait')->where('store_id', 0)->find();
+        if ($rsc) {
+            $list['admin_default_portrait'] = $rsc['admin_default_portrait'];
         }
 
         $sql1 = "select merchant_logo from lkt_customer where id = '$store_id' ";
@@ -1891,27 +1897,27 @@ class System  extends BaseController
     // 设置基础配置（新）
     public function SetBasicConfiguration()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $store_name = addslashes(Request::param('store_name')); // 商城名称
         $H5_domain = addslashes(Request::param('h_Address')); // H5域名
     	$message_day = addslashes(Request::param('messageSaveDay')); // 消息保留天数
     	$exp_time = addslashes(Request::param('login_validity')); // 移动端登录有效期
-        $copyright_information = addslashes(trim(Request::param('copyright_information'))); // 版权信息
-        $record_information = addslashes(trim(Request::param('record_information'))); // 备案信息
+        $copyright_information = addslashes(safe_trim(Request::param('copyright_information'))); // 版权信息
+        $record_information = addslashes(safe_trim(Request::param('record_information'))); // 备案信息
         $link_to_landing_page = Request::param('link_to_landing_page'); // 登录页友情链接
 
-        $app_logo = addslashes(trim(Request::param('app_logo'))); // 小程序授权登录logo
-        $html_icon = addslashes(trim(Request::param('html_icon'))); // 浏览器icon图标
-        $logon_logo = addslashes(trim(Request::param('logon_logo'))); // 登录logo
-        $store_logo = addslashes(trim(Request::param('store_logo'))); // 商城后台logo
+        $app_logo = addslashes(safe_trim(Request::param('app_logo'))); // 小程序授权登录logo
+        $html_icon = addslashes(safe_trim(Request::param('html_icon'))); // 浏览器icon图标
+        $logon_logo = addslashes(safe_trim(Request::param('logon_logo'))); // 登录logo
+        $store_logo = addslashes(safe_trim(Request::param('store_logo'))); // 商城后台logo
 
     	$watermark_name = addslashes(Request::param('watermarkName')); // 水印名称
     	$watermark_url = addslashes(Request::param('watermarkUrl')); // 水印网址
 
-        $admin_default_portrait = addslashes(trim(Request::param('admin_default_portrait'))); // 默认头像设置
+        $admin_default_portrait = addslashes(safe_trim(Request::param('admin_default_portrait'))); // 默认头像设置
 
         $time = date("Y-m-d H:i:s");
         $Jurisdiction = new Jurisdiction();
@@ -1922,7 +1928,7 @@ class System  extends BaseController
         $sql_update1 = array();
         if($store_name != '')
         {
-            $sql_update['store_name'] = $store_name;
+            $sql_update['company'] = $store_name;
         }
         if($H5_domain != '')
         {
@@ -1954,11 +1960,11 @@ class System  extends BaseController
         }
         if($html_icon != '')
         {
-            $sql_update['html_icon'] = $html_icon;
+            $sql_update['logo1'] = $html_icon;
         }
         if($logon_logo != '')
         {
-            $sql_update['logon_logo'] = $logon_logo;
+            $sql_update['logo'] = $logon_logo;
         }
         if($store_logo != '')
         {
@@ -1973,6 +1979,11 @@ class System  extends BaseController
             $sql_update['watermark_url'] = $watermark_url;
         }
 
+        if($admin_default_portrait != '')
+        {
+            Db::name('system_configuration')->where('store_id', 0)->update(['admin_default_portrait' => $admin_default_portrait]);
+        }
+
         // $sql_update = array('message_day'=>$message_day,'H5_domain'=>$H5_domain,'exp_time'=>$exp_time,'watermark_name'=>$watermark_name,'watermark_url'=>$watermark_url,'modify_date'=>$time,'logon_logo'=>$logon_logo,'copyright_information'=>$copyright_information,'record_information'=>$record_information,'link_to_landing_page'=>$link_to_landing_page,'admin_default_portrait'=>$admin_default_portrait,'store_name'=>$store_name,'app_logo'=>$app_logo,'html_icon'=>$html_icon);
         $sql_where = array('store_id'=>$store_id);
         $r = Db::name('config')->where($sql_where)->update($sql_update);
@@ -1985,7 +1996,7 @@ class System  extends BaseController
         }
         else
         {
-            $sql_update1 = array('merchant_logo'=>$store_logo);
+            // $sql_update1 = array('merchant_logo'=>$store_logo);
             if($sql_update1 != array())
             {
                 $sql_where1 = array('id'=>$store_id);
@@ -2004,9 +2015,9 @@ class System  extends BaseController
     // 获取搜索及敏感词（新）
     public function GetSearchAndSensitiveWords()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $list = array();
 
@@ -2024,13 +2035,13 @@ class System  extends BaseController
     // 设置搜索及敏感词（新）
     public function SearchAndSensitiveWords()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
-        // $is_open = addslashes(trim(Request::param('isOpen'))); // 是否开启
-        $num = addslashes(trim(Request::param('limitNum'))); // 关键词上限
-        $keyword = addslashes(trim(Request::param('keyword'))); // 关键词
+        // $is_open = addslashes(safe_trim(Request::param('isOpen'))); // 是否开启
+        $num = addslashes(safe_trim(Request::param('limitNum'))); // 关键词上限
+        $keyword = addslashes(safe_trim(Request::param('keyword'))); // 关键词
 
         $time = date("Y-m-d H:i:s");
         $Jurisdiction = new Jurisdiction();
@@ -2098,13 +2109,13 @@ class System  extends BaseController
     // 敏感字设置（新）
     public function selectSensitive()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
-    	$word = addslashes(trim(Request::param('word'))); // 敏感词
-    	$page = addslashes(trim(Request::param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim(Request::param('pageSize'))); // 每页数据
+    	$word = addslashes(safe_trim(Request::param('word'))); // 敏感词
+    	$page = addslashes(safe_trim(Request::param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim(Request::param('pageSize'))); // 每页数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $start = 0;
@@ -2143,12 +2154,12 @@ class System  extends BaseController
     // 添加敏感字（新）
     public function addSensitive()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
-    	$id = addslashes(trim(Request::param('id'))); // 敏感词ID
-    	$word = addslashes(trim(Request::param('word'))); // 敏感词
+    	$id = addslashes(safe_trim(Request::param('id'))); // 敏感词ID
+    	$word = addslashes(safe_trim(Request::param('word'))); // 敏感词
 
         $time = date("Y-m-d H:i:s");
         if($word == '')
@@ -2208,11 +2219,11 @@ class System  extends BaseController
     // 删除敏感字（新）
     public function deleteSensitive()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
-    	$ids = addslashes(trim(Request::param('ids'))); // 敏感词ID
+    	$ids = addslashes(safe_trim(Request::param('ids'))); // 敏感词ID
 
         $sql1 = "update lkt_sensitive_words set recycle = 1 where store_id = '$store_id' and id in ($ids) ";
         $r1 = Db::execute($sql1);
@@ -2231,9 +2242,9 @@ class System  extends BaseController
     // 批量上传
     public function importSensitives()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $time = date("Y-m-d H:i:s");
         $filename = $_FILES['file']['tmp_name'];
@@ -2261,7 +2272,7 @@ class System  extends BaseController
         Db::startTrans();
         foreach ($result as $k => $v) 
         {
-            $word = addslashes(trim($v['A']));
+            $word = addslashes(safe_trim($v['A']));
 
             if($word == '')
             {
@@ -2330,13 +2341,13 @@ class System  extends BaseController
     // 获取物流及打印（新）
     public function GetLogisticsAndPrinting()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $express_list = array(); // 物流
         $print_list = array(); // 打印
-        $r = ConfigModel::where(['store_id'=>$store_id])->field('express_address,express_number,express_key,express_secret,express_tempId')->select()->toArray();
+        $r = ConfigModel::where(['store_id'=>$store_id])->field('express_address,express_number,express_key,express_secret,express_temp_id as express_tempId')->select()->toArray();
         if($r)
         {
             $express_list = $r[0];
@@ -2364,9 +2375,9 @@ class System  extends BaseController
     // 物流及打印（新）
     public function LogisticsAndPrinting()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
     	$express_address = addslashes(Request::param('expressAddress')); // 查询接口地址
     	$express_number = addslashes(Request::param('expressNumber')); // 用户编号
@@ -2374,6 +2385,10 @@ class System  extends BaseController
     	// $express_key = addslashes(Request::param('expressKey')); // 接口调用key
         $express_secret = addslashes(Request::param('express_secret'));// secret
         $express_tempId = addslashes(Request::param('express_tempId'));// tempId
+        if($express_tempId === '')
+        {
+            $express_tempId = addslashes(Request::param('express_temp_id'));
+        }
 
     	$print_name = addslashes(Request::param('printName')); // 打印名称
     	$print_url = addslashes(Request::param('printUrl')); // 打印网址
@@ -2407,7 +2422,7 @@ class System  extends BaseController
         }
 
         Db::startTrans();
-        $sql_update = array('express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_secret'=>$express_secret,'express_tempId'=>$express_tempId);
+        $sql_update = array('express_address'=>$express_address,'express_number'=>$express_number,'express_key'=>$express_key,'express_secret'=>$express_secret,'express_temp_id'=>$express_tempId);
         $sql_where = array('store_id'=>$store_id);
         $r = Db::name('config')->where($sql_where)->update($sql_update);
         if ($r == -1)
@@ -2460,9 +2475,9 @@ class System  extends BaseController
     // 获取国际话设置
     public function storeIntenationSetting()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
         $list = array();
         $sql = "select default_lang_code from lkt_config where store_id = '$store_id' ";
@@ -2481,11 +2496,11 @@ class System  extends BaseController
     // 设置国际话设置
     public function addOrUpdateStoreIntenationSetting()
     {
-        $store_id = addslashes(trim(Request::param('storeId')));
-    	$store_type = addslashes(trim(Request::param('storeType')));
-    	$access_id = addslashes(trim(Request::param('accessId')));
+        $store_id = addslashes(safe_trim(Request::param('storeId')));
+    	$store_type = addslashes(safe_trim(Request::param('storeType')));
+    	$access_id = addslashes(safe_trim(Request::param('accessId')));
 
-    	$default_lang_code = addslashes(trim(Request::param('default_lang_code')));
+    	$default_lang_code = addslashes(safe_trim(Request::param('default_lang_code')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');

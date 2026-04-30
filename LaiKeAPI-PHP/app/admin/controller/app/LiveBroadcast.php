@@ -13,12 +13,12 @@ class LiveBroadcast
     // 直播列表
     public function getLiveList()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
-        $start = trim(Request::param('start')); // 起始拉取视频，0表示从第一个视频片段开始拉取
-        $limit = trim(Request::param('limit')); // 每次拉取的数量，建议100以内
+        $start = safe_trim(Request::param('start')); // 起始拉取视频，0表示从第一个视频片段开始拉取
+        $limit = safe_trim(Request::param('limit')); // 每次拉取的数量，建议100以内
 
         // 1.当前时间戳
         $currentTime = time();
@@ -71,13 +71,13 @@ class LiveBroadcast
     // 直播回放
     public function getLiveHistory()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
-        $start = trim(Request::param('start')); // 起始拉取视频，0表示从第一个视频片段开始拉取
-        $limit = trim(Request::param('limit')); // 每次拉取的数量，建议100以内
-        $roomid = trim(Request::param('roomid')); // 直播间ID
+        $start = safe_trim(Request::param('start')); // 起始拉取视频，0表示从第一个视频片段开始拉取
+        $limit = safe_trim(Request::param('limit')); // 每次拉取的数量，建议100以内
+        $roomid = safe_trim(Request::param('roomid')); // 直播间ID
 
         // 1.当前时间戳
         $currentTime = time();

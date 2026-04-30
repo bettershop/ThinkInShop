@@ -10,14 +10,14 @@ class LedgerRecords extends BaseController
     // 分账记录
     public function queryLedgerRecord()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $shop_id = trim($this->request->param('mchId')); // 店铺ID
-        $condition = trim($this->request->param('condition')); // 搜索内容
-        $startDate = trim($this->request->param('startDate')); // 查询开始时间
-        $endDate = trim($this->request->param('endDate')); // 查询结束时间
-        $page = trim($this->request->param('pageNo')); // 加载次数
-        $pagesize = trim($this->request->param('pageSize')); // 每页多少条数据
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $shop_id = safe_trim($this->request->param('mchId')); // 店铺ID
+        $condition = safe_trim($this->request->param('condition')); // 搜索内容
+        $startDate = safe_trim($this->request->param('startDate')); // 查询开始时间
+        $endDate = safe_trim($this->request->param('endDate')); // 查询结束时间
+        $page = safe_trim($this->request->param('pageNo')); // 加载次数
+        $pagesize = safe_trim($this->request->param('pageSize')); // 每页多少条数据
         $user_id = $this->user_list['user_id'];
 
         $start = 0;

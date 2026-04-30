@@ -86,6 +86,11 @@ import router from "@/router";
 import { orderCount } from "@/api/plug_ins/preSale";
 import ErrorImg from "@/assets/images/menu_icon.png";
 
+function loadView(url) {
+  const viewPath = url.replace(/\.vue$/, "");
+  return (resolve) => require([`@/views${viewPath}.vue`], resolve);
+}
+
 export default {
   name: "mainSideBar",
   components: {
@@ -316,8 +321,7 @@ export default {
           if (isExternal(currentMenu.module)) {
             childrenMenu.component = { render(c) { return c("div"); } };
           } else {
-            childrenMenu.component = (resolve) =>
-              require([`@/views${currentMenu.url}`], resolve);
+            childrenMenu.component = loadView(currentMenu.url);
           }
         } else {
           childrenMenu.redirect = currentMenu.url;

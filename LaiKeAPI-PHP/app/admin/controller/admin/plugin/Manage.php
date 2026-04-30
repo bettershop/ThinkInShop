@@ -22,11 +22,11 @@ class Manage extends BaseController
     // 插件配置
     public function index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$storeType = addslashes(trim($this->request->param('storeType')));
-    	$accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$storeType = addslashes(safe_trim($this->request->param('storeType')));
+    	$accessId = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 插件ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 插件ID
 
         $page = addslashes($this->request->param('pageNo')); // 页码
     	$pagesize = addslashes($this->request->param('pageSize')); // 每页多少条数据
@@ -73,11 +73,11 @@ class Manage extends BaseController
     // 保存插件排序
     public function saveSort()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
 
-        $pluginId = addslashes(trim($this->request->param('pluginId'))); // 插件ID
+        $pluginId = addslashes(safe_trim($this->request->param('pluginId'))); // 插件ID
         $pluginSort = $this->request->param('pluginSort'); // 排序值
 
         if($pluginId === '' || $pluginSort === '' || $pluginSort === null)
@@ -122,9 +122,9 @@ class Manage extends BaseController
     // 参数修改页面
     public function pluginParmaInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$storeType = addslashes(trim($this->request->param('storeType')));
-    	$accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$storeType = addslashes(safe_trim($this->request->param('storeType')));
+    	$accessId = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 插件ID
 
@@ -143,13 +143,13 @@ class Manage extends BaseController
     // 编辑保存
     public function addPlugin()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-    	$storeType = addslashes(trim($this->request->param('storeType')));
-    	$accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+    	$storeType = addslashes(safe_trim($this->request->param('storeType')));
+    	$accessId = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 插件ID
-        $content = trim($this->request->param('content')); // 插件介绍
-        $status = addslashes(trim($this->request->param('pluginSwitch'))); // 是否显示 0否 1是
+        $id = addslashes(safe_trim($this->request->param('id'))); // 插件ID
+        $content = safe_trim($this->request->param('content')); // 插件介绍
+        $status = addslashes(safe_trim($this->request->param('pluginSwitch'))); // 是否显示 0否 1是
 
         $Jurisdiction = new Jurisdiction();
         $operator = cache($accessId.'admin_name');
@@ -191,11 +191,11 @@ class Manage extends BaseController
     // 是否开启
     public function pluginSwitch()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 插件ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 插件ID
 
         $Jurisdiction = new Jurisdiction();
         $operator = cache($accessId.'admin_name');
@@ -259,11 +259,11 @@ class Manage extends BaseController
     // 获取拼团设置信息
     public function getOrderConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $token = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $token = addslashes(safe_trim($this->request->param('accessId')));
 
-        $pluginCode = addslashes(trim($this->request->param('pluginCode')));
+        $pluginCode = addslashes(safe_trim($this->request->param('pluginCode')));
 
         $isOpen = 0;
         $autoCommentContent = '';
@@ -291,9 +291,9 @@ class Manage extends BaseController
     // 拼团设置
     public function addPluginConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
 
         $is_open = $this->request->param('isOpen'); // 自动收货时间
         $auto_the_goods = $this->request->param('autoTheGoods') * 60 * 60 * 24; // 自动收货时间
@@ -355,9 +355,9 @@ class Manage extends BaseController
     // 获取直播配置信息
     public function getLivingConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $token = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $token = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = 0;
         $is_open = 0;
@@ -392,18 +392,18 @@ class Manage extends BaseController
     // 保存直播配置信息
     public function addLivingConfig()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
 
-        $is_open = addslashes(trim($this->request->param('is_open')));
-        $mch_is_open = addslashes(trim($this->request->param('mch_is_open')));
-        $push_url = addslashes(trim($this->request->param('pushUrl'))); // 推流地址
-        $play_url = addslashes(trim($this->request->param('playUrl'))); // 播放地址
-        $agree_title = addslashes(trim($this->request->param('agreeTitle'))); // 协议标题
-        $agree_content = addslashes(trim($this->request->param('agreeContent'))); // 协议内容
-        $license_key = addslashes(trim($this->request->param('license_key'))); // 腾讯云直播播放器的key
-        $license_url = addslashes(trim($this->request->param('license_url'))); // 腾讯云直播播放器的url
+        $is_open = addslashes(safe_trim($this->request->param('is_open')));
+        $mch_is_open = addslashes(safe_trim($this->request->param('mch_is_open')));
+        $push_url = addslashes(safe_trim($this->request->param('pushUrl'))); // 推流地址
+        $play_url = addslashes(safe_trim($this->request->param('playUrl'))); // 播放地址
+        $agree_title = addslashes(safe_trim($this->request->param('agreeTitle'))); // 协议标题
+        $agree_content = addslashes(safe_trim($this->request->param('agreeContent'))); // 协议内容
+        $license_key = addslashes(safe_trim($this->request->param('license_key'))); // 腾讯云直播播放器的key
+        $license_url = addslashes(safe_trim($this->request->param('license_url'))); // 腾讯云直播播放器的url
         
         $Jurisdiction = new Jurisdiction();
         $operator = cache($accessId.'admin_name');
@@ -505,13 +505,13 @@ class Manage extends BaseController
     // 敏感字设置
     public function selectSensitive()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $word = addslashes(trim($this->request->param('word'))); // 敏感词
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $word = addslashes(safe_trim($this->request->param('word'))); // 敏感词
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $start = 0;
@@ -550,12 +550,12 @@ class Manage extends BaseController
     // 添加敏感字
     public function addSensitive()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 敏感词ID
-        $word = addslashes(trim($this->request->param('word'))); // 敏感词
+        $id = addslashes(safe_trim($this->request->param('id'))); // 敏感词ID
+        $word = addslashes(safe_trim($this->request->param('word'))); // 敏感词
 
         $time = date("Y-m-d H:i:s");
         if($word == '')
@@ -615,11 +615,11 @@ class Manage extends BaseController
     // 删除敏感字
     public function deleteSensitive()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $ids = addslashes(trim($this->request->param('ids'))); // 敏感词ID
+        $ids = addslashes(safe_trim($this->request->param('ids'))); // 敏感词ID
 
         $sql1 = "update lkt_living_sensitive set recycle = 1 where store_id = '$store_id' and id in ($ids) ";
         $r1 = Db::execute($sql1);
@@ -638,9 +638,9 @@ class Manage extends BaseController
     // 批量上传
     public function addSensitives()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $time = date("Y-m-d H:i:s");
         $filename = $_FILES['file']['tmp_name'];
@@ -668,7 +668,7 @@ class Manage extends BaseController
         Db::startTrans();
         foreach ($result as $k => $v) 
         {
-            $word = addslashes(trim($v['A']));
+            $word = addslashes(safe_trim($v['A']));
 
             if($word == '')
             {

@@ -9,6 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\facade\Route;
+use think\facade\Request;
 
 Route::get('think', function () {
     return 'hello,ThinkPHP6!';
@@ -16,6 +17,17 @@ Route::get('think', function () {
 
 Route::get('hello/:name', 'index/hello');
 
-Route::get('gw', function () {
-    return 'LaikeAPI Gateway Works!';
+Route::any('/', function () {
+    return app()->make(\app\admin\controller\Gateway::class)->index();
+});
+
+Route::any('gw', function () {
+    return app()->make(\app\admin\controller\Gateway::class)->index();
+});
+
+Route::miss(function () {
+    if (Request::param('api')) {
+        return app()->make(\app\admin\controller\Gateway::class)->index();
+    }
+    return output(404, 'Not Found');
 });

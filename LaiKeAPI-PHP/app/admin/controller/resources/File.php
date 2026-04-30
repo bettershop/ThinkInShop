@@ -31,7 +31,7 @@ class File extends BaseController
 
         $id = addslashes($this->request->param('id'));
         $supplier_id = (int)addslashes($this->request->param('supplierId')); // 供应商ID
-        $mchId_get = addslashes($this->request->param('mchId'))?addslashes($this->request->param('mchId')):trim($this->request->param('shop_id')); // 店铺ID
+        $mchId_get = addslashes($this->request->param('mchId'))?addslashes($this->request->param('mchId')):safe_trim($this->request->param('shop_id')); // 店铺ID
         $group_id = addslashes($this->request->param('groupId'))?addslashes($this->request->param('groupId')):'-1'; // 分组ID
     	$title = addslashes($this->request->param('title'))?addslashes($this->request->param('title')):addslashes($this->request->param('name'));
         $explain = addslashes($this->request->param('explain'));
@@ -372,8 +372,8 @@ class File extends BaseController
     	$title = addslashes($this->request->param('title'));
     	$startDate = addslashes($this->request->param('startDate'));
     	$endDate = addslashes($this->request->param('endDate'));
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页显示多少条数据
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页显示多少条数据
 
         $shop_id = 0;
 

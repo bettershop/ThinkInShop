@@ -1278,7 +1278,7 @@ class CouponPublicMethod
             $total = $r0[0]['total'];
         }
 
-        $field_str = "id,store_id,mch_id,name,activity_type,grade_id,money,discount,consumption_threshold_type,z_money,shopping,free_mail_task,circulation,num,receive,start_time,end_time,type,skip_type,status,add_time,recycle,day,is_display,issue_unit,receive_type,is_auto_push,Instructions,product_class_id,product_id,cover_map";
+        $field_str = "id,store_id,mch_id,name,activity_type,grade_id,money,discount,z_money,shopping,free_mail_task,circulation,num,receive,start_time,end_time,type,skip_type,status,add_time,recycle,day,is_display,issue_unit,receive_type,is_auto_push,Instructions,product_class_id,product_id,cover_map";
         
         $sql1 = "select $field_str from lkt_coupon_activity where $data_condition order by add_time desc limit $start,$pagesize ";
         $r1 = Db::query($sql1);
@@ -1414,12 +1414,14 @@ class CouponPublicMethod
                 //     $v['numStr'] = "无门槛";
                 // }
 
-                if($v['consumption_threshold_type'] == 1)
+                if(floatval($v['z_money']) <= 0)
                 {
+                    $v['consumption_threshold_type'] = 1;
                     $v['consumption_threshold_type_str'] = '无门槛';
                 }
                 else
                 {
+                    $v['consumption_threshold_type'] = 2;
                     $v['consumption_threshold_type_str'] = round($v['z_money'],2);
                 }
 
@@ -1751,16 +1753,7 @@ class CouponPublicMethod
         $name = $data['name'];
         $money = $data['money'];
         $discount = $data['discount'];
-        // $consumption_threshold_type = $data['consumption_threshold_type'];
         $z_money = $data['z_money'];
-        if($z_money == '')
-        {
-            $consumption_threshold_type = 1;
-        }
-        else
-        {
-            $consumption_threshold_type = 2;
-        }
         $type = $data['type'];
         $receive_type = $data['receive_type'];
         $circulation = $data['circulation'];
@@ -1970,11 +1963,11 @@ class CouponPublicMethod
         }
         if($end_time == '')
         {
-            $data_sql = array('store_id'=>$store_id,'mch_id'=>$mch_id,'name'=>$name,'activity_type'=>$activity_type,'grade_id'=>0,'money'=>$money,'discount'=>$discount,'consumption_threshold_type'=>$consumption_threshold_type,'z_money'=>$z_money,'circulation'=>$circulation,'num'=>$circulation,'receive'=>$receive,'type'=>$type,'product_class_id'=>$product_class_id,'product_id'=>$product_id,'add_time'=>$time,'status'=>1,'skip_type'=>1,'url'=>'','day'=>$day,'Instructions'=>$Instructions,'issue_unit'=>$issue_unit,'receive_type'=>$receive_type,'is_auto_push'=>$receive_type,'cover_map'=>$cover_map);
+            $data_sql = array('store_id'=>$store_id,'mch_id'=>$mch_id,'name'=>$name,'activity_type'=>$activity_type,'grade_id'=>0,'money'=>$money,'discount'=>$discount,'z_money'=>$z_money,'circulation'=>$circulation,'num'=>$circulation,'receive'=>$receive,'type'=>$type,'product_class_id'=>$product_class_id,'product_id'=>$product_id,'add_time'=>$time,'status'=>1,'skip_type'=>1,'url'=>'','day'=>$day,'Instructions'=>$Instructions,'issue_unit'=>$issue_unit,'receive_type'=>$receive_type,'is_auto_push'=>$receive_type,'cover_map'=>$cover_map);
         }
         else
         {
-            $data_sql = array('store_id'=>$store_id,'mch_id'=>$mch_id,'name'=>$name,'activity_type'=>$activity_type,'grade_id'=>0,'money'=>$money,'discount'=>$discount,'consumption_threshold_type'=>$consumption_threshold_type,'z_money'=>$z_money,'circulation'=>$circulation,'num'=>$circulation,'receive'=>$receive,'end_time'=>$end_time,'type'=>$type,'product_class_id'=>$product_class_id,'product_id'=>$product_id,'add_time'=>$time,'status'=>1,'skip_type'=>1,'url'=>'','day'=>$day,'Instructions'=>$Instructions,'issue_unit'=>$issue_unit,'receive_type'=>$receive_type,'is_auto_push'=>$receive_type,'cover_map'=>$cover_map);
+            $data_sql = array('store_id'=>$store_id,'mch_id'=>$mch_id,'name'=>$name,'activity_type'=>$activity_type,'grade_id'=>0,'money'=>$money,'discount'=>$discount,'z_money'=>$z_money,'circulation'=>$circulation,'num'=>$circulation,'receive'=>$receive,'end_time'=>$end_time,'type'=>$type,'product_class_id'=>$product_class_id,'product_id'=>$product_id,'add_time'=>$time,'status'=>1,'skip_type'=>1,'url'=>'','day'=>$day,'Instructions'=>$Instructions,'issue_unit'=>$issue_unit,'receive_type'=>$receive_type,'is_auto_push'=>$receive_type,'cover_map'=>$cover_map);
         }
         $r = Db::name('coupon_activity')->insertGetId($data_sql);
         if ($r)
@@ -2021,11 +2014,19 @@ class CouponPublicMethod
                 }
             }
 
-            $field_str = "id,store_id,mch_id,name,activity_type,grade_id,money,consumption_threshold_type,discount,z_money,shopping,free_mail_task,circulation,num,receive,start_time,end_time,type,product_class_id,product_id,skip_type,status,add_time,recycle,day,Instructions as instructions,is_display,issue_unit,receive_type,is_auto_push,cover_map";
+            $field_str = "id,store_id,mch_id,name,activity_type,grade_id,money,discount,z_money,shopping,free_mail_task,circulation,num,receive,start_time,end_time,type,product_class_id,product_id,skip_type,status,add_time,recycle,day,Instructions as instructions,is_display,issue_unit,receive_type,is_auto_push,cover_map";
             $r1 = CouponActivityModel::where('id',$id)->field($field_str)->select()->toArray();
             $r1[0]['money'] = round($r1[0]['money'],2); // 优惠券面值
             $r1[0]['discount'] = round($r1[0]['discount'],2); // 折扣值
             $r1[0]['z_money'] = round($r1[0]['z_money'],2); // 消费满多少
+            if(floatval($r1[0]['z_money']) <= 0)
+            {
+                $r1[0]['consumption_threshold_type'] = 1;
+            }
+            else
+            {
+                $r1[0]['consumption_threshold_type'] = 2;
+            }
             $r1[0]['add_time'] = strtotime($r1[0]['add_time']);
 
             $r1[0]['limitCount'] = $r1[0]['receive'];
@@ -2107,16 +2108,7 @@ class CouponPublicMethod
         $activity_type = $data['activity_type'];
         $money = $data['money'];
         $discount = $data['discount'];
-        // $consumption_threshold_type = $data['consumption_threshold_type'];
         $z_money = $data['z_money'];
-        if($z_money == '')
-        {
-            $consumption_threshold_type = 1;
-        }
-        else
-        {
-            $consumption_threshold_type = 2;
-        }
         $Instructions = $data['Instructions'];
         $cover_map = $data['cover_map'];
         
@@ -3558,7 +3550,7 @@ class CouponPublicMethod
                 else
                 {
                     $r0 = CouponSnoModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'coupon_id'=>$v])->update(['recycle'=>1]);
-                    if($r0 <= 0)
+                    if ($r0 === false)
                     {
                         $coupon_Log_content = __METHOD__ . ":" . __LINE__.'修改优惠券关联信息失败！sql:' . Db::getLastSQl() ;
                         $this->coupon_set_Log($coupon_Log_content);

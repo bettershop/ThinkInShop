@@ -24,13 +24,13 @@ class Search
     // 全部分类
     public function index()
     {
-        $store_id = addslashes(trim(Request::param('store_id')));
-        $store_type = addslashes(trim(Request::param('store_type'))); // 来源
-        $access_id = addslashes(trim(Request::param('access_id'))); // 授权id
+        $store_id = addslashes(safe_trim(Request::param('store_id')));
+        $store_type = addslashes(safe_trim(Request::param('store_type'))); // 来源
+        $access_id = addslashes(safe_trim(Request::param('access_id'))); // 授权id
         $language = addslashes(Request::param('language')); // 语言
 
-        $id = trim(Request::param('cid')); // 分类ID
-        $keyword = trim(Request::param('keyword')); // 关键词
+        $id = safe_trim(Request::param('cid')); // 分类ID
+        $keyword = safe_trim(Request::param('keyword')); // 关键词
 
         $lang_code = Tools::get_lang($language);
 
@@ -86,18 +86,18 @@ class Search
     // 全部分类进入商品列表
     public function listdetail()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
-        $shop_id = trim(Request::param('shop_id')); // 店铺id
-        $id = trim(Request::param('cid')); // 分类ID
-        $paegr = trim(Request::param('page')); // 页面
-        $pro = trim(Request::param('pro')); // 关键词
-        $keyword = trim(Request::param('keyword')); // 关键词
-        $query_criteria = trim(Request::param('query_criteria')); // 查询条件
-        $sort_criteria = trim(Request::param('sort_criteria')); // 排序条件
-        $sort = addslashes(trim(Request::param('sort'))) ? addslashes(trim(Request::param('sort'))) : 'asc'; // 排序条件
+        $shop_id = safe_trim(Request::param('shop_id')); // 店铺id
+        $id = safe_trim(Request::param('cid')); // 分类ID
+        $paegr = safe_trim(Request::param('page')); // 页面
+        $pro = safe_trim(Request::param('pro')); // 关键词
+        $keyword = safe_trim(Request::param('keyword')); // 关键词
+        $query_criteria = safe_trim(Request::param('query_criteria')); // 查询条件
+        $sort_criteria = safe_trim(Request::param('sort_criteria')); // 排序条件
+        $sort = addslashes(safe_trim(Request::param('sort'))) ? addslashes(safe_trim(Request::param('sort'))) : 'asc'; // 排序条件
 
         $currency_id = cache($access_id . '_currency'); // 获取用户默认币种
         $lang_code = Tools::get_lang($language);
@@ -266,11 +266,11 @@ class Search
     // 热门搜索
     public function hot_search()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
-        $type = trim(Request::param('type')); // 类型 0.商品 1.店铺
+        $type = safe_trim(Request::param('type')); // 类型 0.商品 1.店铺
 
         $lang_code = Tools::get_lang($language);
 
@@ -353,12 +353,12 @@ class Search
     // 输入一部分，返回字符串全部
     public function input_search()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
-        $type = trim(Request::param('type')); // 类型 0.商品 1.店铺
-        $keyword = trim(Request::param('keyword')); // 关键词
+        $type = safe_trim(Request::param('type')); // 类型 0.商品 1.店铺
+        $keyword = safe_trim(Request::param('keyword')); // 关键词
 
         $lang_code = Tools::get_lang($language);
 
@@ -421,16 +421,16 @@ class Search
     // 搜索
     public function search()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $language = addslashes(Request::param('language')); // 语言
-        $type = trim(Request::param('type')); // 类型 0.全部 1.热销 2.店铺
-        $keyword = trim(Request::param('keyword')); // 关键词
+        $type = safe_trim(Request::param('type')); // 类型 0.全部 1.热销 2.店铺
+        $keyword = safe_trim(Request::param('keyword')); // 关键词
         $query_criteria = Request::param('query_criteria'); // 查询条件
-        $sort_criteria = trim(Request::param('sort_criteria')); // 排序条件
-        $num = trim(Request::param('num')); // 次数
-        $sort = addslashes(trim(Request::param('sort'))) ? addslashes(trim(Request::param('sort'))) : 'asc'; // 排序条件
+        $sort_criteria = safe_trim(Request::param('sort_criteria')); // 排序条件
+        $num = safe_trim(Request::param('num')); // 次数
+        $sort = addslashes(safe_trim(Request::param('sort'))) ? addslashes(safe_trim(Request::param('sort'))) : 'asc'; // 排序条件
 
         $currency_id = cache($access_id . '_currency'); // 获取用户默认币种
         $lang_code = Tools::get_lang($language);

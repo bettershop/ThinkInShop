@@ -23,9 +23,9 @@ class SysNotice extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_token = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_token = safe_trim($this->request->param('accessId'));
 
         $id = $this->request->param('id');
         $page = $this->request->param('pageNo');
@@ -100,7 +100,7 @@ class SysNotice extends BaseController
                     $storeTypes[] = 4;
                     $storeTypesName .= '门店端,';
                 }
-                $storeTypesName = trim($storeTypesName,',');
+                $storeTypesName = safe_trim($storeTypesName,',');
                 $r[$k]['status'] = $status;
                 $r[$k]['storeTypes'] = $storeTypes;
                 $r[$k]['storeTypesName'] = $storeTypesName;
@@ -127,16 +127,16 @@ class SysNotice extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->post('id'));//公告id
-        $title = trim($this->request->post('title')); // notice
+        $id = safe_trim($this->request->post('id'));//公告id
+        $title = safe_trim($this->request->post('title')); // notice
         $telltype = $this->request->post('type');//公告类型
-        $startdate = trim($this->request->post('startDate')); // 活动图片
-        $enddate = trim($this->request->post('endDate')); // 活动介绍
-        $detail = trim($this->request->post('content')); // 活动介绍
-        $storeTypes = trim($this->request->post('storeTypes')); // 接收方
+        $startdate = safe_trim($this->request->post('startDate')); // 活动图片
+        $enddate = safe_trim($this->request->post('endDate')); // 活动介绍
+        $detail = safe_trim($this->request->post('content')); // 活动介绍
+        $storeTypes = safe_trim($this->request->post('storeTypes')); // 接收方
         
         if ($title == '')
         {   
@@ -315,10 +315,10 @@ class SysNotice extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id'));//公告id
+        $id = safe_trim($this->request->param('id'));//公告id
         $sql = SystemTellModel::find($id);
         $res = $sql->delete();
         if (!$res)
@@ -340,11 +340,11 @@ class SysNotice extends BaseController
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
         $admin_type1 = $admin_list['type'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_token = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_token = safe_trim($this->request->param('accessId'));
 
-        $id = trim($this->request->param('ids'));//公告id
+        $id = safe_trim($this->request->param('ids'));//公告id
 
         $admin_id = cache($access_token.'admin_id');
         $time = date("Y-m-d H:i:s");

@@ -25,16 +25,16 @@ class Invoice extends BaseController
     // 列表
     public function GetList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id')); // 授权id
-        $shop_id = trim($this->request->param('shop_id')); // 店铺ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
+        $shop_id = safe_trim($this->request->param('shop_id')); // 店铺ID
         
-        $invoice_status = addslashes(trim($this->request->param('invoiceStatus'))); // 发票状态 1.申请中 2.已开票 3.已撤销
-        $search = trim($this->request->param('condition'));//发票抬头，税号，订单号
+        $invoice_status = addslashes(safe_trim($this->request->param('invoiceStatus'))); // 发票状态 1.申请中 2.已开票 3.已撤销
+        $search = safe_trim($this->request->param('condition'));//发票抬头，税号，订单号
 
-        $page = trim($this->request->param('page')); // 页码
-        $pagesize = trim($this->request->param('pagesize')); // 每页多少条数据
+        $page = safe_trim($this->request->param('page')); // 页码
+        $pagesize = safe_trim($this->request->param('pagesize')); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = $this->user_list['user_id'];
@@ -100,10 +100,10 @@ class Invoice extends BaseController
     // 发票详情
     public function GetInfo()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id')); // 授权id
-        $shop_id = trim($this->request->param('shop_id')); // 店铺ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
+        $shop_id = safe_trim($this->request->param('shop_id')); // 店铺ID
 
         $id = $this->request->param('id');//开票id
 
@@ -151,10 +151,10 @@ class Invoice extends BaseController
     // 上传发票
     public function UploadInvoice()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id')); // 授权id
-        $shop_id = trim($this->request->param('shop_id')); // 店铺ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
+        $shop_id = safe_trim($this->request->param('shop_id')); // 店铺ID
 
         $id = $this->request->param('id');//开票id
         $file = $this->request->param('filePath');//发票地址
@@ -199,10 +199,10 @@ class Invoice extends BaseController
     //删除
     public function DelInvoice()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $access_id = trim($this->request->param('access_id')); // 授权id
-        $shop_id = trim($this->request->param('shop_id')); // 店铺ID
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
+        $shop_id = safe_trim($this->request->param('shop_id')); // 店铺ID
 
         $id = $this->request->param('ids');//开票id
 

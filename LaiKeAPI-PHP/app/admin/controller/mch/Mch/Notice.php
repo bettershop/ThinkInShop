@@ -15,9 +15,9 @@ class Notice extends BaseController
     public function NoticeList()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $accessId = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $accessId = safe_trim($this->request->param('accessId'));
 
         $mch_id = cache($accessId.'_7');
 
@@ -177,12 +177,12 @@ class Notice extends BaseController
     public function NoticeRead()
     {   
         $admin_list = $this->user_list;
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $accessId = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $accessId = safe_trim($this->request->param('accessId'));
 
-        $type = trim($this->request->param('types'));
-        $id = trim($this->request->param('id'));
+        $type = safe_trim($this->request->param('types'));
+        $id = safe_trim($this->request->param('id'));
 
         $mch_id = cache($accessId.'_7');
 

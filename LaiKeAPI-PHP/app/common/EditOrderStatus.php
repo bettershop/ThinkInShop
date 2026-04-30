@@ -30,7 +30,7 @@ class EditOrderStatus
         $lktlog = new LaiKeLogUtils();
         $Jurisdiction = new Jurisdiction();
         //获取原订单信息
-        $res_o = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->field('status,z_price,otype,self_lifting')->select()->toArray();
+        $res_o = OrderModel::where(['store_id'=>$store_id,'sNo'=>$sNo])->field('status,z_price,z_freight,otype,self_lifting')->select()->toArray();
         if($res_o)
         {
             $status = $res_o[0]['status'];
@@ -100,7 +100,7 @@ class EditOrderStatus
     	{	
             if($otype == 'JP')
             {
-                $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'remarks'=>$data['remarks'],'cpc'=>$data['cpc']);
+                $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'remarks'=>$data['remarks'],'cpc'=>($data['cpc'] ?? ''));
                 $res_u = Db::name('order')->where(['store_id'=>$store_id,'sNo'=>$sNo])->update($data_u);
                 if($res_u < 0)
                 {
@@ -148,7 +148,7 @@ class EditOrderStatus
 
                 if($status > 0)
                 {
-                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'remarks'=>$data['remarks'],'cpc'=>$data['cpc']);
+                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'remarks'=>$data['remarks'],'cpc'=>($data['cpc'] ?? ''));
                 }
                 else
                 {     
@@ -177,12 +177,27 @@ class EditOrderStatus
                                 exit;
                             }
                         }
-                        $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'z_price'=>$data['z_price'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'z_freight'=>$z_freight,'cpc'=>$data['cpc']);
+                        $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'z_price'=>$data['z_price'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'z_freight'=>$z_freight,'cpc'=>($data['cpc'] ?? ''));
                     }
                     else
                     {
-                        $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>$data['cpc']);
+                        $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>($data['cpc'] ?? ''));
                     }     
+                    if(isset($data['z_freight']))
+                    {
+                        $new_freight = (float)$data['z_freight'];
+                        if($new_freight < 0)
+                        {
+                            Db::rollback();
+                            $message = Lang('order.23');
+                            echo json_encode(array('code' => ERROR_CODE_DDJEYW, 'message' => $message));
+                            exit;
+                        }
+                        $new_total = isset($data_u['z_price']) ? (float)$data_u['z_price'] : (float)$oldz_price;
+                        $new_total = $new_total - (float)$res_o[0]['z_freight'] + $new_freight;
+                        $data_u['z_freight'] = $new_freight;
+                        $data_u['z_price'] = round($new_total,2);
+                    }
                 }
                 $res_u = Db::name('order')->where(['store_id'=>$store_id,'sNo'=>$sNo])->update($data_u);
                 if($res_u < 0)
@@ -211,11 +226,11 @@ class EditOrderStatus
         	{
         	    if(isset($data['z_price']))
                 {
-                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'z_price'=>$data['z_price'],'remarks'=>$data['remarks'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>$data['cpc']);
+                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'z_price'=>$data['z_price'],'remarks'=>$data['remarks'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>($data['cpc'] ?? ''));
                 }
                 else
                 {
-                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>$data['cpc']);
+                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>($data['cpc'] ?? ''));
                 }
         	}
         	else
@@ -243,11 +258,26 @@ class EditOrderStatus
                             }
                         }
                     }
-                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'z_price'=>$data['z_price'],'remarks'=>$data['remarks'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>$data['cpc']);
+                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'z_price'=>$data['z_price'],'remarks'=>$data['remarks'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>($data['cpc'] ?? ''));
                 }
                 else
                 {
-                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>$data['cpc']);
+                    $data_u = array('name'=>$data['name'],'mobile'=>$data['mobile'],'address'=>$data['address'],'sheng'=>$data['sheng'],'shi'=>$data['shi'],'xian'=>$data['xian'],'cpc'=>($data['cpc'] ?? ''));
+                }
+                if(isset($data['z_freight']))
+                {
+                    $new_freight = (float)$data['z_freight'];
+                    if($new_freight < 0)
+                    {
+                        Db::rollback();
+                        $message = Lang('order.23');
+                        echo json_encode(array('code' => ERROR_CODE_DDJEYW, 'message' => $message));
+                        exit;
+                    }
+                    $new_total = isset($data_u['z_price']) ? (float)$data_u['z_price'] : (float)$oldz_price;
+                    $new_total = $new_total - (float)$res_o[0]['z_freight'] + $new_freight;
+                    $data_u['z_freight'] = $new_freight;
+                    $data_u['z_price'] = round($new_total,2);
                 }
         	}
             $res_u = Db::name('order')->where(['store_id'=>$store_id,'sNo'=>$sNo])->update($data_u);

@@ -566,11 +566,11 @@ class GetCode extends BaseController
     {
         $db = DBAction::getInstance();
         $request = $this->getContext()->getRequest();
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 来源
-        $access_id = trim($this->request->post('access_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 来源
+        $access_id = safe_trim($this->request->post('access_id'));
 
-        $id = trim($this->request->post('id'));
+        $id = safe_trim($this->request->post('id'));
         $wx_id = $this->request->post('openid');
         // 查询公司名称
         $sql = "select * from lkt_config where store_id = '$store_id'";
@@ -619,8 +619,8 @@ class GetCode extends BaseController
     public function get_share_qrcode($path, $width, $id, $AccessToken)
     {
         // header('content-type:image/jpeg');  测试时可打开此项 直接显示图片
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 来源
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 来源
 
 
         // 查询系统参数
@@ -787,13 +787,13 @@ class GetCode extends BaseController
      */
     public function share_shop()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 来源
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 来源
 
-        $store_type = trim($this->request->param('store_type'));
-        $shop_id = trim($this->request->post('shop_id'));
-        $access_id = trim($this->request->post('access_id'));
-        $type = trim($this->request->post('type'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $shop_id = safe_trim($this->request->post('shop_id'));
+        $access_id = safe_trim($this->request->post('access_id'));
+        $type = safe_trim($this->request->post('type'));
 
         $user_id = $this->user_list['user_id'];
 
@@ -994,17 +994,17 @@ class GetCode extends BaseController
      */
     public function share()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 来源
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 来源
 
-        $store_type = trim($this->request->param('store_type'));
-        $proId = trim($this->request->post('proId'));
-        $attr_id = trim($this->request->post('attr_id'));
-        $order_no = trim($this->request->post('order_no'));
-        $type = trim($this->request->post('type'));
-        $access_id = trim($this->request->post('access_id'));
-        $href = trim($this->request->post('href'));
-        $path = trim($this->request->post('path'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $proId = safe_trim($this->request->post('proId'));
+        $attr_id = safe_trim($this->request->post('attr_id'));
+        $order_no = safe_trim($this->request->post('order_no'));
+        $type = safe_trim($this->request->post('type'));
+        $access_id = safe_trim($this->request->post('access_id'));
+        $href = safe_trim($this->request->post('href'));
+        $path = safe_trim($this->request->post('path'));
         $share_type = intval($this->request->post('share_type'));
 
         file_put_contents('../public/image/product_share_img/1log.txt', '开始', FILE_APPEND);
@@ -1091,7 +1091,7 @@ class GetCode extends BaseController
                 }
                 else
                 {
-                    $sNo = trim($this->request->post('sNo'));
+                    $sNo = safe_trim($this->request->post('sNo'));
 
                     $sql_grp = "SELECT goo.groupman FROM lkt_order as o left JOIN lkt_group_open as goo on o.ptcode = goo.ptcode where o.sNo ='$sNo' and o.store_id = $store_id ";
                     $grp_res = Db::query($sql_grp);
@@ -1134,7 +1134,7 @@ class GetCode extends BaseController
                 $kai_min_bili = $min_bili = 100;
                 $kai_min_man = $min_man = 100;
                 $level = unserialize($level);
-                $sNo = trim($this->request->post('sNo'));
+                $sNo = safe_trim($this->request->post('sNo'));
                 if ($sNo)
                 {
                     $sql_grp = "SELECT goo.groupman FROM lkt_order as o left JOIN lkt_group_open as goo on o.ptcode = goo.ptcode where o.sNo ='$sNo' and o.store_id = $store_id ";
@@ -1174,20 +1174,20 @@ class GetCode extends BaseController
         $product_title = $c_res[0]['product_title'];
         $url = "pages/goods/goodsDetailed?productId=" . $proId . "&isfx=true&fatherId=" . $user_id;
         if($type == 'fx'){
-            $fx_id = trim($this->request->post('fx_id'));//分销商品ID
+            $fx_id = safe_trim($this->request->post('fx_id'));//分销商品ID
             $url = "pages/goods/goodsDetailed?isDistribution=true&pro_id=" . $proId . "&fx_id=" . $fx_id . "&isfx=true&fatherId=" . $user_id;
         }
         elseif ($type == 'pt')
         {
             //如果是拼团
-            $activity_no = trim($this->request->post('activity_no'));
+            $activity_no = safe_trim($this->request->post('activity_no'));
             $url = "pagesA/group/groupDetailed?pro_id=" . $proId . "&activity_no=$activity_no&isfx=true&fatherId=". $user_id;
             $pic_size = 4;
         }
         else if ($type == 'pp')
         {
             //如果是拼团
-            $activity_no = trim($this->request->post('activity_no'));
+            $activity_no = safe_trim($this->request->post('activity_no'));
             //查询平台活动ID
             $res = PtGroupProductModel::where('activity_no',$activity_no)->field('platform_activities_id')->select()->toArray();
             if($res)
@@ -1204,7 +1204,7 @@ class GetCode extends BaseController
         else if ($type == 'pt_end')
         {
             //如果是拼团结束页面
-            $activity_no = trim($this->request->post('activity_no'));
+            $activity_no = safe_trim($this->request->post('activity_no'));
             $url = "pagesA/group/group_end?sNo=$sNo&friend=true&activity_no=$activity_no&fatherId=". $user_id;
             $url_ = "pagesA/group/group_end";
             $query_param = "sNo=$sNo&friend=true";
@@ -1213,8 +1213,8 @@ class GetCode extends BaseController
         else if ($type == 'pp_end') 
         {
             //如果是拼团结束页面
-            $activity_no = trim($this->request->post('activity_no'));
-            $sNo = trim($this->request->post('sNo'));
+            $activity_no = safe_trim($this->request->post('activity_no'));
+            $sNo = safe_trim($this->request->post('sNo'));
             $url = "pagesA/group/group_end?sNo=$sNo&friend=true&a_type=1&activity_no=$activity_no&fatherId=". $user_id;
             $url_ = "pagesA/group/group_end";
             $query_param = "sNo=$sNo&friend=true";
@@ -1223,7 +1223,7 @@ class GetCode extends BaseController
         else if ($type == "JP")
         {
             //$url = "pagesA/bidding/bidding_detailed?biddingId=$proId&type=1";
-            $bindding_id = trim($this->request->post('bindding_id'));//竞拍活动id
+            $bindding_id = safe_trim($this->request->post('bindding_id'));//竞拍活动id
             $res = AuctionProductModel::where(['store_id'=>$store_id,'id'=>$bindding_id])->field('title,current_price')->select()->toArray();
             $product_title = $res[0]['title'];
             $priceStr = $res[0]['current_price'];
@@ -1405,17 +1405,17 @@ class GetCode extends BaseController
     //new商品分享
     public function rqCodeInfo()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $language = trim($this->request->post('language')); // 来源
+        $store_id = safe_trim($this->request->param('store_id'));
+        $language = safe_trim($this->request->post('language')); // 来源
 
-        $store_type = trim($this->request->param('store_type'));
-        $proId = trim($this->request->post('proId'));
-        $attr_id = trim($this->request->post('attr_id'));
-        $order_no = trim($this->request->post('order_no'));
-        $type = trim($this->request->post('type'));
-        $access_id = trim($this->request->post('access_id'));
-        $href = trim($this->request->post('href'));
-        $path = trim($this->request->post('path'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $proId = safe_trim($this->request->post('proId'));
+        $attr_id = safe_trim($this->request->post('attr_id'));
+        $order_no = safe_trim($this->request->post('order_no'));
+        $type = safe_trim($this->request->post('type'));
+        $access_id = safe_trim($this->request->post('access_id'));
+        $href = safe_trim($this->request->post('href'));
+        $path = safe_trim($this->request->post('path'));
         $share_type = intval($this->request->post('share_type'));
 
         file_put_contents('../public/image/product_share_img/1log.txt', '开始', FILE_APPEND);

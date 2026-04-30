@@ -30,8 +30,8 @@ class Diy extends BaseController
 {   
     public function index()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $name  = '默认模板'; // 当前应用名称
         $H5_domain = '';
@@ -51,11 +51,11 @@ class Diy extends BaseController
     // 轮播图列表
     public function bannerIndex()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
 
         $list = array();
@@ -84,10 +84,10 @@ class Diy extends BaseController
     // 获取路径
     public function bannerPathList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $type0 = trim($this->request->param('type'));
+        $type0 = safe_trim($this->request->param('type'));
 
         $where_list = array('store_id'=>$store_id,'type0'=>$type0,'status'=>1,'type'=>1);
         $list = array();
@@ -128,13 +128,13 @@ class Diy extends BaseController
     // 添加/编辑轮播图
     public function bannerSave()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 轮播图ID
-        $type0 = trim($this->request->param('type0')); // 类型 1.分类 2.商品 3.店铺 4.pc店铺 0=自定义
-        $url = trim($this->request->param('url'));// 路径
-        $image = trim($this->request->param('picUrl')); // 图片
+        $id = safe_trim($this->request->param('id')); // 轮播图ID
+        $type0 = safe_trim($this->request->param('type0')); // 类型 1.分类 2.商品 3.店铺 4.pc店铺 0=自定义
+        $url = safe_trim($this->request->param('url'));// 路径
+        $image = safe_trim($this->request->param('picUrl')); // 图片
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -205,11 +205,11 @@ class Diy extends BaseController
     // 上移/下移轮播图
     public function bannerRemove()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 互换排序的轮播图ID
-        $id1 = trim($this->request->param('id1')); // 操作的轮播图ID
+        $id = safe_trim($this->request->param('id')); // 互换排序的轮播图ID
+        $id1 = safe_trim($this->request->param('id1')); // 操作的轮播图ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -260,10 +260,10 @@ class Diy extends BaseController
     // 置顶轮播图
     public function bannerMoveTop()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 轮播图ID
+        $id = safe_trim($this->request->param('id')); // 轮播图ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -298,10 +298,10 @@ class Diy extends BaseController
     // 删除轮播图
     public function bannerDel()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 轮播图ID
+        $id = safe_trim($this->request->param('id')); // 轮播图ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -329,11 +329,11 @@ class Diy extends BaseController
     // UI导航栏
     public function uiIndex()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
 
         $list = array();
@@ -363,15 +363,15 @@ class Diy extends BaseController
     // 添加/编辑UI导航栏
     public function uiSave()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // UI导航栏ID
-        $name = trim($this->request->param('name')); // 名称
-        $image = trim($this->request->param('picUrl')); // 图片
-        $type = trim($this->request->param('type0')); // 类型
-        $url = trim($this->request->param('url')); // 路径
-        $isshow = trim($this->request->param('isShow')); // 是否显示
+        $id = safe_trim($this->request->param('id')); // UI导航栏ID
+        $name = safe_trim($this->request->param('name')); // 名称
+        $image = safe_trim($this->request->param('picUrl')); // 图片
+        $type = safe_trim($this->request->param('type0')); // 类型
+        $url = safe_trim($this->request->param('url')); // 路径
+        $isshow = safe_trim($this->request->param('isShow')); // 是否显示
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -468,10 +468,10 @@ class Diy extends BaseController
     // UI导航栏是否显示
     public function uiIsShowSwitch()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // UI导航栏ID
+        $id = safe_trim($this->request->param('id')); // UI导航栏ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -514,10 +514,10 @@ class Diy extends BaseController
     // UI导航栏是否显示
     public function uiIsLoginSwitch()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // UI导航栏ID
+        $id = safe_trim($this->request->param('id')); // UI导航栏ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -560,11 +560,11 @@ class Diy extends BaseController
     // 上移/下移UI导航栏
     public function uiMove()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 互换排序的UI导航栏ID
-        $id1 = trim($this->request->param('id1')); // 操作的UI导航栏ID
+        $id = safe_trim($this->request->param('id')); // 互换排序的UI导航栏ID
+        $id1 = safe_trim($this->request->param('id1')); // 操作的UI导航栏ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -615,10 +615,10 @@ class Diy extends BaseController
     // 置顶UI导航栏
     public function uiTop()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // UI导航栏ID
+        $id = safe_trim($this->request->param('id')); // UI导航栏ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -653,10 +653,10 @@ class Diy extends BaseController
     // 删除UI导航栏
     public function uiDel()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // UI导航栏ID
+        $id = safe_trim($this->request->param('id')); // UI导航栏ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -684,11 +684,11 @@ class Diy extends BaseController
     // 分类管理
     public function classIndex()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
 
         $list = array();
@@ -717,11 +717,11 @@ class Diy extends BaseController
     // 上移/下移分类
     public function classMove()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 互换排序的分类ID
-        $id1 = trim($this->request->param('id1')); // 操作的分类ID
+        $id = safe_trim($this->request->param('id')); // 互换排序的分类ID
+        $id1 = safe_trim($this->request->param('id1')); // 操作的分类ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -772,10 +772,10 @@ class Diy extends BaseController
     // 置顶分类
     public function classTop()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 分类ID
+        $id = safe_trim($this->request->param('id')); // 分类ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -810,10 +810,10 @@ class Diy extends BaseController
     // 是否显示-分类
     public function classSwitch()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 分类ID
+        $id = safe_trim($this->request->param('id')); // 分类ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -853,12 +853,12 @@ class Diy extends BaseController
     // 活动管理
     public function activityList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id'));
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $id = safe_trim($this->request->param('id'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $page = $page ? $page : '1';
         $pagesize = $pagesize ? $pagesize : '10';
 
@@ -893,11 +893,11 @@ class Diy extends BaseController
     // 获取商品-添加商品
     public function getGoodsList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'));
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'));
         $pagesize = $pagesize ? $pagesize : '10';
 
         $list = array();
@@ -951,8 +951,8 @@ class Diy extends BaseController
     // 获取插件数据
     public function getPluginTypeList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
         $Plugin_list = array();
         $Plugin = new Plugin();
@@ -982,14 +982,14 @@ class Diy extends BaseController
     // 添加/编辑活动
     public function activitySave()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // UI导航栏ID
-        $activity_type = trim($this->request->param('activityType')); // 类型 0.活动专题 1.营销插件
-        $plug_type = trim($this->request->param('plugType')); // 插件类型
-        $name = trim($this->request->param('name')); // 活动名称
-        $p_id = trim($this->request->param('pid')); // 商品ID
+        $id = safe_trim($this->request->param('id')); // UI导航栏ID
+        $activity_type = safe_trim($this->request->param('activityType')); // 类型 0.活动专题 1.营销插件
+        $plug_type = safe_trim($this->request->param('plugType')); // 插件类型
+        $name = safe_trim($this->request->param('name')); // 活动名称
+        $p_id = safe_trim($this->request->param('pid')); // 商品ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -1136,10 +1136,10 @@ class Diy extends BaseController
     // 获取商品-编辑页码
     public function getActGoodsList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id'));
+        $id = safe_trim($this->request->param('id'));
 
         $list = array();
         $total = 0;
@@ -1185,10 +1185,10 @@ class Diy extends BaseController
     // 活动是否显示
     public function activitySwitch()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 活动商品ID
+        $id = safe_trim($this->request->param('id')); // 活动商品ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -1235,10 +1235,10 @@ class Diy extends BaseController
     // 商品是否显示
     public function actGoodsSwitch()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 活动商品ID
+        $id = safe_trim($this->request->param('id')); // 活动商品ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -1285,12 +1285,12 @@ class Diy extends BaseController
     // 上移/下移活动商品
     public function actGoodsMove()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 活动ID
-        $goodsId = trim($this->request->param('goodsId')); // 互换排序的活动商品ID
-        $goodsId1 = trim($this->request->param('goodsId1')); // 操作的活动商品ID
+        $id = safe_trim($this->request->param('id')); // 活动ID
+        $goodsId = safe_trim($this->request->param('goodsId')); // 互换排序的活动商品ID
+        $goodsId1 = safe_trim($this->request->param('goodsId1')); // 操作的活动商品ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -1341,11 +1341,11 @@ class Diy extends BaseController
     // 置顶活动商品
     public function actGoodsTop()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 活动ID
-        $goodsId = trim($this->request->param('goodsId')); // 活动商品ID
+        $id = safe_trim($this->request->param('id')); // 活动ID
+        $goodsId = safe_trim($this->request->param('goodsId')); // 活动商品ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -1380,11 +1380,11 @@ class Diy extends BaseController
     // 上移/下移活动
     public function activityMove()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $moveId = trim($this->request->param('moveId')); // 互换排序的活动ID
-        $moveId2 = trim($this->request->param('moveId2')); // 操作的活动ID
+        $moveId = safe_trim($this->request->param('moveId')); // 互换排序的活动ID
+        $moveId2 = safe_trim($this->request->param('moveId2')); // 操作的活动ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];
@@ -1435,10 +1435,10 @@ class Diy extends BaseController
     // 删除活动
     public function activityDel()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = trim($this->request->param('id')); // 活动ID
+        $id = safe_trim($this->request->param('id')); // 活动ID
 
         $JurisdictionAction = new Jurisdiction();
         $admin_name = $this->user_list['name'];

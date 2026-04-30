@@ -78,7 +78,7 @@ class Auction
         $store_type = $action->store_type;
 
         $address_id = Request::post('addressId'); //  地址id
-        $auction_id = addslashes(Request::post('mainId')); // 竞拍商品ID
+        $auction_id = addslashes((string)Request::post('mainId')); // 竞拍商品ID
         $lktlog = new LaiKeLogUtils();
 
         // 支付状态
@@ -164,7 +164,7 @@ class Auction
         $store_type = $action->store_type;
 
         $address_id = Request::post('address_id') ? Request::post('address_id') : Request::post('addressId'); //  地址id
-        $auction_id = addslashes(Request::post('mainId')); // 竞拍商品ID
+        $auction_id = addslashes((string)Request::post('mainId')); // 竞拍商品ID
         $time = date("Y-m-d H:i:s");
 
         $products = Tools::products_JP_list($store_id, $auction_id); //商品数组（pid,cid,num)
@@ -209,7 +209,7 @@ class Auction
         $shi = $address['city'];
         $xian = $address['quyu'];
         $address_xq = $address['address'];
-        $code = $address['code'];
+        $code = $address['code'] ?? '';
 
         //4.计算运费
         $freight = Tools::get_freight($products_freight, $products, $address, $store_id, 'JP');
@@ -521,8 +521,6 @@ class Auction
     // 关闭场次
     public function CloseSession($store_id)
     {
-        Db::startTrans();
-
         $low_pepole = 1;
         $r_config = AuctionConfigModel::where(['store_id'=>$store_id])->field('low_pepole')->select()->toArray();
         if($r_config)
@@ -531,78 +529,39 @@ class Auction
         }
         $time = date("Y-m-d H:i:s"); // 当前时间
         // 查询已到期且状态还是进行中的场次
-        $r0 = AuctionSessionModel::where(['recovery'=>0,'status'=>2])->where('end_date','<=',$time)->field('id,special_id')->select()->toArray();
+        $r0 = AuctionSessionModel::where(['recovery'=>0,'status'=>2])->where('end_date','<=',$time)->field('id')->select()->toArray();
         if($r0)
         {
             foreach($r0 as $k0 => $v0)
             {
-                $special_id = $v0['special_id']; // 专场ID
                 $session_id = $v0['id']; // 场次ID
                 // 根据场次ID，查询竞拍商品
-                $r1 = AuctionProductModel::where(['session_id'=>$session_id,'recovery'=>0])->field('id,goods_id,attr_id')->select()->toArray();
+                $r1 = AuctionProductModel::where(['session_id'=>$session_id,'recovery'=>0])->field('id')->select()->toArray();
                 if($r1)
                 {
                     foreach($r1 as $k1 => $v1)
                     {
                         $auction_id = $v1['id']; // 竞拍商品ID
-                        $goods_id = $v1['goods_id']; // 商品ID
-                        $attr_id = $v1['attr_id']; // 属性ID
+                        // 根据竞拍商品ID，查询出价记录
+                        // $r2 = AuctionRecordModel::where(['auction_id'=>$auction_id])->field('user_id')->limit(1)->order('price','desc')->select()->toArray();
                         // 根据竞拍商品ID，查询出价记录
                         $sql2 = "select tt.* from (select user_id,max(price) over (partition by user_id) as price,row_number () over (partition by user_id) as top from lkt_auction_record where auction_id = '$auction_id' order by price desc ) as tt where tt.top < 2 ";
                         $r2 = Db::query($sql2);
                         if($r2)
                         { // 存在，有人出价（修改该商品的最终得主）
                             $user_id = $r2[0]['user_id']; // 出价最高者
-
-                            if(count($r2) >= $low_pepole)
-                            { // 出价人数 >= 最低开拍人数 （竞拍有效）
-                                // 根据商品ID、属性ID，查询商品数据
-                                $sql1_0 = "select a.product_title,c.unit,c.attribute,a.mch_id from lkt_product_list as a left join lkt_configure as c on a.id = c.pid where c.pid = '$goods_id' and c.id = '$attr_id' ";
-                                $r1_0 = Db::query($sql1_0);
-                                if($r1_0)
-                                {
-                                    $shop_id = $r1_0[0]['mch_id'];//生成订单的店铺id
-                                    $shop_str = ',' . $r1_0[0]['mch_id'] . ','; // 店铺ID
-                                    $p_name = $r1_0[0]['product_title'];
-                                    $unit = $r1_0[0]['unit'];
-                                    $specifications = '';
-                                    if($r1_0[0]['attribute'] != '')
-                                    {
-                                        $attribute = unserialize($r1_0[0]['attribute']);
-                                        if (count($attribute) > 0)
-                                        {
-                                            foreach($attribute as $ke => $va)
-                                            {
-                                                if(strpos($ke, '_LKT_') !== false)
-                                                {
-                                                    $ke = substr($ke, 0, strrpos($ke, "_LKT"));
-                                                    $va = substr($va, 0, strrpos($va, "_LKT"));
-                                                }
-                                                $specifications .= $ke . ':' . $va . ',';
-                                            }
-                                        }
-                                    }
-                                    $size = rtrim($specifications, ",");
-                                }
-
-                                $Generate_order_array = array('store_id'=>$store_id,'auction_id'=>$auction_id,'user_id'=>$user_id,'shop_str'=>$shop_str,'p_name'=>$p_name,'unit'=>$unit,'size'=>$size,'attr_id'=>$attr_id,'session_id'=>$session_id);
-                                $rew = $this->Generate_order($Generate_order_array);
-                                if($rew == 1)
-                                {
-                                    Db::rollback();
-                                    return;
-                                }
+                            $sql_update = array('user_id'=>$user_id);
+                            //未达到最低开拍人数（该商品流拍）
+                            if(count($r2) < $low_pepole)
+                            {
+                                $sql_update = array('status'=>3);
                             }
-                            else
-                            { // 未达到最低开拍人数（该商品流拍）
-                                $sql_update = array('user_id'=>'','status'=>3,'sNo'=>'');
-                                $sql_where = array('session_id'=>$session_id,'recovery'=>0,'id'=>$auction_id);
-                                $r3 = Db::name('auction_product')->where($sql_where)->update($sql_update);
-                                if($r3 < 1)
-                                {
-                                    $Log_content = __METHOD__ . '->' . __LINE__ . ' 修改竞拍商品状态失败！参数:' . json_encode($sql_where) . '---' .  json_encode($sql_update);
-                                    $this->Log($Log_content);
-                                }
+                            $sql_where = array('session_id'=>$session_id,'recovery'=>0,'id'=>$auction_id);
+                            $r3 = Db::name('auction_product')->where($sql_where)->update($sql_update);
+                            if($r3 < 1)
+                            {
+                                $Log_content = __METHOD__ . '->' . __LINE__ . ' 修改最终得主失败！参数:' . json_encode($sql_where) . '---' .  json_encode($sql_update);
+                                $this->Log($Log_content);
                             }
                         }
                         else
@@ -629,8 +588,6 @@ class Auction
                 }
             }
         }
-
-        Db::commit();
         return;
     }
 
@@ -661,7 +618,7 @@ class Auction
 
                 $winner_array = array(); // 得主数组(该专场，竞拍成功的得主)
                 // 根据专场ID，查询竞拍信息
-                $sql1 = "select a.id as session_id,b.id as auction_id,b.price,b.attr_id,b.goods_id from lkt_auction_session as a left join lkt_auction_product as b on a.id = b.session_id where a.special_id = '$special_id' and a.recovery = 0 and b.recovery = 0 and a.status = 2 ";
+                $sql1 = "select a.id as session_id,b.id as auction_id,b.price,b.attr_id,b.goods_id from lkt_auction_session as a left join lkt_auction_product as b on a.id = b.session_id where a.special_id = '$special_id' and a.recovery = 0 and b.recovery = 0 ";
                 $r1 = Db::query($sql1);
                 if($r1)
                 {
@@ -719,11 +676,60 @@ class Auction
                                     $winner_array[] = $user_id;
                                 }
 
-                                $Generate_order_array = array('store_id'=>$store_id,'auction_id'=>$auction_id,'user_id'=>$user_id,'shop_str'=>$shop_str,'p_name'=>$p_name,'unit'=>$unit,'size'=>$size,'attr_id'=>$attr_id,'session_id'=>$session_id);
-                                $rew = $this->Generate_order($Generate_order_array);
-                                if($rew == 1)
+                                $products = Tools::products_JP_list($store_id, $auction_id);
+
+                                $products_total = 0;
+                                $products_data = Tools::get_products_data($store_id,$products, $products_total, 'JP');//获取商品信息，运费信息
+                                $products_freight = $products_data['products_freight'];
+                                $products = $products_data['products'];
+
+                                // 获取不配送省的名称
+                                $no_delivery_str = Tools::No_distribution_Province($store_id, $products_freight);
+
+                                //查询默认地址order_details
+                                $address = Tools::find_address($store_id, $user_id,$no_delivery_str, '');
+                                if($address == array())
+                                {
+                                    $address['tel'] = '';
+                                    $address['name'] = '';
+                                    $address['sheng'] = '';
+                                    $address['city'] = '';
+                                    $address['quyu'] = '';
+                                    $address['address'] = '';
+                                }
+                                $mobile = $address['tel'];
+                                $name = $address['name'];
+                                $sheng = $address['sheng'];
+                                $shi = $address['city'];
+                                $xian = $address['quyu'];
+                                $address_x = $address['address'];
+
+                                $freight = Tools::get_freight($products_freight, $products, $address, $store_id,'JP');
+                                $z_freight = $freight['yunfei'];
+
+                                $z_price = $price + $z_freight;
+
+                                $sNo = $Tools->Generate_order_number('JP', 'sNo'); // 生成订单号
+                                $real_sno = $Tools->Generate_order_number('JP', 'real_sno'); // 生成支付订单号
+
+                                $order_failure_time = Tools::Obtain_expiration_time(array('store_id'=>$store_id,'otype'=>'JP'));
+
+                                $sql4 = array('store_id'=>$store_id,'user_id'=>$user_id,'name'=>$name,'mobile'=>$mobile,'num'=>1,'old_total'=>0,'z_price'=>$z_price,'sNo'=>$sNo,'sheng'=>$sheng,'shi'=>$shi,'xian'=>$xian,'address'=>$address_x,'remark'=>'','pay'=>'','add_time'=>$time,'status'=>0,'coupon_id'=>0,'subtraction_id'=>0,'consumer_money'=>0,'coupon_activity_name'=>'','drawid'=>0,'otype'=>'JP','ptcode'=>'','pid'=>'','ptstatus'=>'','groupman'=>'','refundsNo'=>'','trade_no'=>'','is_anonymous'=>0,'logistics_service'=>'','overall_evaluation'=>'','spz_price'=>$price,'reduce_price'=>0,'coupon_price'=>0,'red_packet'=>0,'allow'=>0,'parameter'=>'','source'=>1,'delivery_status'=>0,'readd'=>0,'offset_balance'=>0,'mch_id'=>$shop_str,'zhekou'=>0,'grade_rate'=>0,'grade_score'=>'','grade_fan'=>'','p_sNo'=>$auction_id,'bargain_id'=>0,'comm_discount'=>0,'real_sno'=>$real_sno,'orderId'=>'','baiduId'=>'','remarks'=>'','self_lifting'=>0,'extraction_code'=>'','extraction_code_img'=>'','is_put'=>0,'z_freight'=>$z_freight,'manual_offer'=>0,'preferential_amount'=>0,'recycle'=>0,'single_store'=>0,'pick_up_store'=>0,'platform_activities_id'=>0,'commission_type'=>0,'settlement_status'=>0,'operation_type'=>1,'order_failure_time'=>$order_failure_time);
+                                $r4 = Db::name('order')->insert($sql4);
+                                
+                                $sql5 = array('store_id'=>$store_id,'user_id'=>$user_id,'p_id'=>$auction_id,'p_name'=>$p_name,'p_price'=>$price,'num'=>1,'unit'=>$unit,'r_sNo'=>$sNo,'add_time'=>$time,'r_status'=>0,'content'=>'','reason'=>'','re_type'=>0,'re_apply_money'=>'','re_money'=>'','real_money'=>0,'re_photo'=>'','r_content'=>'','r_type'=>100,'express_id'=>'','courier_num'=>'','express_type'=>1,'freight'=>$z_freight,'size'=>$size,'sid'=>$attr_id,'invoice'=>0,'express'=>0,'exchange_num'=>0,'coupon_id'=>0,'manual_offer'=>0,'after_discount'=>$price,'mch_id'=>'','settlement_type'=>0,'recycle'=>0);
+                                $r5 = Db::name('order_details')->insert($sql5);
+                                if($r4 > 0 && $r5 > 0)
+                                {
+                                    $sql_update = array('status'=>2,'sNo'=>$sNo,'user_id'=>$user_id);
+                                    $sql_where = array('session_id'=>$session_id,'recovery'=>0,'id'=>$auction_id);
+                                    $r = Db::name('auction_product')->where($sql_where)->update($sql_update);
+                                }
+                                else
                                 {
                                     Db::rollback();
+                                    $Log_content = __METHOD__ . '->' . __LINE__ . ' 场次进行中改为已结束失败！订单参数:'.json_encode($sql4).'; 订单详情参数:'.json_encode($sql5);
+                                    $this->Log($Log_content);
                                     return;
                                 }
                             }
@@ -738,20 +744,6 @@ class Auction
                             $Log_content = __METHOD__ . '->' . __LINE__ . ' 场次进行中改为已结束失败！参数:'.json_encode($sql3);
                             $this->Log($Log_content);
                             return;
-                        }
-                    }
-                }
-
-                $sql_0 = "select a.user_id from lkt_auction_product as a left join lkt_auction_session as b on a.session_id = b.id where b.special_id = '$special_id' and b.recovery = 0 and a.recovery = 0 and b.status = 3 ";
-                $r_0 = Db::query($sql_0);
-                if($r_0)
-                {
-                    foreach($r_0 as $k_0 => $v_0)
-                    {
-                        $user_id_0 = $v_0['user_id'];
-                        if(!isset($winner_array[$user_id_0]))
-                        { // 不存在
-                            $winner_array[] = $user_id_0;
                         }
                     }
                 }
@@ -939,79 +931,6 @@ class Auction
         Db::commit();
 
         return;
-    }
-
-    // 生成订单
-    public function Generate_order($array)
-    {
-        $store_id = $array['store_id'];
-        $auction_id = $array['auction_id'];
-        $user_id = $array['user_id'];
-        $shop_str = $array['shop_str'];
-        $p_name = $array['p_name'];
-        $unit = $array['unit'];
-        $size = $array['size'];
-        $attr_id = $array['attr_id'];
-        $session_id = $array['session_id'];
-
-        $time = date("Y-m-d H:i:s"); // 当前时间
-
-        $products = Tools::products_JP_list($store_id, $auction_id);
-
-        $products_total = 0;
-        $products_data = Tools::get_products_data($store_id,$products, $products_total, 'JP');//获取商品信息，运费信息
-        $products_freight = $products_data['products_freight'];
-        $products = $products_data['products'];
-
-        // 获取不配送省的名称
-        $no_delivery_str = Tools::No_distribution_Province($store_id, $products_freight);
-
-        //查询默认地址order_details
-        $address = Tools::find_address($store_id, $user_id,$no_delivery_str, '');
-        if($address == array())
-        {
-            $address['tel'] = '';
-            $address['name'] = '';
-            $address['sheng'] = '';
-            $address['city'] = '';
-            $address['quyu'] = '';
-            $address['address'] = '';
-        }
-        $mobile = $address['tel'];
-        $name = $address['name'];
-        $sheng = $address['sheng'];
-        $shi = $address['city'];
-        $xian = $address['quyu'];
-        $address_x = $address['address'];
-
-        $freight = Tools::get_freight($products_freight, $products, $address, $store_id,'JP');
-        $z_freight = $freight['yunfei'];
-
-        $z_price = $price + $z_freight;
-
-        $sNo = $Tools->Generate_order_number('JP', 'sNo'); // 生成订单号
-        $real_sno = $Tools->Generate_order_number('JP', 'real_sno'); // 生成支付订单号
-
-        $order_failure_time = Tools::Obtain_expiration_time(array('store_id'=>$store_id,'otype'=>'JP'));
-
-        $sql4 = array('store_id'=>$store_id,'user_id'=>$user_id,'name'=>$name,'mobile'=>$mobile,'num'=>1,'old_total'=>0,'z_price'=>$z_price,'sNo'=>$sNo,'sheng'=>$sheng,'shi'=>$shi,'xian'=>$xian,'address'=>$address_x,'remark'=>'','pay'=>'','add_time'=>$time,'status'=>0,'coupon_id'=>0,'subtraction_id'=>0,'consumer_money'=>0,'coupon_activity_name'=>'','drawid'=>0,'otype'=>'JP','ptcode'=>'','pid'=>'','ptstatus'=>'','groupman'=>'','refundsNo'=>'','trade_no'=>'','is_anonymous'=>0,'logistics_service'=>'','overall_evaluation'=>'','spz_price'=>$price,'reduce_price'=>0,'coupon_price'=>0,'red_packet'=>0,'allow'=>0,'parameter'=>'','source'=>1,'delivery_status'=>0,'readd'=>0,'offset_balance'=>0,'mch_id'=>$shop_str,'zhekou'=>0,'grade_rate'=>0,'grade_score'=>'','grade_fan'=>'','p_sNo'=>$auction_id,'bargain_id'=>0,'comm_discount'=>0,'real_sno'=>$real_sno,'orderId'=>'','baiduId'=>'','remarks'=>'','self_lifting'=>0,'extraction_code'=>'','extraction_code_img'=>'','is_put'=>0,'z_freight'=>$z_freight,'manual_offer'=>0,'preferential_amount'=>0,'recycle'=>0,'single_store'=>0,'pick_up_store'=>0,'platform_activities_id'=>0,'commission_type'=>0,'settlement_status'=>0,'operation_type'=>1,'order_failure_time'=>$order_failure_time);
-        $r4 = Db::name('order')->insert($sql4);
-
-        $sql5 = array('store_id'=>$store_id,'user_id'=>$user_id,'p_id'=>$auction_id,'p_name'=>$p_name,'p_price'=>$price,'num'=>1,'unit'=>$unit,'r_sNo'=>$sNo,'add_time'=>$time,'r_status'=>0,'content'=>'','reason'=>'','re_type'=>0,'re_apply_money'=>'','re_money'=>'','real_money'=>0,'re_photo'=>'','r_content'=>'','r_type'=>100,'express_id'=>'','courier_num'=>'','express_type'=>1,'freight'=>$z_freight,'size'=>$size,'sid'=>$attr_id,'invoice'=>0,'express'=>0,'exchange_num'=>0,'coupon_id'=>0,'manual_offer'=>0,'after_discount'=>$price,'mch_id'=>'','settlement_type'=>0,'recycle'=>0);
-        $r5 = Db::name('order_details')->insert($sql5);
-        if($r4 > 0 && $r5 > 0)
-        {
-            $sql_update = array('status'=>2,'sNo'=>$sNo,'user_id'=>$user_id);
-            $sql_where = array('session_id'=>$session_id,'recovery'=>0,'id'=>$auction_id);
-            $r = Db::name('auction_product')->where($sql_where)->update($sql_update);
-            return 0;
-        }
-        else
-        {
-            $Log_content = __METHOD__ . '->' . __LINE__ . ' 场次进行中改为已结束失败！订单参数:'.json_encode($sql4).'; 订单详情参数:'.json_encode($sql5);
-            $this->Log($Log_content);
-            return 1;
-        }
     }
 
     // 删除订单过期
@@ -4509,4 +4428,3 @@ class Auction
         return $data;
     }
 }
-

@@ -4,6 +4,12 @@
       class="img-item"
       v-for="(url, index) of fileList"
       :key="index"
+      :class="{ 'drag-sort-item': canDragSort }"
+      :draggable="canDragSort"
+      @dragstart="handleDragStart(index, $event)"
+      @dragover.prevent="handleDragOver(index, $event)"
+      @drop.prevent="handleDrop(index, $event)"
+      @dragend="handleDragEnd"
       :style="{
         width: size + 'px',
         height: heightSize + 'px',
@@ -41,6 +47,7 @@
         >
       </div>
       <i class="img-main" v-if="index == 0 && mainImg">主图</i>
+      <i v-if="canDragSort" class="drag-hint el-icon-rank"></i>
     </div>
     <div
       class="upload"
@@ -146,18 +153,21 @@ export default {
       type: Boolean,
       default: true,
     },
+    dragSort: {
+      type: Boolean,
+      default: false,
+    },
   },
   watch: {
-    "value.length": {
-      handler() {
-        if (Array.isArray(this.value)) {
-          this.fileList = this.value;
+    value: {
+      handler(val) {
+        if (Array.isArray(val)) {
+          this.fileList = val;
+        } else if (typeof val === "string") {
+          this.fileList = val ? [val] : [];
         } else {
-          if (this.value) {
-            this.fileList = [this.value];
-          }
+          this.fileList = [];
         }
-
         if (this.limit === 1) return 1;
         this.maxSelectNum = this.limit - this.fileList.length;
         console.log(this.maxSelectNum);
@@ -182,6 +192,9 @@ export default {
       }
       return "0";
     },
+    canDragSort() {
+      return !!this.dragSort && this.limit > 1;
+    },
   },
   components: {
     // eslint-disable-next-line vue/no-unused-components
@@ -196,6 +209,7 @@ export default {
       fileList: [],
       maxSelectNum: 1,
       bigimg: "",
+      dragFromIndex: -1,
     };
   },
   methods: {
@@ -221,6 +235,57 @@ export default {
       let imgUrl = this.fileList[index];
       this.fileList.splice(index, 1);
       this.fileList.unshift(imgUrl);
+      this.emitSortedList();
+    },
+    handleDragStart(index, event) {
+      if (!this.canDragSort) {
+        return;
+      }
+      this.dragFromIndex = index;
+      if (event && event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+      }
+    },
+    handleDragOver(index, event) {
+      if (!this.canDragSort) {
+        return;
+      }
+      if (event && event.dataTransfer) {
+        event.dataTransfer.dropEffect = "move";
+      }
+    },
+    handleDrop(index) {
+      if (!this.canDragSort) {
+        return;
+      }
+      const fromIndex = this.dragFromIndex;
+      const toIndex = index;
+      if (
+        fromIndex < 0 ||
+        toIndex < 0 ||
+        fromIndex === toIndex ||
+        fromIndex >= this.fileList.length ||
+        toIndex >= this.fileList.length
+      ) {
+        this.dragFromIndex = -1;
+        return;
+      }
+      const list = this.fileList.slice();
+      const [moved] = list.splice(fromIndex, 1);
+      list.splice(toIndex, 0, moved);
+      this.fileList = list;
+      this.dragFromIndex = -1;
+      this.emitSortedList();
+    },
+    handleDragEnd() {
+      this.dragFromIndex = -1;
+    },
+    emitSortedList() {
+      if (this.limit === 1) {
+        this.$emit("input", this.fileList[0] || "");
+      } else {
+        this.$emit("input", this.fileList.slice());
+      }
     },
 
     // 单选
@@ -263,5 +328,30 @@ export default {
   top: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
+}
+
+.l-upload .img-item.drag-sort-item {
+  cursor: move;
+}
+
+.l-upload .img-item.drag-sort-item .drag-hint {
+  display: none;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 2px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.l-upload .img-item.drag-sort-item:hover .drag-hint {
+  display: inline-block;
 }
 </style>

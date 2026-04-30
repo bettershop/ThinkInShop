@@ -19,16 +19,16 @@ class Msg extends BaseController
     //发送消息
     public function addMessage()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
-        $send_id = trim($this->request->param('send_id')); // 发送人id
-        $receive_id = trim($this->request->param('receive_id'));//接收客服id
+        $send_id = safe_trim($this->request->param('send_id')); // 发送人id
+        $receive_id = safe_trim($this->request->param('receive_id'));//接收客服id
         $content = $this->request->param('content');//发送内容
-        $img_list = trim($this->request->param('img_list'));//发送图片
-        $orderId = trim($this->request->param('orderId')); // 订单ID
-        $pId = trim($this->request->param('pId')); // 商品ID
-        $is_mch_send = trim($this->request->param('is_mch_send'));//是否店铺0否1是
+        $img_list = safe_trim($this->request->param('img_list'));//发送图片
+        $orderId = safe_trim($this->request->param('orderId')); // 订单ID
+        $pId = safe_trim($this->request->param('pId')); // 商品ID
+        $is_mch_send = safe_trim($this->request->param('is_mch_send'));//是否店铺0否1是
         $user_id = $this->user_list['user_id'];
         $headimgurl = $this->user_list['headimgurl'];
         $name = $this->user_list['user_name'];
@@ -141,12 +141,12 @@ class Msg extends BaseController
     //获取历史记录
     public function getMessageList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $access_id = trim($this->request->param('access_id'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $access_id = safe_trim($this->request->param('access_id'));
 
-        $user_id = trim($this->request->param('userId')); // 用户id
-        $mch_id = trim($this->request->param('mchId'));//店铺id
-        $type = trim($this->request->param('type'));//0用户端1店铺端
+        $user_id = safe_trim($this->request->param('userId')); // 用户id
+        $mch_id = safe_trim($this->request->param('mchId'));//店铺id
+        $type = safe_trim($this->request->param('type'));//0用户端1店铺端
 
         $headimgurl = $this->user_list['headimgurl'];
         $name = $this->user_list['user_name'];
@@ -219,9 +219,9 @@ class Msg extends BaseController
     //获取对话列表
     public function mch_userList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $mch_id = trim($this->request->param('mchId'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $mch_id = safe_trim($this->request->param('mchId'));
 
         $list0 = array();
         $list = array();
@@ -288,11 +288,11 @@ class Msg extends BaseController
 
     public function user_mchList()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
-        $mch_id = trim($this->request->param('mchId'));
-        $user_id = trim($this->request->param('userId'));
-        $mch_name = trim($this->request->param('mchName'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
+        $mch_id = safe_trim($this->request->param('mchId'));
+        $user_id = safe_trim($this->request->param('userId'));
+        $mch_name = safe_trim($this->request->param('mchName'));
 
         $condition = " store_id = '$store_id' ";
         if($user_id != '')

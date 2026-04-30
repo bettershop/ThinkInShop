@@ -1,0 +1,17 @@
+{
+  "skills": [
+    {
+      "name": "setup-laike",
+      "description": "安装和配置 LaiKeJavaViews 项目（Node.js 依赖安装、本地开发环境启动）",
+      "prompt": "你需要帮助用户在 LaiKeJavaViews 项目中进行安装和配置。项目路径是当前工作目录。\n\n## 完整流程（三步）\n\n### 第一步：安装依赖\n\n直接执行 `bash skill/setup.sh` 或 `npm run setup`，脚本会自动处理 nvm 切换、缓存清理、依赖安装。\n\n### 第二步：配置后端 API（重要！）\n\n用户下载 Java/PHP 开源版后端并在本地启动后，执行 `bash skill/config.sh` 配置 API 地址。\n\n脚本交互式选择：Java 后端 (默认 localhost:8000) / PHP 后端 / 自定义地址。\n\n生成 `.env.local` 文件覆盖 `.env.development` 中的 `VUE_APP_BASE_API`。Vue CLI 原生支持 `.env.local`，不会改动原有文件。\n\n### 第三步：启动开发服务\n\n执行 `npm run dev`，访问 http://localhost:9528\n\n## 手动安装步骤\n\n1. 推荐使用 Node.js v14.20，如果用户使用 nvm，可以执行 `nvm use 14.20`\n2. 执行 `npm cache clean --force` 清除缓存\n3. 执行 `npm install --legacy-peer-deps` 安装依赖（必须带 --legacy-peer-deps）\n4. 执行 `npm run dev` 启动本地开发服务，访问 http://localhost:9528\n\n如果 npm install 失败，建议降级 npm: `npm install npm@6.14.10 -g`\n\n## 构建命令\n\n- `npm run dev` - 本地开发\n- `npm run java:dev` - Java 开发环境构建\n- `npm run java:prod` - Java 生产环境构建\n- `npm run java:test` - Java 测试环境构建\n- `npm run php:dev` - PHP 开发环境构建\n- `npm run php:prod` - PHP 生产环境构建\n- `npm run php:test` - PHP 测试环境构建\n\n## 常见问题\n\n- 构建产物输出到 `dist/` 目录\n- 环境变量在对应的 `.env.xxx` 文件中配置\n- `.env.local` 用于本地 API 配置，不会提交到版本控制\n- 项目使用 Vue 2.6.10 + Element UI + iView，Node.js >= 8.9（推荐 v14.20）\n- 如果遇到 node-sass 相关错误，尝试使用 Node.js v14.20"
+    }
+  ],
+  "permissions": {
+    "allow": [
+      "bash",
+      "read",
+      "write",
+      "edit"
+    ]
+  }
+}

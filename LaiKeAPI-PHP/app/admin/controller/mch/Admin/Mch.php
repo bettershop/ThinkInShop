@@ -41,9 +41,9 @@ class Mch extends BaseController
     // 获取店铺设置
     public function GetStoreConfigInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $r_admin = AdminModel::where(['store_id'=>$store_id,'type'=>1,'recycle'=>0])->field('shop_id')->select()->toArray();
         $shop_id = $r_admin[0]['shop_id'];
@@ -70,9 +70,9 @@ class Mch extends BaseController
     // 设置店铺设置
     public function SetStoreConfigInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
     	$head_img = $this->request->post('headImg'); // 店铺头像
     	$logo = $this->request->post('logiUrl'); // logo
@@ -80,16 +80,26 @@ class Mch extends BaseController
 
     	$auto_log_off = $this->request->post('autoLogOff'); // 注销设置
     	$auto_examine = $this->request->post('autoExamine'); // 店铺自动审核天数
-    	$commodity_setup = addslashes(trim($this->request->post('uploadType'))); // 商品设置  1.上传商品 2.自选商品
-    	$promise_switch = addslashes(trim($this->request->post('promiseSwitch'))); // 是否开启店铺保证金 0关闭 1开启
-    	$promise_amt = addslashes(trim($this->request->post('promiseAmt'))); // 保证金
+    	$commodity_setup = addslashes(safe_trim($this->request->post('uploadType'))); // 商品设置  1.上传商品 2.自选商品
+    	$promise_switch_raw = safe_trim($this->request->post('promiseSwitch'));
+        if ($promise_switch_raw === '' || $promise_switch_raw === 'undefined' || $promise_switch_raw === 'null')
+        {
+            $promise_switch_raw = '0';
+        }
+        $promise_switch = (string)(int)$promise_switch_raw; // 是否开启店铺保证金 0关闭 1开启
+    	$promise_amt = addslashes(safe_trim($this->request->post('promiseAmt'))); // 保证金
     	$promise_text = $this->request->post('promiseText'); // 保证金说明
 
-        $min_charge = addslashes(trim($this->request->post('minWithdrawalMoney'))); // 最低提现金额
-    	$max_charge = addslashes(trim($this->request->post('maxWithdrawalMoney'))); // 最大提现金额
-    	$service_charge = addslashes(trim($this->request->post('serviceCharge'))); // 手续费
-    	$withdrawal_time_open = addslashes(trim($this->request->post('withdrawalTimeOpen'))); // 提现时间开关 0.不限制 1.指定日期 2.指定时间段
-    	$withdrawal_time = addslashes(trim($this->request->post('withdrawalTime'))); // 指定时间(时间段:15-20)
+        $min_charge = addslashes(safe_trim($this->request->post('minWithdrawalMoney'))); // 最低提现金额
+    	$max_charge = addslashes(safe_trim($this->request->post('maxWithdrawalMoney'))); // 最大提现金额
+    	$service_charge = addslashes(safe_trim($this->request->post('serviceCharge'))); // 手续费
+        $withdrawal_time_open_raw = safe_trim($this->request->post('withdrawalTimeOpen'));
+        if ($withdrawal_time_open_raw === '' || $withdrawal_time_open_raw === 'undefined' || $withdrawal_time_open_raw === 'null')
+        {
+            $withdrawal_time_open_raw = '0';
+        }
+        $withdrawal_time_open = (string)(int)$withdrawal_time_open_raw; // 提现时间开关 0.不限制 1.指定日期 2.指定时间段
+    	$withdrawal_time = addslashes(safe_trim($this->request->post('withdrawalTime'))); // 指定时间(时间段:15-20)
     	$illustrate = $this->request->post('illustrate'); // 提现说明
         
         $Jurisdiction = new Jurisdiction();
@@ -334,14 +344,14 @@ class Mch extends BaseController
     // 店铺分类
     public function MchClassList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $name = addslashes(trim($this->request->param('name')));
-        $page = addslashes(trim($this->request->param('pageNo')));
-        $pagesize = addslashes(trim($this->request->param('pageSize')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $name = addslashes(safe_trim($this->request->param('name')));
+        $page = addslashes(safe_trim($this->request->param('pageNo')));
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize')));
         $page = $page ? $page : 1;
         $pagesize = $pagesize ? $pagesize : 10;
 
@@ -392,15 +402,15 @@ class Mch extends BaseController
     // 添加店铺分类
     public function AddMchClass()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $name = addslashes(trim($this->request->param('name')));
-        $img = addslashes(trim($this->request->param('img')));
-        $sort = addslashes(trim($this->request->param('sort')));
-        $isDisplay = addslashes(trim($this->request->param('isDisplay')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $name = addslashes(safe_trim($this->request->param('name')));
+        $img = addslashes(safe_trim($this->request->param('img')));
+        $sort = addslashes(safe_trim($this->request->param('sort')));
+        $isDisplay = addslashes(safe_trim($this->request->param('isDisplay')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -487,12 +497,12 @@ class Mch extends BaseController
     // 店铺分类-是否显示
     public function IsDisplay()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $is_display = addslashes(trim($this->request->param('isDisplay')));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $is_display = addslashes(safe_trim($this->request->param('isDisplay')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -531,11 +541,11 @@ class Mch extends BaseController
     // 删除店铺分类
     public function DelMchClass()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -574,17 +584,17 @@ class Mch extends BaseController
     // 店铺列表
     public function GetMchInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$id = addslashes(trim($this->request->param('id'))); // 店铺ID
-    	$is_open = addslashes(trim($this->request->param('isOpen'))); // 是否营业：0.未营业 1.营业中 2.打烊
-    	$is_margin = addslashes(trim($this->request->param('promiseStatus'))); // 是否缴纳保证金1未缴纳2已缴纳
-    	$name = addslashes(trim($this->request->param('name'))); // 店铺名称
-    	$cid = addslashes(trim($this->request->param('cid'))); // 店铺分类
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+    	$id = addslashes(safe_trim($this->request->param('id'))); // 店铺ID
+    	$is_open = addslashes(safe_trim($this->request->param('isOpen'))); // 是否营业：0.未营业 1.营业中 2.打烊
+    	$is_margin = addslashes(safe_trim($this->request->param('promiseStatus'))); // 是否缴纳保证金1未缴纳2已缴纳
+    	$name = addslashes(safe_trim($this->request->param('name'))); // 店铺名称
+    	$cid = addslashes(safe_trim($this->request->param('cid'))); // 店铺分类
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $time = date("Y-m-d H:i:s");
@@ -712,24 +722,24 @@ class Mch extends BaseController
     // 添加店铺
     public function AddMchInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$name = addslashes(trim($this->request->param('name'))); // 店铺名称
-    	$cid = addslashes(trim($this->request->param('cid'))); // 店铺分类
-        $shop_range = trim($this->request->param('shop_range')); // 经营范围
-        $shop_information = trim($this->request->param('shop_information')); // 店铺信息
-        $realname = trim($this->request->param('realname')); // 真实姓名
-        $ID_number = trim($this->request->param('ID_number')); // 身份证号码
-        $tel = trim($this->request->param('tel')); // 联系电话
-        $city_all = trim($this->request->param('city_all')); // 联系地址
-        $address = trim($this->request->param('address')); // 联系地址
-        $shop_nature = trim($this->request->param('shop_nature')); // 店铺性质
-        $imgUrls = trim($this->request->param('imgUrls')); // 身份证证件照
+    	$name = addslashes(safe_trim($this->request->param('name'))); // 店铺名称
+    	$cid = addslashes(safe_trim($this->request->param('cid'))); // 店铺分类
+        $shop_range = safe_trim($this->request->param('shop_range')); // 经营范围
+        $shop_information = safe_trim($this->request->param('shop_information')); // 店铺信息
+        $realname = safe_trim($this->request->param('realname')); // 真实姓名
+        $ID_number = safe_trim($this->request->param('ID_number')); // 身份证号码
+        $tel = safe_trim($this->request->param('tel')); // 联系电话
+        $city_all = safe_trim($this->request->param('city_all')); // 联系地址
+        $address = safe_trim($this->request->param('address')); // 联系地址
+        $shop_nature = safe_trim($this->request->param('shop_nature')); // 店铺性质
+        $imgUrls = safe_trim($this->request->param('imgUrls')); // 身份证证件照
 
-        $zhanghao = trim($this->request->param('account')); // 账号
-        $password = trim($this->request->param('password')); // 密码
+        $zhanghao = safe_trim($this->request->param('account')); // 账号
+        $password = safe_trim($this->request->param('password')); // 密码
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -803,7 +813,7 @@ class Mch extends BaseController
             {
                 $business_license .= preg_replace('/.*\//', '', $v) . ',';
             }
-            $business_license = trim($business_license,',');
+            $business_license = safe_trim($business_license,',');
         }
 
         $city_list = explode('-',$city_all);
@@ -897,15 +907,15 @@ class Mch extends BaseController
     // 审核列表
     public function GetMchExamineInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-    	$review_status = addslashes(trim($this->request->param('reviewStatus'))); // 审核状态：0.待审核 1.审核通过 2.审核不通过
-    	$name = addslashes(trim($this->request->param('name'))); // 店铺名称
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条
+    	$review_status = addslashes(safe_trim($this->request->param('reviewStatus'))); // 审核状态：0.待审核 1.审核通过 2.审核不通过
+    	$name = addslashes(safe_trim($this->request->param('name'))); // 店铺名称
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条
         $pagesize = $pagesize ? $pagesize : '10';
 
         $start = 0;
@@ -1000,29 +1010,29 @@ class Mch extends BaseController
     // 编辑店铺
     public function ModifyMchInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$id = addslashes(trim($this->request->param('id'))); // 店铺ID
-    	$roomid = addslashes(trim($this->request->param('roomid'))); // 直播ID
-    	$shop_information = addslashes(trim($this->request->param('mchInfo'))); // 店铺信息
-        $shop_range = addslashes(trim($this->request->param('confines'))); // 经营范围
-    	$tel = addslashes(trim($this->request->param('tel'))); // 联系电话
-    	$sheng = addslashes(trim($this->request->param('shen'))); // 省
-    	$shi = addslashes(trim($this->request->param('shi'))); // 市
-    	$xian = addslashes(trim($this->request->param('xian'))); // 县
-    	$address = addslashes(trim($this->request->param('address'))); // 详细地址
-    	$shop_nature = addslashes(trim($this->request->param('nature'))); // 店铺性质：0.个人 1.企业
-    	$cid = addslashes(trim($this->request->param('cid'))); // 店铺分类ID
-    	$realname = addslashes(trim($this->request->param('realName'))); // 真实姓名
-    	$ID_number = addslashes(trim($this->request->param('idNumber'))); // 身份证号码
-    	$name = addslashes(trim($this->request->param('mchName'))); // 店铺名称
-    	$is_open = addslashes(trim($this->request->param('isOpen'))); // 是否营业：0.未营业 1.营业中 2.打烊
-    	$logo = addslashes(trim($this->request->param('logo'))); // 店铺Logo
-    	$head_img = addslashes(trim($this->request->param('headImg'))); // 店铺头像
-    	$poster_img = addslashes(trim($this->request->param('posterImg'))); // 店铺新增宣传图
-    	$imgUrls = addslashes(trim($this->request->param('license'))); // 身份证证件照
+    	$id = addslashes(safe_trim($this->request->param('id'))); // 店铺ID
+    	$roomid = addslashes(safe_trim($this->request->param('roomid'))); // 直播ID
+    	$shop_information = addslashes(safe_trim($this->request->param('mchInfo'))); // 店铺信息
+        $shop_range = addslashes(safe_trim($this->request->param('confines'))); // 经营范围
+    	$tel = addslashes(safe_trim($this->request->param('tel'))); // 联系电话
+    	$sheng = addslashes(safe_trim($this->request->param('shen'))); // 省
+    	$shi = addslashes(safe_trim($this->request->param('shi'))); // 市
+    	$xian = addslashes(safe_trim($this->request->param('xian'))); // 县
+    	$address = addslashes(safe_trim($this->request->param('address'))); // 详细地址
+    	$shop_nature = addslashes(safe_trim($this->request->param('nature'))); // 店铺性质：0.个人 1.企业
+    	$cid = addslashes(safe_trim($this->request->param('cid'))); // 店铺分类ID
+    	$realname = addslashes(safe_trim($this->request->param('realName'))); // 真实姓名
+    	$ID_number = addslashes(safe_trim($this->request->param('idNumber'))); // 身份证号码
+    	$name = addslashes(safe_trim($this->request->param('mchName'))); // 店铺名称
+    	$is_open = addslashes(safe_trim($this->request->param('isOpen'))); // 是否营业：0.未营业 1.营业中 2.打烊
+    	$logo = addslashes(safe_trim($this->request->param('logo'))); // 店铺Logo
+    	$head_img = addslashes(safe_trim($this->request->param('headImg'))); // 店铺头像
+    	$poster_img = addslashes(safe_trim($this->request->param('posterImg'))); // 店铺新增宣传图
+    	$imgUrls = addslashes(safe_trim($this->request->param('license'))); // 身份证证件照
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1175,7 +1185,7 @@ class Mch extends BaseController
             {
                 $business_license .= preg_replace('/.*\//', '', $v) . ',';
             }
-            $business_license = trim($business_license,',');
+            $business_license = safe_trim($business_license,',');
         }
 
         $sql_update = array('roomid'=>$roomid,'shop_information'=>$shop_information,'shop_range'=>$shop_range,'tel'=>$tel,'sheng'=>$sheng,'shi'=>$shi,'xian'=>$xian,'address'=>$address,'longitude'=>$longitude,'latitude'=>$latitude,'shop_nature'=>$shop_nature,'old_roomid'=>$old_roomid,'cid'=>$cid,'realname'=>$realname,'ID_number'=>$ID_number,'name'=>$name,'is_open'=>$is_open,'logo'=>$logo,'head_img'=>$head_img,'poster_img'=>$poster_img,'business_license'=>$business_license);
@@ -1215,13 +1225,13 @@ class Mch extends BaseController
     // 店铺审核/拒绝
     public function ExamineMch()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$id = addslashes(trim($this->request->param('mchId'))); // 店铺ID
-    	$review_status = addslashes(trim($this->request->param('reviewStatus'))); // 审核状态：0.待审核 1.审核通过 2.审核不通过
-    	$review_result = addslashes(trim($this->request->param('text'))); // 拒绝理由
+    	$id = addslashes(safe_trim($this->request->param('mchId'))); // 店铺ID
+    	$review_status = addslashes(safe_trim($this->request->param('reviewStatus'))); // 审核状态：0.待审核 1.审核通过 2.审核不通过
+    	$review_result = addslashes(safe_trim($this->request->param('text'))); // 拒绝理由
 
         $admin_name = $this->user_list['name'];
         $Jurisdiction = new Jurisdiction();
@@ -1345,11 +1355,11 @@ class Mch extends BaseController
     // 删除店铺
     public function DelMchInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('mchId'))); // 店铺ID
+        $id = addslashes(safe_trim($this->request->param('mchId'))); // 店铺ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1365,13 +1375,13 @@ class Mch extends BaseController
     // 保证金列表
     public function Index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $search = addslashes(trim($this->request->param('keyName'))); // 店铺名或用户ID
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $search = addslashes(safe_trim($this->request->param('keyName'))); // 店铺名或用户ID
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $time = date("Y-m-d H:i:s");
@@ -1420,13 +1430,13 @@ class Mch extends BaseController
     // 保证金审核列表
     public function SelectPromisePrice()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $search = addslashes(trim($this->request->param('title'))); // 店铺名或用户ID
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-        $pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+        $search = addslashes(safe_trim($this->request->param('title'))); // 店铺名或用户ID
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $time = date("Y-m-d H:i:s");
@@ -1474,13 +1484,13 @@ class Mch extends BaseController
     // 保证金审核
     public function PassOrRefused()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 店铺名或用户ID
-        $is_pass = addslashes(trim($this->request->param('isPass'))); // 是否通过 1=通过 2=不通过 3=审核中
-        $refused_why = addslashes(trim($this->request->param('refusedWhy'))); // 拒绝原因
+        $id = addslashes(safe_trim($this->request->param('id'))); // 店铺名或用户ID
+        $is_pass = addslashes(safe_trim($this->request->param('isPass'))); // 是否通过 1=通过 2=不通过 3=审核中
+        $refused_why = addslashes(safe_trim($this->request->param('refusedWhy'))); // 拒绝原因
 
         $admin_name = $this->user_list['name'];
         $Tools = new Tools( $store_id, 1);
@@ -1667,11 +1677,11 @@ class Mch extends BaseController
     // 删除保证金审核
     public function DeletePromisePrice()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-        $id = addslashes(trim($this->request->param('id'))); // 保证金审核ID
+        $id = addslashes(safe_trim($this->request->param('id'))); // 保证金审核ID
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -1714,15 +1724,15 @@ class Mch extends BaseController
     // 商品审核
     public function GetGoodsExamineInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-    	$goodsId = addslashes(trim($this->request->param('goodsId'))); // 商品ID
-    	$mch_name = addslashes(trim($this->request->param('mchName'))); // 店铺名称
-    	$product_title = addslashes(trim($this->request->param('goodsName'))); // 商品名称
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+    	$goodsId = addslashes(safe_trim($this->request->param('goodsId'))); // 商品ID
+    	$mch_name = addslashes(safe_trim($this->request->param('mchName'))); // 店铺名称
+    	$product_title = addslashes(safe_trim($this->request->param('goodsName'))); // 商品名称
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $start = 0;
@@ -1903,12 +1913,12 @@ class Mch extends BaseController
                 $s_type_list = PC_Tools::getProductLabel(array('store_id'=>$store_id,'s_type'=>$s_type));
                 $value['labelList'] = $s_type_list;
 
-                $s_type = explode(',', trim($value['s_type'],','));
+                $s_type = explode(',', safe_trim($value['s_type'],','));
                 $value['s_type'] = $s_type;
                 $s_type_list = PC_Tools::getProductLabel0(array('store_id'=>$store_id,'s_type'=>$s_type));
                 $value['s_type_list'] = $s_type_list;
 
-                $showAdrList = explode(',', trim($value['show_adr'],','));
+                $showAdrList = explode(',', safe_trim($value['show_adr'],','));
                 $value['showAdrList'] = $showAdrList;
                 $value['showAdrNameList'] = $showAdrList;
 
@@ -1986,11 +1996,11 @@ class Mch extends BaseController
     // 商品审核编辑页面
     public function GetGoodsDetailInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-    	$id = addslashes(trim($this->request->param('goodsId'))); // 商品ID
+    	$id = addslashes(safe_trim($this->request->param('goodsId'))); // 商品ID
 
         $r_admin = AdminModel::where(['store_id'=>$store_id,'type'=>1])->field('shop_id')->select()->toArray();
         $shop_id = $r_admin[0]['shop_id'];
@@ -2009,7 +2019,7 @@ class Mch extends BaseController
             $r[0]['cover_map'] = ServerPath::getimgpath($r[0]['cover_map'], $store_id); //图片
             $r[0]['proVideo'] = $r[0]['pro_video']; //图片
 
-            $product_class = explode('-',trim($r[0]['product_class'],'-')); // 产品类别
+            $product_class = explode('-',safe_trim($r[0]['product_class'],'-')); // 产品类别
             $product_class_num = count($product_class) - 1;
             $brand_id = $r[0]['brand_id']; // 产品品牌
             $freight_id = $r[0]['freight'];
@@ -2111,13 +2121,13 @@ class Mch extends BaseController
     // 商品审核通过/拒绝
     public function GoodsExamine()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
-    	$id = addslashes(trim($this->request->param('goodsId'))); // 商品ID
-    	$mch_status = addslashes(trim($this->request->param('status'))); // 审核状态
-    	$refuse_reasons = addslashes(trim($this->request->param('text'))); // 拒绝原因
+    	$id = addslashes(safe_trim($this->request->param('goodsId'))); // 商品ID
+    	$mch_status = addslashes(safe_trim($this->request->param('status'))); // 审核状态
+    	$refuse_reasons = addslashes(safe_trim($this->request->param('text'))); // 拒绝原因
 
         $admin_name = $this->user_list['name'];
         $Jurisdiction = new Jurisdiction();
@@ -2144,7 +2154,7 @@ class Mch extends BaseController
             $product_title = $r[0]['product_title'];
             if(strlen($product_title) > 10)
             {
-                $product_title = substr(addslashes(trim($product_title)),0,9) . '...';
+                $product_title = substr(addslashes(safe_trim($product_title)),0,9) . '...';
             }
 
             $sku_id_list = array();
@@ -2302,16 +2312,16 @@ class Mch extends BaseController
     // 提现审核列表
     public function GetWithdrawalExamineInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$name = addslashes(trim($this->request->param('mchName'))); // 店铺名称
-    	$mobile = addslashes(trim($this->request->param('phone'))); // 联系电话
-    	$startdate = addslashes(trim($this->request->param('startDate'))); // 开始时间
-    	$enddate = addslashes(trim($this->request->param('endDate'))); // 截止时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+    	$name = addslashes(safe_trim($this->request->param('mchName'))); // 店铺名称
+    	$mobile = addslashes(safe_trim($this->request->param('phone'))); // 联系电话
+    	$startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+    	$enddate = addslashes(safe_trim($this->request->param('endDate'))); // 截止时间
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $start = 0;
@@ -2434,13 +2444,13 @@ class Mch extends BaseController
     // 提现审核通过/拒绝
     public function WithdrawalExamine()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
-    	$id = addslashes(trim($this->request->param('id'))); // 提现id
-    	$m = addslashes(trim($this->request->param('stauts'))); // 状态 1：审核通过 2：拒绝
-    	$refuse = addslashes(trim($this->request->param('text'))); // 拒绝原因
+    	$id = addslashes(safe_trim($this->request->param('id'))); // 提现id
+    	$m = addslashes(safe_trim($this->request->param('stauts'))); // 状态 1：审核通过 2：拒绝
+    	$refuse = addslashes(safe_trim($this->request->param('text'))); // 拒绝原因
 
         $admin_name = $this->user_list['name'];
         $time = date("Y-m-d H:i:s");
@@ -2589,18 +2599,18 @@ class Mch extends BaseController
     // 提现记录
     public function GetWithdrawalInfo()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
-    	$name = addslashes(trim($this->request->param('mchName'))); // 店铺名称
-    	$mobile = addslashes(trim($this->request->param('phone'))); // 联系电话
-    	$status = addslashes(trim($this->request->param('status'))); // 状态 0：审核中 1：审核通过 2：拒绝
-    	$startdate = addslashes(trim($this->request->param('startDate'))); // 开始时间
-    	$enddate = addslashes(trim($this->request->param('endDate'))); // 截止时间
-        $page = addslashes(trim($this->request->param('pageNo'))); // 页码
-    	$pagesize = addslashes(trim($this->request->param('pageSize'))); // 每页多少条数据
+    	$name = addslashes(safe_trim($this->request->param('mchName'))); // 店铺名称
+    	$mobile = addslashes(safe_trim($this->request->param('phone'))); // 联系电话
+    	$status = addslashes(safe_trim($this->request->param('status'))); // 状态 0：审核中 1：审核通过 2：拒绝
+    	$startdate = addslashes(safe_trim($this->request->param('startDate'))); // 开始时间
+    	$enddate = addslashes(safe_trim($this->request->param('endDate'))); // 截止时间
+        $page = addslashes(safe_trim($this->request->param('pageNo'))); // 页码
+    	$pagesize = addslashes(safe_trim($this->request->param('pageSize'))); // 每页多少条数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $start = 0;
@@ -2866,7 +2876,7 @@ class Mch extends BaseController
                 $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
                 $pos = array_search('unknown', $arr);
                 if (false !== $pos) unset($arr[$pos]);
-                $ip = trim($arr[0]);
+                $ip = safe_trim($arr[0]);
             }
             elseif (isset($_SERVER['HTTP_CLIENT_IP']))
             {
@@ -2890,10 +2900,10 @@ class Mch extends BaseController
     // 公告已读
     public function markToRead()
     {
-        $store_id = trim(Request::param('storeId'));
-        $store_type = trim(Request::param('storeType')); // 来源
-        $access_id = trim(Request::param('accessId')); // 授权id
-        $tell_id = trim(Request::param('tell_id')); // 公告ID
+        $store_id = safe_trim(Request::param('storeId'));
+        $store_type = safe_trim(Request::param('storeType')); // 来源
+        $access_id = safe_trim(Request::param('accessId')); // 授权id
+        $tell_id = safe_trim(Request::param('tell_id')); // 公告ID
         $read_id = cache($access_id.'_uid');
         
         $array = array('store_id'=>$store_id,'store_type'=>$store_type,'read_id'=>$read_id,'tell_id'=>$tell_id);
@@ -2906,10 +2916,10 @@ class Mch extends BaseController
     // 获取维护公告
     public function getUserTell()
     {
-        $store_id = trim(Request::param('storeId'));
-        $store_type = trim(Request::param('storeType')); // 来源
-        $access_id = trim(Request::param('accessId')); // 授权id
-        $language = trim(Request::param('language')); // 授权id
+        $store_id = safe_trim(Request::param('storeId'));
+        $store_type = safe_trim(Request::param('storeType')); // 来源
+        $access_id = safe_trim(Request::param('accessId')); // 授权id
+        $language = safe_trim(Request::param('language')); // 授权id
         
         $read_id = cache($access_id.'_uid');
 

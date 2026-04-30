@@ -16,13 +16,13 @@ class currency extends BaseController
     // 币种列表
     public function currencyList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
-        $keyword = addslashes(trim($this->request->param('keyword')));
-        $page = addslashes($this->request->param('pageNo'));
-        $pagesize = addslashes($this->request->param('pageSize'));
+        $id = addslashes(safe_trim($this->request->param('id')));
+        $keyword = addslashes(safe_trim($this->request->param('keyword')));
+        $page = addslashes(safe_trim($this->request->param('pageNo')));
+        $pagesize = addslashes(safe_trim($this->request->param('pageSize')));
         $pagesize = $pagesize ? $pagesize : '10';
         $start = 0;
         if ($page)
@@ -34,8 +34,8 @@ class currency extends BaseController
         $list = array();
         if($id != '')
         {
-            $sql0 = "select count(id) as total from lkt_currency where id = '$id' ";
-            $sql1 = "select * from lkt_currency where id = '$id' limit $start,$pagesize ";
+            $sql0 = "select count(id) as total from lkt_currency where recycle = 0 and id = '$id' ";
+            $sql1 = "select * from lkt_currency where recycle = 0 and id = '$id' limit $start,$pagesize ";
         }
         else
         {
@@ -70,10 +70,10 @@ class currency extends BaseController
     // 添加/编辑币种
     public function saveOrEditCurrency()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
         $currency_name = addslashes($this->request->param('currency_name')); // 货币名称
         $currency_code = addslashes($this->request->param('currency_code')); // ISO货币代码(如USD)
         $currency_symbol = addslashes($this->request->param('currency_symbol')); // 货币符号($)
@@ -92,11 +92,11 @@ class currency extends BaseController
         {
             if($id != '')
             {
-                $sql0 = "select id from lkt_currency where currency_name = '$currency_name' and recycle = 0 and id != '$id' ";
+                $sql0 = "select id from lkt_currency where recycle = 0 and currency_name = '$currency_name' and id != '$id' ";
             }
             else
             {
-                $sql0 = "select id from lkt_currency where currency_name = '$currency_name' and recycle = 0 ";
+                $sql0 = "select id from lkt_currency where recycle = 0 and currency_name = '$currency_name' ";
             }
             $r0 = Db::query($sql0);
             if($r0)
@@ -118,11 +118,11 @@ class currency extends BaseController
         {
             if($id != '')
             {
-                $sql1 = "select id from lkt_currency where currency_code = '$currency_code' and recycle = 0 and id != '$id' ";
+                $sql1 = "select id from lkt_currency where recycle = 0 and currency_code = '$currency_code' and id != '$id' ";
             }
             else
             {
-                $sql1 = "select id from lkt_currency where currency_code = '$currency_code' and recycle = 0 ";
+                $sql1 = "select id from lkt_currency where recycle = 0 and currency_code = '$currency_code' ";
             }
             $r1 = Db::query($sql1);
             if($r1)
@@ -184,12 +184,12 @@ class currency extends BaseController
     // 删除币种
     public function delCurrency()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $id = addslashes(trim($this->request->param('id')));
+        $id = addslashes(safe_trim($this->request->param('id')));
 
-        $sql = "update lkt_currency set recycle = 1 where id = '$id' ";
+        $sql = "update lkt_currency set recycle = 1 where recycle = 0 and id = '$id' ";
         $r = Db::execute($sql);
         if($r > 0)
         {

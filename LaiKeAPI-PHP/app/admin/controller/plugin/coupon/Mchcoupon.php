@@ -69,9 +69,9 @@ class Mchcoupon extends BaseController
     // 优惠券列表
     public function Index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $accessId = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
 
         $exportType = addslashes($this->request->param('exportType')); // 导出
         $hid = addslashes($this->request->param('hid')); // 优惠券活动ID
@@ -98,10 +98,10 @@ class Mchcoupon extends BaseController
     // 获取优惠券类型
     public function AddPage()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $storeType = addslashes(trim($this->request->param('storeType')));
-        $accessId = addslashes(trim($this->request->param('accessId')));
-        $mch_id = addslashes(trim($this->request->param('mchId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $storeType = addslashes(safe_trim($this->request->param('storeType')));
+        $accessId = addslashes(safe_trim($this->request->param('accessId')));
+        $mch_id = addslashes(safe_trim($this->request->param('mchId')));
  
         $admin_name = $this->user_list['name'];
         $user_id = $this->user_list['user_id'];
@@ -128,7 +128,7 @@ class Mchcoupon extends BaseController
     public function GetAssignGoods()
     {
         $store_id = addslashes($this->request->param('storeId'));
-        $mch_id = addslashes(trim($this->request->param('mchId')));
+        $mch_id = addslashes(safe_trim($this->request->param('mchId')));
 
         $product_title = addslashes($this->request->param('product_title')); // 关键词
         $page = addslashes($this->request->param('page')); // 页码

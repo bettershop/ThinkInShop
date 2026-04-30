@@ -22,13 +22,13 @@ class InvoiceInfo extends BaseController
     //待开票
     public function getToInvoiced()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
         $user_id = $this->user_list['user_id'];
 
-        $page = trim($this->request->param('pageNo'));
-        $pagesize = trim($this->request->param('pageSize'))?trim($this->request->param('pageSize')):10;
+        $page = safe_trim($this->request->param('pageNo'));
+        $pagesize = safe_trim($this->request->param('pageSize'))?safe_trim($this->request->param('pageSize')):10;
         $start = ($page-1) * $pagesize;
 
         $time = date('Y-m-d H:i:s'); // 当前时间
@@ -82,18 +82,18 @@ class InvoiceInfo extends BaseController
     //申请开票
     public function applyInvoicing()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
         $user_id = $this->user_list['user_id'];
-        $id = trim($this->request->param('id'));//开票id
-        $headId = trim($this->request->param('headId'));//抬头id
-        $type = trim($this->request->param('type'));//抬头类型 1.企业 2.个人
-        $company_name = trim($this->request->param('companyName'));//公司名称(抬头名称)
-        $company_tax_number = trim($this->request->param('companyTaxNumber'));//公司税号
-        $amount = trim($this->request->param('amount'));//发票金额
-        $sNo = trim($this->request->param('sNo'));//订单号
-        $email = trim($this->request->param('email'));//邮箱
+        $id = safe_trim($this->request->param('id'));//开票id
+        $headId = safe_trim($this->request->param('headId'));//抬头id
+        $type = safe_trim($this->request->param('type'));//抬头类型 1.企业 2.个人
+        $company_name = safe_trim($this->request->param('companyName'));//公司名称(抬头名称)
+        $company_tax_number = safe_trim($this->request->param('companyTaxNumber'));//公司税号
+        $amount = safe_trim($this->request->param('amount'));//发票金额
+        $sNo = safe_trim($this->request->param('sNo'));//订单号
+        $email = safe_trim($this->request->param('email'));//邮箱
 
         //获取订单信息
         $res_o = OrderModel::where(['store_id'=>$store_id,'status'=>5,'settlement_status'=>1,'user_id'=>$user_id,'sNo'=>$sNo])->where('recycle','<>',2)->field('mch_id')->select()->toArray();
@@ -179,11 +179,11 @@ class InvoiceInfo extends BaseController
     //撤销开票
     public function revoke()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
         $user_id = $this->user_list['user_id'];
-        $id = trim($this->request->param('id'));//开票id
+        $id = safe_trim($this->request->param('id'));//开票id
 
         $sql = InvoiceInfoModel::find($id);
         if($sql)
@@ -203,13 +203,13 @@ class InvoiceInfo extends BaseController
     //申请列表
     public function getInvoiceInfo()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
         $user_id = $this->user_list['user_id'];
-        $status = trim($this->request->param('status'));//发票状态 1.申请中 2.已完成 3.已撤销
-        $page = trim($this->request->param('pageNo'))?trim($this->request->param('pageNo')):1;//页码
-        $pagesize = trim($this->request->param('pageSize'))?trim($this->request->param('pageSize')):10;
+        $status = safe_trim($this->request->param('status'));//发票状态 1.申请中 2.已完成 3.已撤销
+        $page = safe_trim($this->request->param('pageNo'))?safe_trim($this->request->param('pageNo')):1;//页码
+        $pagesize = safe_trim($this->request->param('pageSize'))?safe_trim($this->request->param('pageSize')):10;
         $start = ($page - 1) * $pagesize;
 
         $total = 0;
@@ -255,11 +255,11 @@ class InvoiceInfo extends BaseController
     //发票详情
     public function getDetails()
     {
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
 
         $user_id = $this->user_list['user_id'];
-        $id = trim($this->request->param('id'));//开票id
+        $id = safe_trim($this->request->param('id'));//开票id
         $res = InvoiceInfoModel::where(['store_id'=>$store_id,'user_id'=>$user_id,'id'=>$id])->select()->toArray();
         if($res)
         {

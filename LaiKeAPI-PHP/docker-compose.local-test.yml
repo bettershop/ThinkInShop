@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: mysql:8.0.27
+    container_name: laikeapi-local-mysql
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+      - --explicit_defaults_for_timestamp=1
+      - --max_allowed_packet=512M
+      - --net_read_timeout=600
+      - --net_write_timeout=600
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: "000000"
+      MYSQL_DATABASE: "tp_db"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./runtime/local-test/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h127.0.0.1 -uroot -p000000 --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:6.2.6
+    container_name: laikeapi-local-redis
+    command: ["redis-server", "--port", "6339", "--requirepass", "laiketui18", "--appendonly", "yes"]
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "6339:6339"
+    volumes:
+      - ./runtime/local-test/redis:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a laiketui18 -p 6339 ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 30

@@ -15,10 +15,10 @@ class Diy
     // diy
     public function index()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
-        $language = trim(Request::param('language')); // 语言
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
+        $language = safe_trim(Request::param('language')); // 语言
 
         $value = '';
         $tab_bar = '';

@@ -59,9 +59,9 @@ class Role extends BaseController
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
         $pagesize = $this->request->param('pageSize');// 每页显示多少条数据
         $page = $this->request->param('pageNo');
@@ -151,9 +151,9 @@ class Role extends BaseController
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
         $customer_number = '';
         $r0 = CustomerModel::where('id',$store_id)->field('customer_number')->select()->toArray();
@@ -177,14 +177,14 @@ class Role extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $id = addslashes(trim($this->request->param('id'))); // 管理员id
-        $name = addslashes(trim($this->request->param('adminName'))); // 管理员账号
-        $password = MD5(addslashes(trim($this->request->param('adminPWD')))); // 密码
-        $role = addslashes(trim($this->request->param('roleId'))); // 角色
+        $id = addslashes(safe_trim($this->request->param('id'))); // 管理员id
+        $name = addslashes(safe_trim($this->request->param('adminName'))); // 管理员账号
+        $password = MD5(addslashes(safe_trim($this->request->param('adminPWD')))); // 密码
+        $role = addslashes(safe_trim($this->request->param('roleId'))); // 角色
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -231,14 +231,14 @@ class Role extends BaseController
                 return output(ERROR_CODE_JSMCBNCGGZWZZD,$message);
             }
             
-            if ($password && strlen(addslashes(trim($this->request->param('adminPWD')))) < 6)
+            if ($password && strlen(addslashes(safe_trim($this->request->param('adminPWD')))) < 6)
             {
                 $Log_content = __METHOD__ . '->' . __LINE__ . ' 管理员密码不能低于6位';
                 $this->Log($Log_content);
                 $message = Lang("role.4");
                 return output(ERROR_CODE_MMBFHGF,$message);
             }
-            if ($password && strlen(addslashes(trim($this->request->param('adminPWD')))) > 16)
+            if ($password && strlen(addslashes(safe_trim($this->request->param('adminPWD')))) > 16)
             {
                 $Log_content = __METHOD__ . '->' . __LINE__ . ' 管理员密码不能高于20位';
                 $this->Log($Log_content);
@@ -330,11 +330,11 @@ class Role extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $id = addslashes(trim($this->request->param('id'))); // 管理员账号
+        $id = addslashes(safe_trim($this->request->param('id'))); // 管理员账号
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -411,11 +411,11 @@ class Role extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $id = addslashes(trim($this->request->param('id'))); // 管理员账号
+        $id = addslashes(safe_trim($this->request->param('id'))); // 管理员账号
         
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -469,15 +469,15 @@ class Role extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
-        $name = trim($this->request->param('adminName')); // 管理员账号
-        $logAccountType = trim($this->request->param("logAccountType")); // 账号类型 0:系统管理员 1：客户 2:商城管理员 3:店主
-        $logOperationType = trim($this->request->param("logOperationType")); // 操作类型 0:登录/退出 1:添加 2:修改 3:删除 4:导出 5:启用/禁用 6:通过/拒绝 10删除订单
-        $startdate = trim($this->request->param("startDate"));
-        $enddate = trim($this->request->param("endDate"));
+        $name = safe_trim($this->request->param('adminName')); // 管理员账号
+        $logAccountType = safe_trim($this->request->param("logAccountType")); // 账号类型 0:系统管理员 1：客户 2:商城管理员 3:店主
+        $logOperationType = safe_trim($this->request->param("logOperationType")); // 操作类型 0:登录/退出 1:添加 2:修改 3:删除 4:导出 5:启用/禁用 6:通过/拒绝 10删除订单
+        $startdate = safe_trim($this->request->param("startDate"));
+        $enddate = safe_trim($this->request->param("endDate"));
 
         $exportType = $this->request->param('exportType');//导出
         $page = $this->request->param('pageNo'); // 页码
@@ -645,9 +645,9 @@ class Role extends BaseController
     //删除日志
     public function delAdminLogger()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
         $Jurisdiction = new Jurisdiction();
         $operator_id = cache($access_id.'admin_id');
@@ -679,9 +679,9 @@ class Role extends BaseController
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
         $id = $this->request->param('id');
         $page = $this->request->param('pageNo');
@@ -720,13 +720,13 @@ class Role extends BaseController
         $admin_list = $this->user_list;
         $admin_id = $admin_list['id'];
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
         // 接收数据
         $id = $this->request->post('id');//角色id
-        $name = addslashes(trim($this->request->post('roleName'))); // 角色
+        $name = addslashes(safe_trim($this->request->post('roleName'))); // 角色
         $permissions = $this->request->post('permissions'); // 权限
         $role_describe = $this->request->post('describe'); // 描述
 
@@ -751,9 +751,9 @@ class Role extends BaseController
     {
         $admin_list = $this->user_list;
         $admin_name = $admin_list['name'];
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId'));
 
         $id = intval($this->request->param('id')); //id
         

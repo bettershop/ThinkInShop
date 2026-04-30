@@ -21,9 +21,9 @@ class Store extends BaseController
     // 门店管理
     public function Index()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('mchStoreId')); // 门店ID
         $name = addslashes($this->request->param('mchName')); // 门店名称
@@ -88,18 +88,18 @@ class Store extends BaseController
     // 添加/编辑门店
     public function AddStore()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 门店ID
         $name = addslashes($this->request->param('name')); // 门店名称
-        $cpc = addslashes(trim($this->request->param('cpc'))); // 区号
+        $cpc = addslashes(safe_trim($this->request->param('cpc'))); // 区号
         $mobile = addslashes($this->request->param('mobile')); // 联系电话
         $business_hours = addslashes($this->request->param('businessHours')); // 营业时间
         $city_all = addslashes($this->request->param('cityAll')); // 省市区
         $address = addslashes($this->request->param('address')); // 详细地址
-        $code = trim($this->request->param('code')); // 邮政编码
+        $code = safe_trim($this->request->param('code')); // 邮政编码
 
         $time = date("Y-m-d H:i:s");
         $Jurisdiction = new Jurisdiction();
@@ -234,9 +234,9 @@ class Store extends BaseController
     // 设置默认
     public function SetDefaultStore()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('mchStoreId')); // 门店ID
 
@@ -339,9 +339,9 @@ class Store extends BaseController
     // 删除门店
     public function DelStore()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
 
         $id = addslashes($this->request->param('id')); // 门店ID
         $id_list = explode(',',$id);
@@ -415,9 +415,9 @@ class Store extends BaseController
     // 门店管理员列表
     public function AdminList()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $mch_store_id = addslashes($this->request->param('mch_store_id')); // 门店ID
         $account_number = addslashes($this->request->param('account_number')); // 管理员账号
@@ -491,22 +491,22 @@ class Store extends BaseController
     // 添加/编辑门店管理员
     public function AddAdmin()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $id = addslashes($this->request->param('id')); // 管理员ID
         $mch_store_id = addslashes($this->request->param('mch_store_id')); // 门店ID
-        $account_number = addslashes(trim($this->request->param('account_number'))); // 账号
+        $account_number = addslashes(safe_trim($this->request->param('account_number'))); // 账号
         if ($account_number == '')
         {
-            $account_number = addslashes(trim($this->request->param('phone'))); // 兼容 phone
+            $account_number = addslashes(safe_trim($this->request->param('phone'))); // 兼容 phone
         }
         if ($account_number == '')
         {
-            $account_number = addslashes(trim($this->request->param('mobile'))); // 兼容 mobile
+            $account_number = addslashes(safe_trim($this->request->param('mobile'))); // 兼容 mobile
         }
-        $password = addslashes(trim($this->request->param('password'))); // 密码
+        $password = addslashes(safe_trim($this->request->param('password'))); // 密码
 
         $Jurisdiction = new Jurisdiction();
         $user_id = cache($access_id.'_uid'); // 用户user_id
@@ -615,9 +615,9 @@ class Store extends BaseController
     // 删除门店管理员
     public function DelAdmin()
     {
-        $store_id = addslashes(trim($this->request->param('storeId')));
-        $store_type = addslashes(trim($this->request->param('storeType')));
-        $access_id = addslashes(trim($this->request->param('accessId')));
+        $store_id = addslashes(safe_trim($this->request->param('storeId')));
+        $store_type = addslashes(safe_trim($this->request->param('storeType')));
+        $access_id = addslashes(safe_trim($this->request->param('accessId')));
         
         $ids = addslashes($this->request->param('id')); // 管理员ID
         $mch_store_id = addslashes($this->request->param('mch_store_id')); // 门店ID

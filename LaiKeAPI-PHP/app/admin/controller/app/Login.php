@@ -149,7 +149,7 @@ class Login
     // H5授权
     public function appletsWx()
     {
-        $code = addslashes(trim(Request::param('code'))); // code
+        $code = addslashes(safe_trim(Request::param('code'))); // code
         if($code)
         {       
             //公众号
@@ -167,7 +167,7 @@ class Login
         $store_id = Request::param('store_id'); // 商城ID
         $store_type = Request::param('store_type'); // 来源
 
-        $code = addslashes(trim(Request::param('code'))); // code
+        $code = addslashes(safe_trim(Request::param('code'))); // code
 
         $data = array();
         // if ($store_type == 1)
@@ -246,14 +246,14 @@ class Login
     {
         $store_id = Request::param('store_id'); // 商城ID
         $store_type = Request::param('store_type'); // 来源
-        $access_id = trim(Request::param('access_id')); 
+        $access_id = safe_trim(Request::param('access_id')); 
 
-        $unionid = addslashes(trim(Request::param('unionid'))); // 用户统一标识。针对一个微信开放平台帐号下的应用，同一用户的 unionid 是唯一的
-        $openid = addslashes(trim(Request::param('openid'))); // openid
-        $user_name = addslashes(trim(Request::param('nickName'))); // 用户昵称
-        $headimgurl = trim(Request::param('headimgurl')); // 用户头像
-        $sex = trim(Request::param('sex')); // 用户性别
-        $pid = trim(Request::param('pid')); // 推荐人id
+        $unionid = addslashes(safe_trim(Request::param('unionid'))); // 用户统一标识。针对一个微信开放平台帐号下的应用，同一用户的 unionid 是唯一的
+        $openid = addslashes(safe_trim(Request::param('openid'))); // openid
+        $user_name = addslashes(safe_trim(Request::param('nickName'))); // 用户昵称
+        $headimgurl = safe_trim(Request::param('headimgurl')); // 用户头像
+        $sex = safe_trim(Request::param('sex')); // 用户性别
+        $pid = safe_trim(Request::param('pid')); // 推荐人id
         $wx_id = '';
         if (!Request::has('unionid') and !Request::has('openid'))
         {
@@ -509,7 +509,7 @@ class Login
         //微信公众号授权 
         $store_id = Request::param('store_id'); // 商城ID
         $store_type = Request::param('store_type'); // 来源
-        $code = addslashes(trim(Request::param('code'))); // code
+        $code = addslashes(safe_trim(Request::param('code'))); // code
 
         $appid = '';
         $appsecret = '';
@@ -790,10 +790,10 @@ class Login
     public function chang_pid()
     {   
         $lktlog = new LaiKeLogUtils();
-        $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-        $language = trim(Request::param('language')); // 语言
-        $pid = trim(Request::param('pid')); // 推荐人id
-        $access_id = trim(Request::param('access_id')); 
+        $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+        $language = safe_trim(Request::param('language')); // 语言
+        $pid = safe_trim(Request::param('pid')); // 推荐人id
+        $access_id = safe_trim(Request::param('access_id')); 
         $r0 = UserModel::where(['store_id'=>$store_id,'access_id'=>$access_id])->field('user_id')->select()->toArray();
         if($r0)
         {
@@ -835,11 +835,11 @@ class Login
     {
         try
         {
-            $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-            $store_type = trim(Request::param('store_type'));
+            $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+            $store_type = safe_trim(Request::param('store_type'));
 
-            $alimp_auth_code = addslashes(trim(Request::param('alimp_auth_code'))); // 授权ID
-            $access_id = trim(Request::param('access_id')); // 来客电商访问token
+            $alimp_auth_code = addslashes(safe_trim(Request::param('alimp_auth_code'))); // 授权ID
+            $access_id = safe_trim(Request::param('access_id')); // 来客电商访问token
             if (empty($alimp_auth_code))
             {
                 $message = Lang('Parameter error');
@@ -949,19 +949,19 @@ class Login
     {
         try
         {
-            $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-            $language = trim(Request::param('language')); // 语言
+            $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+            $language = safe_trim(Request::param('language')); // 语言
 
-            $store_type = trim(Request::param('store_type')); // 来源
-            $user_name = trim(Request::param('nickName')); // 用户昵称
-            $headimgurl = trim(Request::param('headimgurl')); // 用户头像
-            $sex = trim(Request::param('sex')); // 用户性别
-            $pid = trim(Request::param('pid')); // 推荐人id
+            $store_type = safe_trim(Request::param('store_type')); // 来源
+            $user_name = safe_trim(Request::param('nickName')); // 用户昵称
+            $headimgurl = safe_trim(Request::param('headimgurl')); // 用户头像
+            $sex = safe_trim(Request::param('sex')); // 用户性别
+            $pid = safe_trim(Request::param('pid')); // 推荐人id
 
             //支付宝ID
-            $zfb_id = trim(Request::param('zfb_id')); // 支付宝ID
+            $zfb_id = safe_trim(Request::param('zfb_id')); // 支付宝ID
 
-            $access_id = trim(Request::param('access_id')); 
+            $access_id = safe_trim(Request::param('access_id')); 
             $token = $access_id;
 
             //返回前端的数组
@@ -1103,18 +1103,18 @@ class Login
     {
         try
         {
-            $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-            $language = trim(Request::param('language')); // 语言
+            $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+            $language = safe_trim(Request::param('language')); // 语言
 
-            $store_type = trim(Request::param('store_type')); // 来源
-            $user_name = trim(Request::param('nickName')); // 用户昵称
-            $headimgurl = trim(Request::param('headimgurl')); // 用户头像
-            $sex = trim(Request::param('sex')); // 用户性别
-            $pid = trim(Request::param('pid')); // 推荐人id
+            $store_type = safe_trim(Request::param('store_type')); // 来源
+            $user_name = safe_trim(Request::param('nickName')); // 用户昵称
+            $headimgurl = safe_trim(Request::param('headimgurl')); // 用户头像
+            $sex = safe_trim(Request::param('sex')); // 用户性别
+            $pid = safe_trim(Request::param('pid')); // 推荐人id
 
             //头条ID
-            $tt_id = trim(Request::param('tt_id')); // 头条ID
-            $access_id = trim(Request::param('access_id')); //
+            $tt_id = safe_trim(Request::param('tt_id')); // 头条ID
+            $access_id = safe_trim(Request::param('access_id')); //
             $token = $access_id;
             //返回前端的数组
             $data = array();
@@ -1252,12 +1252,12 @@ class Login
     {
         try
         {
-            $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-            $store_type = addslashes(trim(Request::param('store_type'))); // 商城id
-            $language = trim(Request::param('language')); // 语言
+            $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+            $store_type = addslashes(safe_trim(Request::param('store_type'))); // 商城id
+            $language = safe_trim(Request::param('language')); // 语言
 
-            $tt_auth_code = addslashes(trim(Request::param('tt_auth_code'))); // 授权ID
-            $access_id = trim(Request::param('access_id')); // 来客电商访问token
+            $tt_auth_code = addslashes(safe_trim(Request::param('tt_auth_code'))); // 授权ID
+            $access_id = safe_trim(Request::param('access_id')); // 来客电商访问token
             if (empty($tt_auth_code))
             {
                 $message = Lang('Parameter error');
@@ -1381,11 +1381,11 @@ class Login
     {
         try
         {
-            $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-            $language = trim(Request::param('language')); // 语言
-            $store_type = addslashes(trim(Request::param('store_type')));
-            $bd_auth_code = addslashes(trim(Request::param('bd_auth_code'))); // 授权ID
-            $access_id = trim(Request::param('access_id')); // 来客电商访问token
+            $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+            $language = safe_trim(Request::param('language')); // 语言
+            $store_type = addslashes(safe_trim(Request::param('store_type')));
+            $bd_auth_code = addslashes(safe_trim(Request::param('bd_auth_code'))); // 授权ID
+            $access_id = safe_trim(Request::param('access_id')); // 来客电商访问token
             if (empty($bd_auth_code))
             {
                 $message = Lang('Parameter error');
@@ -1514,18 +1514,18 @@ class Login
     {
         try
         {
-            $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-            $language = trim(Request::param('language')); // 语言
+            $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+            $language = safe_trim(Request::param('language')); // 语言
 
-            $store_type = trim(Request::param('store_type')); // 来源
-            $user_name = trim(Request::param('nickName')); // 用户昵称
-            $headimgurl = trim(Request::param('headimgurl')); // 用户头像
-            $sex = trim(Request::param('sex')); // 用户性别
-            $pid = trim(Request::param('pid')); // 推荐人id
+            $store_type = safe_trim(Request::param('store_type')); // 来源
+            $user_name = safe_trim(Request::param('nickName')); // 用户昵称
+            $headimgurl = safe_trim(Request::param('headimgurl')); // 用户头像
+            $sex = safe_trim(Request::param('sex')); // 用户性别
+            $pid = safe_trim(Request::param('pid')); // 推荐人id
 
             //百度openID
-            $bd_id = trim(Request::param('bd_id')); // 百度openID
-            $access_id = trim(Request::param('access_id')); //
+            $bd_id = safe_trim(Request::param('bd_id')); // 百度openID
+            $access_id = safe_trim(Request::param('access_id')); //
             //返回前端的数组
             $data = array();
 
@@ -1694,10 +1694,10 @@ class Login
     // 注册
     public function user_register()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权ID
-        $clientid = trim(Request::param('clientid')); // 推送客户id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权ID
+        $clientid = safe_trim(Request::param('clientid')); // 推送客户id
 
         $type = Request::param('type'); // 类型 0.手机号 1.邮箱
         $cpc = Request::param('cpc'); // 区号
@@ -1705,8 +1705,8 @@ class Login
         $tel = Request::param('phone'); // 手机号码
         $e_mail = Request::param('e_mail'); // 邮箱
         $password = Tools::lock_url((Request::param('password')));//密码
-        $keyCode = trim(Request::param('keyCode')); // 验证码
-        $pid = trim(Request::param('pid')); // 推荐人id
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
+        $pid = safe_trim(Request::param('pid')); // 推荐人id
 
         $zhanghao = Tools::generateRandomString(8);
 
@@ -1858,7 +1858,7 @@ class Login
     // 注册协议
     public function register_agreement()
     {
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         $r1 = AgreementModel::where(['store_id'=>$store_id,'type'=>0])->select()->toArray();
         if ($r1)
         {
@@ -1878,7 +1878,7 @@ class Login
     // 隐私协议
     public function privacy_agreement()
     {
-        $store_id = trim(Request::param('store_id'));
+        $store_id = safe_trim(Request::param('store_id'));
         $r1 = AgreementModel::where(['store_id'=>$store_id,'type'=>2])->select()->toArray();
         if ($r1)
         {
@@ -1898,20 +1898,20 @@ class Login
     // 验证码登录
     public function register()
     {
-        $store_id = trim(Request::param('store_id'));
-        $language = trim(Request::param('language')); // 语言
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权ID
-        $clientid = trim(Request::param('clientid')); // 推送客户ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $language = safe_trim(Request::param('language')); // 语言
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权ID
+        $clientid = safe_trim(Request::param('clientid')); // 推送客户ID
 
         $type = Request::param('type'); // 类型 0.手机号 1.邮箱
         $cpc = Request::param('cpc'); // 区号
         $country_num = Request::param('country_num'); // 国家代码
         $tel = Request::param('phone'); // 手机号码
         $e_mail = Request::param('e_mail'); // 邮箱
-        $keyCode = trim(Request::param('keyCode')); // 验证码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
 
-        $pid = trim(Request::param('pid')); // 推荐人id
+        $pid = safe_trim(Request::param('pid')); // 推荐人id
 
         if($type == 1)
         {
@@ -2272,28 +2272,36 @@ class Login
                     {   
                         //最后登录时间
                         $now_time = date('Y-m-d H:i:s');
-                        if (empty($clientid))
+                        $updateData = array(
+                            'access_id' => $token,
+                            'last_time' => $now_time,
+                            'lang' => $lang
+                        );
+                        if (!empty($clientid))
                         {
-                            $sql1 = "update lkt_user set access_id = '$token',last_time = '$now_time',lang = '$lang' where store_id = '$store_id' and user_id = '$user_id' ";
+                            $updateData['clientid'] = $clientid;
                         }
-                        else
-                        {
-                            $sql1 = "update lkt_user set clientid = '$clientid',access_id = '$token',last_time = '$now_time',lang = '$lang' where store_id = '$store_id' and user_id = '$user_id' ";
-                        }
-                        $r1 = Db::execute($sql1);
+                        $r1 = Db::name('user')->where(['store_id'=>$store_id,'user_id'=>$user_id])->update($updateData);
                         if($r1 < 0)
                         {
-                            $Log_content = __METHOD__ . '->' . __LINE__ . '修改用户登录信息失败!sql:' . $sql1;
+                            $Log_content = __METHOD__ . '->' . __LINE__ . '修改用户登录信息失败!参数:' . json_encode($updateData);
                             $this->Log($Log_content);
                         }
-                        //添加用户登录记录失败
-                        $RecordModel = new RecordModel;
-                        $RecordModel->store_id = $store_id;
-                        $RecordModel->user_id = $user_id;
-                        $RecordModel->event = $event;
-                        $RecordModel->add_date = $now_time;
-                        $RecordModel->type = 0;
-                        $RecordModel->save();
+                        // 添加用户登录记录（失败仅记录日志，不阻塞登录）
+                        try
+                        {
+                            $RecordModel = new RecordModel;
+                            $RecordModel->store_id = $store_id;
+                            $RecordModel->user_id = $user_id;
+                            $RecordModel->event = $event;
+                            $RecordModel->add_date = $now_time;
+                            $RecordModel->type = 0;
+                            $RecordModel->save();
+                        }
+                        catch (\Throwable $te)
+                        {
+                            $this->Log(__METHOD__ . '->' . __LINE__ . '添加用户登录记录异常:' . $te->getMessage());
+                        }
                         Db::commit();
 
                         // 用户信息存入redis
@@ -2368,8 +2376,8 @@ class Login
     // 忘记密码,验证账号是否存在
     public function forget_zhanghao()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         $type = Request::param('type'); // 类型 0.手机号 1.邮箱
         $cpc = Request::param('cpc'); // 区号
@@ -2401,15 +2409,15 @@ class Login
     // 忘记密码,验证验证码是否正确，并修改密码
     public function forget_code()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         $type = Request::param('type'); // 类型 0.手机号 1.邮箱
         $cpc = Request::param('cpc'); // 区号
         $country_num = Request::param('country_num'); // 国家代码
         $tel = Request::param('tel'); // 手机号码
         $e_mail = Request::param('e_mail'); // 邮箱
-        $keyCode = trim(Request::param('keyCode')); // 验证码
+        $keyCode = safe_trim(Request::param('keyCode')); // 验证码
         $password = Tools::lock_url(Request::param('password')); // 重置密码
         Db::startTrans();
         if($type == 1)
@@ -2479,8 +2487,8 @@ class Login
     // 忘记密码重置密码（新逻辑，这一步已挪移到上一步）
     public function forgotpassword()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
         $tel = Request::param('phone'); // 手机号码
         $password = Tools::lock_url(Request::param('password')); // 重置密码
 
@@ -2518,8 +2526,12 @@ class Login
         {
             return;
         }
+        $cart_token = Tools::fitDbString('lkt_cart', 'token', $token);
+        $cart_n_token = Tools::fitDbString('lkt_cart', 'token', $n_token);
+        $browse_token = Tools::fitDbString('lkt_mch_browse', 'token', $token);
+        $browse_n_token = Tools::fitDbString('lkt_mch_browse', 'token', $n_token);
         // 根据商城ID、token，查询购物车信息
-        $r0 = CartModel::where(['store_id'=>$store_id,'token'=>$token])
+        $r0 = CartModel::where(['store_id'=>$store_id,'token'=>$cart_token])
                        ->field('id,Goods_id,Size_id,Goods_num')
                        ->select()
                        ->toArray();
@@ -2573,8 +2585,8 @@ class Login
                 else
                 { // 不存在 表示用户购物车没有该商品
                     // 根据商城ID、token、购物车ID，修改购物车用户ID
-                    $r6 = Db::name('cart')->where(['store_id'=>$store_id,'token'=>$token,'Goods_id'=>$Goods_id])
-                                          ->data(['user_id'=>$user_id,'token'=>$n_token])
+                    $r6 = Db::name('cart')->where(['store_id'=>$store_id,'token'=>$cart_token,'Goods_id'=>$Goods_id])
+                                          ->data(['user_id'=>$user_id,'token'=>$cart_n_token])
                                           ->update();
                     if($r6 < 0){
                         $Log_content = __METHOD__ . '->' . __LINE__ . '用户登录成功，修改购物车信息失败!sql:' . $sql6;
@@ -2585,8 +2597,8 @@ class Login
         }
 
         // 根据商城ID、token，修改店铺浏览记录表
-        $r3 = Db::name('mch_browse')->where(['store_id'=>$store_id,'token'=>$token])
-                                    ->data(['user_id'=>$user_id,'token'=>$n_token])
+        $r3 = Db::name('mch_browse')->where(['store_id'=>$store_id,'token'=>$browse_token])
+                                    ->data(['user_id'=>$user_id,'token'=>$browse_n_token])
                                     ->update();
         if($r3 < 0)
         {
@@ -2600,11 +2612,11 @@ class Login
     // 判断token是否存在或是否失效
     public function token()
     {
-        $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-        $language = trim(Request::param('language')); // 语言
+        $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+        $language = safe_trim(Request::param('language')); // 语言
 
-        $store_type = trim(Request::param('store_type'));
-        $access_id = trim(Request::param('access_id')); // 授权ID
+        $store_type = safe_trim(Request::param('store_type'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权ID
         if (!empty($access_id))
         { // 存在
             $getPayload_test = Tools::verifyToken($access_id); //对token进行验证签名,如果过期返回false,成功返回数组
@@ -2685,8 +2697,8 @@ class Login
     //退出登录
     public function quit()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权ID
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权ID
 
         $sql_0 = "select user_id from lkt_user where store_id = '$store_id' and access_id = '$access_id' ";
         $r_0 = Db::query($sql_0);
@@ -2807,9 +2819,9 @@ class Login
     {
         $store_id = Request::param('store_id'); // 商城ID
 
-        $openid = trim(Request::param('openid'));
-        $encryptedData = trim(Request::param('encryptedData'));
-        $iv = trim(Request::param('iv'));
+        $openid = safe_trim(Request::param('openid'));
+        $encryptedData = safe_trim(Request::param('encryptedData'));
+        $iv = safe_trim(Request::param('iv'));
 
         //获取appid
         $res = ConfigModel::where('store_id', $store_id)->field('appid')->select()->toArray();
@@ -2851,8 +2863,8 @@ class Login
     //获取微信公众号支付，支付宝支付配置
     public function getAuthConfig()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         $is_wx = 0;//微信公众号配置是否已配置
         $is_alipay = 0;//支付宝配置是否已配置
@@ -2895,8 +2907,8 @@ class Login
     //获取微信公众号支付，支付宝支付配置
     public function getWxAppId()
     {
-        $store_id = trim(Request::param('store_id'));
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
         $is_wx = 0;//微信公众号配置是否已配置
         $is_alipay = 0;//支付宝配置是否已配置
@@ -2927,8 +2939,8 @@ class Login
     //获取H5支付宝授权令牌
     public function aliUserLoginByWeb()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
 
         $rep = [
             '%21' =>'!',
@@ -2982,11 +2994,11 @@ class Login
     public function aliUserLoginApp()
     {
 
-        $store_id = addslashes(trim(Request::param('store_id'))); // 商城id
-        $store_type = trim(Request::param('store_type')); // 来源
-        $code = addslashes(trim(Request::param('authCode'))); // code
-        $pid = trim(Request::param('pid')); // 推荐人id
-        $access_id = trim(Request::param('access_id')); // 推荐人id
+        $store_id = addslashes(safe_trim(Request::param('store_id'))); // 商城id
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $code = addslashes(safe_trim(Request::param('authCode'))); // code
+        $pid = safe_trim(Request::param('pid')); // 推荐人id
+        $access_id = safe_trim(Request::param('access_id')); // 推荐人id
 
         //获取用户openid
         if (!$code)

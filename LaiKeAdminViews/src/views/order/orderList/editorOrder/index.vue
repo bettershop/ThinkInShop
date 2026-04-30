@@ -130,9 +130,15 @@
               <el-form-item :label="$t('increaseStore.xxdz')" prop="r_address" v-if="dataInfo.self_lifting != 1 ">
                 <el-input v-model="ruleForm.r_address" placeholder=""></el-input>
               </el-form-item>
-              <!-- <el-form-item :label="订单备注" prop="remarks">
-                <el-input v-model="ruleForm.remarks" placeholder="请输入订单备注"></el-input>
-              </el-form-item> -->
+              <el-form-item label="订单备注" prop="remarks">
+                <el-input v-model="ruleForm.remarks" maxlength="50" show-word-limit placeholder="请输入订单备注"></el-input>
+              </el-form-item>
+              <el-form-item v-if="dataInfo.status == '待付款'" label="运费">
+                <el-input v-model="ruleForm.freight" type="number" min="0" placeholder="请输入运费"></el-input>
+              </el-form-item>
+              <el-form-item v-if="dataInfo.status == '待付款' && !totleInfo.isManyMch" label="订单金额">
+                <el-input v-model="ruleForm.pay_price" type="number" min="0" placeholder="请输入订单金额"></el-input>
+              </el-form-item>
               <!-- 商家配送 配送时间 -->
               <el-form-item
                 v-if="totleInfo.selfLifting == 2 && ruleForm.sjpsData !=''"
@@ -245,7 +251,7 @@
                     <span v-if="dataInfo.status=='待付款'||(dataInfo.status=='已关闭'&&!dataInfo.pay_time)" class="title-totle  name">应支付：</span>
                     <span v-else class="title-totle  name">{{$t('orderDetails.hjzf')}}：</span>
                     <!-- <span class="red price">{{totleInfo.currency_symbol }}{{ totleInfo.pay_price.toFixed(2) }}</span> -->
-                    <span class="red price">{{totleInfo.currency_symbol }}{{ totleInfo.old_total }}</span>
+                    <span class="red price">{{totleInfo.currency_symbol }}{{ getRealtimePayPrice() }}</span>
                 </div>
             </div>
         </div>

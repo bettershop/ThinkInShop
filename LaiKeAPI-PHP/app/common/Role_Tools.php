@@ -14,11 +14,10 @@ use app\admin\model\GuideMenuModel;
 class Role_Tools
 {
     // 获取商城菜单
-    public static function see_menu_0($store_id)
+    public static function see_menu_0($store_id, $unused = null)
     {
         $data = array();
-        $list = array();
-        $id_str = '';
+        $id_list = array();
         $sql_admin = "select role from lkt_admin where store_id = '$store_id' ";
         $r_admin = Db::query($sql_admin);
         if($r_admin)
@@ -29,27 +28,66 @@ class Role_Tools
             {
                 foreach ($r0 as $k0 => $v0)
                 {
-                    $id_str .= $v0['menu_id'] . ",";
+                    $id_list[] = $v0['menu_id'];
                 }
-                $id_str = trim($id_str,',');
             }
         }
 
-        // 查询菜单表(模块名称、模块标识、模块描述)
-        $r = CoreMenuModel::where(['s_id'=>0,'type'=>1,'recycle'=>0])->whereIn('id',$id_str)->order('sort','desc')->order('id','asc')->field('id,title,s_id')->select()->toArray();
-        if ($r)
+        if (!$id_list)
         {
-            foreach ($r as $k => $v)
-            {
-                $v['checked'] = false; // 定义没选中
-                $id_0 = $v['id'];
-
-                $v['children'] = Role_Tools::see_menu_subordinate($id_0,$list);
-                $data[] = $v;
-            }
+            return $data;
         }
 
-        return $data;
+        $menus = CoreMenuModel::where(['type'=>1,'recycle'=>0])->order('sort','desc')->order('id','asc')->field('id,title,s_id')->select()->toArray();
+        if (!$menus)
+        {
+            return $data;
+        }
+
+        $by_parent = array();
+        foreach ($menus as $menu)
+        {
+            $parent_id = (int)$menu['s_id'];
+            if (!isset($by_parent[$parent_id]))
+            {
+                $by_parent[$parent_id] = array();
+            }
+            $by_parent[$parent_id][] = $menu;
+        }
+
+        $id_set = array_fill_keys($id_list, true);
+        $top = isset($by_parent[0]) ? $by_parent[0] : array();
+        $top = array_values(array_filter($top, function($item) use ($id_set) {
+            return isset($id_set[$item['id']]);
+        }));
+
+        foreach ($top as $k => $v)
+        {
+            $v['checked'] = false; // 定义没选中
+            $id_0 = (int)$v['id'];
+            $v['children'] = Role_Tools::build_menu_children($id_0, $by_parent);
+            $top[$k] = $v;
+        }
+
+        return $top;
+    }
+
+    // 构建菜单树（避免递归查询）
+    private static function build_menu_children($parent_id, $by_parent)
+    {
+        if (!isset($by_parent[$parent_id]))
+        {
+            return array();
+        }
+        $children = $by_parent[$parent_id];
+        foreach ($children as $k => $child)
+        {
+            $child['checked'] = false; // 定义没选中
+            $id_0 = (int)$child['id'];
+            $child['children'] = Role_Tools::build_menu_children($id_0, $by_parent);
+            $children[$k] = $child;
+        }
+        return $children;
     }
     
     // 根据角色ID，标记选中
@@ -60,6 +98,7 @@ class Role_Tools
         {
             $id_list[] = $v['menu_id'];
         }
+        $id_set = $id_list ? array_fill_keys($id_list, true) : array();
 
         $list = array();
         foreach ($list0 as $k0 => $v0)
@@ -71,14 +110,14 @@ class Role_Tools
                 $list2 = array();
                 foreach ($v1['children'] as $k2 => $v2)
                 {
-                    if(in_array($v2['id'],$id_list))
+                    if(isset($id_set[$v2['id']]))
                     {
                         $v2['checked'] = true;
                         $is_checked = true;
                     }
                     $list2[] = $v2;
                 }
-                if(in_array($v1['id'],$id_list))
+                if(isset($id_set[$v1['id']]))
                 {
                     $v1['checked'] = true;
                 }
@@ -86,7 +125,7 @@ class Role_Tools
                 $list1[$k1] = $v1;
             }
             
-            if(in_array($v0['id'],$id_list))
+            if(isset($id_set[$v0['id']]))
             {
                 $v0['checked'] = true;
             }

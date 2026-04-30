@@ -43,4 +43,14 @@ if (!function_exists('is_china_calling_code')) {
     }
 }
 
-
+if (!function_exists('safe_trim')) { 
+    /**
+     * 安全去空格
+     * @param mixed $value 输入值
+     * @return string 去空格后的字符串
+     */
+    function safe_trim($value): string
+    {
+        return trim((string)($value ?? ''));
+    } 
+}

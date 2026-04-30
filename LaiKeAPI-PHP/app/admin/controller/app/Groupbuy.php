@@ -14,18 +14,18 @@ class Groupbuy extends BaseController
     public function payfor()
     {
         //1.列出基础数据
-        $store_id = trim($this->request->param('store_id'));
-        $store_type = trim($this->request->param('store_type'));
+        $store_id = safe_trim($this->request->param('store_id'));
+        $store_type = safe_trim($this->request->param('store_type'));
         $this->store_id = $store_id;
         $this->store_type = $store_type;
         
-        $language = trim($this->request->param('language')); // 语言
-        $access_id = trim($this->request->param('access_id')); // 授权id
+        $language = safe_trim($this->request->param('language')); // 语言
+        $access_id = safe_trim($this->request->param('access_id')); // 授权id
         $this->language = $language;
         $this->access_id = $access_id;
         
         $product1 = addslashes($this->request->param('product'));//  商品数组--------['pid'=>66,'cid'=>88]
-        $cart_id = addslashes(trim($this->request->param('cart_id')));  //购物车id-- 12,13,123,
+        $cart_id = addslashes(safe_trim($this->request->param('cart_id')));  //购物车id-- 12,13,123,
         $vipSource = addslashes($this->request->param('vipSource')); // 1.会员
         // $coupon_id = addslashes($this->request->post('coupon_id')); // 优惠券ID
         $type = addslashes($this->request->param('type'));// PS.预售

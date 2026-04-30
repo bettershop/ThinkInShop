@@ -44,6 +44,11 @@ public class ProductMappingModel implements Serializable
     private Integer sort;
 
     /**
+     * 语种编码
+     */
+    private String lang_code;
+
+    /**
      * 添加时间
      */
     private Date add_date;
@@ -146,6 +151,16 @@ public class ProductMappingModel implements Serializable
     public void setSort(Integer sort)
     {
         this.sort = sort;
+    }
+
+    public String getLang_code()
+    {
+        return lang_code;
+    }
+
+    public void setLang_code(String lang_code)
+    {
+        this.lang_code = lang_code;
     }
 
     /**

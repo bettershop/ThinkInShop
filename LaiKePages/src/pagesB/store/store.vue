@@ -132,49 +132,16 @@
                     </div>
                 </div>
             </div>
-                <!-- 预售商品 -->
-                <div
-                    class="mytab_div"
-                    @tap="
-                    "
-                >
-                    <div class="mytab_div_img">
-                        <img :src="dianpuzy8" alt="" />
-                    </div>
-                    <p>{{ language.store.yssp }}</p>
-                </div>
-                <!-- 限时秒杀 -->
-                <div
-                    class="mytab_div"
-                >
-                    <div class="mytab_div_img">
-                        <img :src="dianpuzy6" alt="" />
-                    </div>
-                    <p>{{ language.store.xszk }}</p>
-                </div>
-                <!-- 拼团商品 -->
-                <div
-                    class="mytab_div"
-                >
-                    <div class="mytab_div_img">
-                        <img :src="dianpuzy3" alt="" />
-                    </div>
-                    <p>{{ language.store.ptsp }}</p>
-                </div>
-                <!-- 竞拍商品 -->
-                <div
-                    class="mytab_div"
-                    @tap="
-                        navTo(
-                                shop_id
-                        )
-                    "
-                >
-                    <div class="mytab_div_img">
-                        <img :src="dianpuzy5" alt="" />
-                    </div>
-                    <p>{{ language.store.jpsp }}</p>
-                </div>
+            <div class="mytab" v-if="!is_diy">
+                 
+                 
+
+                 
+
+                 
+
+                 
+
                 <!-- 省钱好券 -->
                 <div
                     class="mytab_div"
@@ -186,19 +153,9 @@
                     </div>
                     <p>{{ language.store.sqhq }}</p>
                 </div>
-                <!-- 限时折扣 -->
-                <div
-                    class="mytab_div"
-                    @tap="
-                        navTo(
-                        )
-                    "
-                >
-                    <div class="mytab_div_img">
-                        <img :src="xszk" alt="" />
-                    </div>
-                    <p>{{ language.store.xszka }}</p>
-                </div>
+
+                 
+                 
             </div>
             <storeDiy v-if="is_diy" @getHomeBg="getHomeBg" :is_open="is_open" :shop_id="shop_id"></storeDiy>
 

@@ -8670,6 +8670,18 @@ public class PublicOrderServiceImpl implements PublicOrderService
                         }
                     }
                 }
+                if (StringUtils.isNotEmpty(orderVo.getFreight()) && DictionaryConst.OrdersStatus.ORDERS_R_STATUS_UNPAID == orderModel.getStatus())
+                {
+                    BigDecimal oldFreight = orderModel.getZ_freight() == null ? BigDecimal.ZERO : orderModel.getZ_freight();
+                    BigDecimal newFreight = new BigDecimal(orderVo.getFreight());
+                    if (newFreight.compareTo(BigDecimal.ZERO) < 0)
+                    {
+                        throw new LaiKeAPIException(ErrorCode.BizErrorCode.ERROR_CODE_DDJEYW, "订单金额有误");
+                    }
+                    // 运费调整时保持商品实付小计不变，仅替换总运费并重算订单总额
+                    orderUpdate.setZ_freight(newFreight);
+                    orderUpdate.setZ_price(orderModel.getZ_price().subtract(oldFreight).add(newFreight));
+                }
             }
             if (orderModel.getSelf_lifting() == 2 && orderVo.getDeliveryTime() != null && orderVo.getDeliveryPeriod() != null)
             {

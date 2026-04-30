@@ -67,11 +67,11 @@ class Common extends BaseController
     // 更改用户默认币种
     public function userChangeCurrency()
     {
-        $store_id = trim(Request::param('store_id'));
-        $store_type = trim(Request::param('store_type')); // 来源
-        $access_id = trim(Request::param('access_id')); // 授权id
+        $store_id = safe_trim(Request::param('store_id'));
+        $store_type = safe_trim(Request::param('store_type')); // 来源
+        $access_id = safe_trim(Request::param('access_id')); // 授权id
 
-        $currency_id = trim(Request::param('currency_id')); // 币种ID
+        $currency_id = safe_trim(Request::param('currency_id')); // 币种ID
 
         $sql0 = "select id from lkt_user where store_id = '$store_id' and access_id = '$access_id'";
         $r0 = Db::query($sql0);

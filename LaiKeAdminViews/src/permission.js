@@ -14,6 +14,37 @@ const AutomaticList = [
   "/mall/fastBoot/index",
   "/plug_ins/stores/increaseStore",
 ];
+
+function normalizeToPath(path) {
+  if (!path || typeof path !== "string") {
+    return "";
+  }
+  const value = path.trim();
+  if (!value) {
+    return "";
+  }
+  return value.startsWith("/") ? value : `/${value}`;
+}
+
+function canAccessByMenuRoute(menuRouteList, targetPath) {
+  const normalizedTargetPath = normalizeToPath(targetPath);
+  if (!normalizedTargetPath || !Array.isArray(menuRouteList)) {
+    return false;
+  }
+
+  return menuRouteList.some((item) => {
+    if (!item) {
+      return false;
+    }
+    if (Array.isArray(item.availablePaths) && item.availablePaths.length) {
+      return item.availablePaths.some((path) => normalizeToPath(path) === normalizedTargetPath);
+    }
+    return [item.redirect, item.url, item.menuPath, item.path]
+      .map((path) => normalizeToPath(path))
+      .filter(Boolean)
+      .includes(normalizedTargetPath);
+  });
+}
 router.beforeEach(async (to, from, next) => {
   // 开始进度条
   // debugger
@@ -39,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
           // 登录更改权限退出登录，页面404问题
           const goRouterList = getStorage("route");
           if (goRouterList) {
-            if (goRouterList.some((item) => item.redirect === to.path)) {
+            if (canAccessByMenuRoute(goRouterList, to.path)) {
               next(to.path);
             } else {
               console.log(
@@ -49,7 +80,7 @@ router.beforeEach(async (to, from, next) => {
               );
               if (
                 AutomaticList.indexOf(to.path) !== -1 &&
-                !goRouterList.some((item) => item.redirect === to.path)
+                !canAccessByMenuRoute(goRouterList, to.path)
               ) {
                 let path = store.state.permission.addRoutes[0].redirect;
                 next(path);

@@ -20,17 +20,17 @@ class ProClass extends BaseController
     // 分类审核列表
     public function auditList()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
 
-        $lang_code = addslashes(trim($this->request->param('lang_code'))); // 语种
-        $name = addslashes(trim($this->request->param('condition'))); // 分类名称/供应商名称
-        $examine = addslashes(trim($this->request->param('status'))); // 审核状态 0.待审核 1.审核通过 2.不通过
-        $startTime = addslashes(trim($this->request->param('startTime'))); // 查询开始时间
-        $endTime = addslashes(trim($this->request->param('endTime'))); // 查询结束时间
+        $lang_code = addslashes(safe_trim($this->request->param('lang_code'))); // 语种
+        $name = addslashes(safe_trim($this->request->param('condition'))); // 分类名称/供应商名称
+        $examine = addslashes(safe_trim($this->request->param('status'))); // 审核状态 0.待审核 1.审核通过 2.不通过
+        $startTime = addslashes(safe_trim($this->request->param('startTime'))); // 查询开始时间
+        $endTime = addslashes(safe_trim($this->request->param('endTime'))); // 查询结束时间
 
-        $page = trim($this->request->param('pageNo'));//页码
-        $pagesize = trim($this->request->param('pageSize'));//每页数据
+        $page = safe_trim($this->request->param('pageNo'));//页码
+        $pagesize = safe_trim($this->request->param('pageSize'));//每页数据
         $pagesize = $pagesize ? $pagesize : '10';
 
         $user_id = $this->user_list['user_id'];

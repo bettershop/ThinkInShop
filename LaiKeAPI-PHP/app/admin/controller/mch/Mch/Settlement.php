@@ -35,13 +35,13 @@ class Settlement extends BaseController
     // 结算订单列表
     public function Index()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId')); // 授权id
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId')); // 授权id
         $mch_id = $this->user_list['id'];
         $mch_name = $this->user_list['name'];
 
-        $search = addslashes(trim($this->request->param('search'))); // 订单号/订单id
+        $search = addslashes(safe_trim($this->request->param('search'))); // 订单号/订单id
         $startdate = $this->request->param("startDate");
         $enddate = $this->request->param("endDate"); 
         $status = $this->request->param('status');
@@ -205,9 +205,9 @@ class Settlement extends BaseController
     // 结算详情
     public function Detail()
     {   
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId')); // 授权id
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId')); // 授权id
         $mch_id = $this->user_list['id'];
         $mch_name = $this->user_list['name'];
 
@@ -620,9 +620,9 @@ class Settlement extends BaseController
     // 删除
     public function Del()
     {
-        $store_id = trim($this->request->param('storeId'));
-        $store_type = trim($this->request->param('storeType'));
-        $access_id = trim($this->request->param('accessId')); // 授权id
+        $store_id = safe_trim($this->request->param('storeId'));
+        $store_type = safe_trim($this->request->param('storeType'));
+        $access_id = safe_trim($this->request->param('accessId')); // 授权id
 
         $id = $this->request->param('id');
         

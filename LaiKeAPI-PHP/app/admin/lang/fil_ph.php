@@ -51,6 +51,7 @@ return [
         '22'=> 'Mayroon nang ganitong email address',
         '23'=> 'Nairehistro na ang email',
         '24'=> 'Ang email ay pareho sa kasalukuyang naka-bind na email',
+        '25'=> 'Naipadala na ang verification code, mangyaring subukan muli mamaya!',
     ],
     'favorites' =>[
         '0' => 'Naka-save na!',
@@ -328,6 +329,7 @@ return [
         '100' => 'Hindi puwedeng walang laman ang bilang ng beses ng verification ng attribute',
         '101' => 'Ang title ng produkto ay hindi maaaring lumampas sa 20 character',
         '102' => 'May mga hindi natapos na order, hindi maaaring ma-delete',
+        '103' => 'Ang haba ng pamagat ng introduksyon ng produkto ay dapat nasa 1-60 karakter!',
     ],
     'coupon' => [
         '0' => 'Tapos na ang aktibidad na ito!',
@@ -906,6 +908,8 @@ return [
         '8' => 'Nabigo ang pag-delete ng record!',
         '9' => 'Tapos na ang aktibidad!',
         '10'=> 'Ang bilang ng iyong pagbili ay lumampas sa maximum na limitasyon ng pagbili!',
+        '11'=> 'Ang haba ng pamagat ng seckill ay dapat nasa 1-30 karakter!',
+        'title' => 'Flash Sale',
     ],
     'image' => [
         '0' => 'Mangyaring punan ang pangalan ng storage space!',
